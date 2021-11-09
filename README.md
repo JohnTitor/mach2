@@ -1,3 +1,5 @@
+# mach2
+
 [![Latest Version]][crates.io] [![docs]][docs.rs]
 
 A Rust interface to the **user-space** API of the Mach 3.0 kernel exposed in
@@ -14,7 +16,7 @@ often API-incompatible with the kernel space one, and even in the cases where
 they match, they are sometimes ABI incompatible such that using this library
 would have **undefined behavior**.
 
-# Usage
+## Usage
 
 Add the following to your `Cargo.toml` to conditionally include mach on those
 platforms that support it.
@@ -24,14 +26,27 @@ platforms that support it.
 version = "0.3"
 ```
 
-The following crate features are available:
+Available crate feature:
 
-* **deprecated** (disabled by default): exposes deprecated APIs that have been
-  removed from the latest versions of the MacOS SDKs. The behavior of using
-  these APIs on MacOS versions that do not support them is undefined (hopefully
-  a linker error).
+* **unstable** (disabled by default): Exposes newly changed APIs. Enabling this may
+  bring breaking changes (see the breaking change policy).
 
-# Platform support
+
+### Breaking change policy
+
+We do the following steps when an item is changed/removed on latest toolchain:
+
+1. Deprecate an existing one
+2. Declare a new one under the `unstable` feature
+3. After a month or more since releasing a new version that contains that change,
+  remove/change an older one
+
+For instance, if const `FOO` value is changed from `3` to `4`,
+we expose the newer one, i.e. `4`, under `unstable` first.
+So the `unstable` users should notice the change on the first release since deprecating.
+After a month or more, all the users should notice it.
+
+## Platform support
 
 The following table describes the current CI set-up:
 
@@ -43,7 +58,7 @@ The following table describes the current CI set-up:
 | `aarch64-apple-ios-sim` | nightly   | 13.1.0          | ✓     | -     | -   |
 | `x86_64-apple-ios`      | nightly   | 13.1.0          | ✓     | -     | -   |
 
-# License
+## License
 
 This project is licensed under either of
 
@@ -55,7 +70,7 @@ This project is licensed under either of
 
 at your option.
 
-# Contribution
+## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in `mach` by you, as defined in the Apache-2.0 license, shall be
@@ -68,7 +83,7 @@ TARGET=x86_64-apple-darwin RUST_VERSION=nightly ./ci/run.sh
 ```
 
 where you can replace the `TARGET` and `RUST_VERSION` with the target you
-want to test (e.g. `x86_64-apple-darwin`) and the Rust version you want to use for
+want to test (e.g. `aarch64-apple-darwin`) and the Rust version you want to use for
 the tests (e.g. `stable`, `1.33.0`, etc.).
 
 [crates.io]: https://crates.io/crates/mach2
