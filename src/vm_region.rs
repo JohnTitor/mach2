@@ -38,8 +38,8 @@ pub type vm_page_info_basic_t = *mut vm_page_info_basic;
 pub type vm_page_info_basic_data_t = vm_page_info_basic;
 pub type mach_vm_read_entry_t = [mach_vm_read_entry; VM_MAP_ENTRY_MAX as usize];
 
-pub const VM_REGION_INFO_MAX: ::libc::c_int = (1 << 10);
-pub const VM_MAP_ENTRY_MAX: ::libc::c_int = (1 << 8);
+pub const VM_REGION_INFO_MAX: ::libc::c_int = 1 << 10;
+pub const VM_MAP_ENTRY_MAX: ::libc::c_int = 1 << 8;
 
 pub const VM_PAGE_INFO_BASIC: vm_page_info_flavor_t = 1;
 

@@ -9,11 +9,11 @@ extern "C" {
 }
 
 pub unsafe fn mach_vm_trunc_page(x: mach_vm_offset_t) -> mach_vm_offset_t {
-    (x & !(vm_page_mask as mach_vm_size_t))
+    x & !(vm_page_mask as mach_vm_size_t)
 }
 
 pub unsafe fn mach_vm_round_page(x: mach_vm_offset_t) -> mach_vm_offset_t {
-    ((x + vm_page_mask as mach_vm_size_t) & !(vm_page_mask as mach_vm_size_t))
+    (x + vm_page_mask as mach_vm_size_t) & !(vm_page_mask as mach_vm_size_t)
 }
 
 #[cfg(test)]
