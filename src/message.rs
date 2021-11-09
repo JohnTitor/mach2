@@ -82,10 +82,10 @@ pub const MACH_SEND_NODENAP: mach_msg_option_t = MACH_SEND_NOIMPORTANCE;
 pub const MACH_SEND_IMPORTANCE: mach_msg_option_t = 0x0008_0000;
 
 pub const MACH_RCV_TIMEOUT: mach_msg_option_t = 0x0000_0100;
-pub const MACH_RCV_NOTIFY: mach_msg_option_t = 0x0000_0200;
+pub const MACH_RCV_NOTIFY: mach_msg_option_t = 0x0000_0000;
 pub const MACH_RCV_INTERRUPT: mach_msg_option_t = 0x0000_0400;
 pub const MACH_RCV_VOUCHER: mach_msg_option_t = 0x0000_0800;
-pub const MACH_RCV_OVERWRITE: mach_msg_option_t = 0x0000_1000;
+pub const MACH_RCV_OVERWRITE: mach_msg_option_t = 0x0000_0000;
 
 pub const MACH_MSG_SUCCESS: mach_msg_return_t = 0x0000_0000;
 
