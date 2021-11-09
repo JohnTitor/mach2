@@ -2,21 +2,21 @@
 //! process.
 
 extern crate libc;
-extern crate mach;
+extern crate mach2;
 
 use std::io;
 use std::mem;
 use std::ptr;
 
-use mach::kern_return::KERN_SUCCESS;
-use mach::mach_types::{task_t, thread_act_array_t};
-use mach::message::mach_msg_type_number_t;
-use mach::port::mach_port_name_t;
-use mach::structs::x86_thread_state64_t;
-use mach::task::{task_resume, task_suspend, task_threads};
-use mach::thread_act::thread_get_state;
-use mach::thread_status::x86_THREAD_STATE64;
-use mach::traps::{mach_task_self, task_for_pid};
+use mach2::kern_return::KERN_SUCCESS;
+use mach2::mach_types::{task_t, thread_act_array_t};
+use mach2::message::mach_msg_type_number_t;
+use mach2::port::mach_port_name_t;
+use mach2::structs::x86_thread_state64_t;
+use mach2::task::{task_resume, task_suspend, task_threads};
+use mach2::thread_act::thread_get_state;
+use mach2::thread_status::x86_THREAD_STATE64;
+use mach2::traps::{mach_task_self, task_for_pid};
 
 use std::io::prelude::*;
 

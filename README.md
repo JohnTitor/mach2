@@ -71,7 +71,7 @@ where you can replace the `TARGET` and `RUST_VERSION` with the target you
 want to test (e.g. `x86_64-apple-darwin`) and the Rust version you want to use for
 the tests (e.g. `stable`, `1.33.0`, etc.).
 
-[crates.io]: https://crates.io/crates/mach
-[Latest Version]: https://img.shields.io/crates/v/mach.svg
-[docs]: https://docs.rs/mach/badge.svg
-[docs.rs]: https://docs.rs/mach/
+[crates.io]: https://crates.io/crates/mach2
+[Latest Version]: https://img.shields.io/crates/v/mach2.svg
+[docs]: https://docs.rs/mach2/badge.svg
+[docs.rs]: https://docs.rs/mach2
