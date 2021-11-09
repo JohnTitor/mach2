@@ -154,6 +154,9 @@ fn main() {
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
             "ipc_port" => true,
 
+            // FIXME:
+            "vm_region_submap_info_64" => true,
+
             _ => false,
         }
     });
@@ -164,6 +167,9 @@ fn main() {
             // but seems to be exposed in
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
             "ipc_port_t" => true,
+
+            // FIXME
+            "vm_region_submap_info_data_64_t" => true,
 
             _ => false,
         }
@@ -179,10 +185,9 @@ fn main() {
         }
     });
 
-    cfg.skip_const(move |s| {
-        match s {
-            _ => false,
-        }
+    cfg.skip_const(move |s| match s {
+        "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" | "VM_PROT_NO_CHANGE" => true,
+        _ => false,
     });
 
     cfg.fn_cname(|rust, _link_name| match rust {
