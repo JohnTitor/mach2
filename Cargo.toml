@@ -8,6 +8,7 @@ readme = "README.md"
 keywords = ["kernel", "macos", "darwin"]
 categories = ["api-bindings", "external-ffi-bindings", "no-std", "os"]
 edition = "2015"
+include = ["src/**/*", "LICENSE-*", "README.md"]
 
 [badges]
 maintenance = { status = "passively-maintained" }
