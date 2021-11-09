@@ -59,6 +59,7 @@ extern "C" {
         dataCnt: *mut mach_msg_type_number_t,
     ) -> kern_return_t;
 
+    #[allow(improper_ctypes)]
     pub fn mach_vm_read_list(
         target_task: vm_task_entry_t,
         data_list: mach_vm_read_entry_t,
