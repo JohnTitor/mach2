@@ -1,46 +1,46 @@
 #![allow(bad_style)]
 
 extern crate libc;
-extern crate mach;
+extern crate mach2;
 
-use mach::boolean::*;
-use mach::bootstrap::*;
-use mach::clock::*;
-use mach::clock_priv::*;
-use mach::clock_reply::*;
-use mach::clock_types::*;
-use mach::dyld_kernel::*;
-use mach::exc::*;
-use mach::exception_types::*;
-use mach::kern_return::*;
-use mach::mach_init::*;
-use mach::mach_port::*;
-use mach::mach_time::*;
-use mach::mach_types::*;
-use mach::memory_object_types::*;
-use mach::message::*;
-use mach::port::*;
-use mach::structs::*;
-use mach::task::*;
-use mach::task_info::*;
-use mach::thread_act::*;
-use mach::thread_status::*;
-use mach::traps::*;
-use mach::vm::*;
-use mach::vm_attributes::*;
-use mach::vm_behavior::*;
-use mach::vm_inherit::*;
+use mach2::boolean::*;
+use mach2::bootstrap::*;
+use mach2::clock::*;
+use mach2::clock_priv::*;
+use mach2::clock_reply::*;
+use mach2::clock_types::*;
+use mach2::dyld_kernel::*;
+use mach2::exc::*;
+use mach2::exception_types::*;
+use mach2::kern_return::*;
+use mach2::mach_init::*;
+use mach2::mach_port::*;
+use mach2::mach_time::*;
+use mach2::mach_types::*;
+use mach2::memory_object_types::*;
+use mach2::message::*;
+use mach2::port::*;
+use mach2::structs::*;
+use mach2::task::*;
+use mach2::task_info::*;
+use mach2::thread_act::*;
+use mach2::thread_status::*;
+use mach2::traps::*;
+use mach2::vm::*;
+use mach2::vm_attributes::*;
+use mach2::vm_behavior::*;
+use mach2::vm_inherit::*;
 // FIXME: vm_page_size is not used => not tested?
 #[allow(unused_imports)]
-use mach::vm_page_size::*;
-use mach::vm_prot::*;
-use mach::vm_purgable::*;
-use mach::vm_region::*;
-use mach::vm_statistics::*;
-use mach::vm_sync::*;
-use mach::vm_types::*;
+use mach2::vm_page_size::*;
+use mach2::vm_prot::*;
+use mach2::vm_purgable::*;
+use mach2::vm_region::*;
+use mach2::vm_statistics::*;
+use mach2::vm_sync::*;
+use mach2::vm_types::*;
 
-// These types are not re-exported by mach::types but they are required.
+// These types are not re-exported by mach2::types but they are required.
 use libc::{c_int, c_uchar, c_uint, c_ulonglong, clock_t};
 
 // Imported by mach, but kept private:
