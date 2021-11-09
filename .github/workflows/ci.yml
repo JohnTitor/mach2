@@ -66,4 +66,3 @@ jobs:
       - run: rustup component add rustfmt clippy
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace -- -D warnings
-      - run: shellcheck ci/*.sh
