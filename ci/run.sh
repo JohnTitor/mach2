@@ -2,8 +2,8 @@
 
 set -ex
 
-: "${TARGET?The TARGET environment variable must be set.}"
-: "${TRAVIS_RUST_VERSION?The TRAVIS_RUST_VERSION environment variable must be set.}"
+: "${TARGET?The `TARGET` environment variable must be set.}"
+: "${RUST_VERSION?The `RUST_VERSION` environment variable must be set.}"
 
 echo "Running tests for target: ${TARGET}"
 export RUST_BACKTRACE=1
@@ -12,6 +12,9 @@ export RUST_TEST_NOCAPTURE=1
 export CARGO_INCREMENTAL=0
 export CARGO_CODEGEN_UNITS=1
 export RUSTFLAGS="-C codegen-units=1 "
+
+rustup override set "${RUST_VERSION}"
+rustup target add "${TARGET}"
 
 case "${TARGET}" in
     *"ios"*)
@@ -29,6 +32,8 @@ case "${TARGET}" in
     *)
         ;;
 esac
+
+sudo rm -rf /Library/Developer/CommandLineTools
 
 # Build w/o std
 cargo clean
@@ -50,7 +55,7 @@ fi
 
 # Runs ctest to verify mach's ABI against the system libraries:
 if [ -z "$NOCTEST" ]; then
-    if [ "${TRAVIS_RUST_VERSION}" = "nightly" ]; then
+    if [ "${RUST_VERSION}" = "nightly" ]; then
         cargo test --manifest-path mach-test/Cargo.toml --target "${TARGET}" -vv
         cargo test --no-default-features --manifest-path mach-test/Cargo.toml --target "${TARGET}" -vv
     fi

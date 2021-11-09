@@ -11,10 +11,12 @@ extern "C" {
     ) -> kern_return_t;
 }
 
+#[allow(clippy::missing_safety_doc)] // FIXME
 pub unsafe fn mach_task_self() -> mach_port_t {
     mach_task_self_
 }
 
+#[allow(clippy::missing_safety_doc)] // FIXME
 pub unsafe fn current_task() -> mach_port_t {
     mach_task_self()
 }

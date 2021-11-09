@@ -1,4 +1,4 @@
-[![Build Status][travis_ci_badge]][travis_ci] [![Latest Version]][crates.io] [![docs]][docs.rs]
+[![Latest Version]][crates.io] [![docs]][docs.rs]
 
 A Rust interface to the **user-space** API of the Mach 3.0 kernel exposed in
 `/usr/include/mach` that underlies macOS and is linked via `libSystem` (and
@@ -35,16 +35,13 @@ The following crate features are available:
 
 The following table describes the current CI set-up:
 
-| Target                | Min. Rust | XCode         | build | ctest | run |
-|-----------------------|-----------|---------------|-------|-------|-----|
-| `x86_64-apple-darwin` | 1.33.0    | 6.4 - 10.0    | ✓     | ✓     | ✓   |
-| `i686-apple-darwin`   | 1.33.0    | 6.4 - 10.0    | ✓     | ✓     | ✓   |
-| `i386-apple-ios`      | 1.33.0    | 6.4 - 9.4 [0] | ✓     | -     | -   |
-| `x86_64-apple-ios`    | 1.33.0    | 6.4 - 10.0    | ✓     | -     | -   |
-| `armv7-apple-ios`     | nightly   | 6.4 - 10.0    | ✓     | -     | -   |
-| `aarch64-apple-ios`   | nightly   | 6.4 - 10.0    | ✓     | -     | -   |
-
-[0] `i386-apple-ios` is deprecated in XCode 10.0.
+| Target                  | Min. Rust | XCode           | build | ctest | run |
+|-------------------------|-----------|-----------------|-------|-------|-----|
+| `x86_64-apple-darwin`   | 1.33.0    | 10.3.0 - 13.1.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-darwin`  | nightly   | 13.1.0          | ✓     | -     | -   |
+| `aarch64-apple-ios`     | nightly   | 13.1.0          | ✓     | -     | -   |
+| `aarch64-apple-ios-sim` | nightly   | 13.1.0          | ✓     | -     | -   |
+| `x86_64-apple-ios`      | nightly   | 13.1.0          | ✓     | -     | -   |
 
 # License
 
@@ -67,15 +64,13 @@ triple licensed as above, without any additional terms or conditions.
 To locally test the library, run:
 
 ```
-TARGET=x86_64-apple-darwin TRAVIS_RUST_VERSION=nightly ./ci/run.sh
+TARGET=x86_64-apple-darwin RUST_VERSION=nightly ./ci/run.sh
 ```
 
-where you can replace the `TARGET` and `TRAVIS_RUST_VERSION` with the target you
-want to test (e.g. `i686-apple-darwin`) and the Rust version you want to use for
+where you can replace the `TARGET` and `RUST_VERSION` with the target you
+want to test (e.g. `x86_64-apple-darwin`) and the Rust version you want to use for
 the tests (e.g. `stable`, `1.33.0`, etc.).
 
-[travis_ci]: https://travis-ci.org/fitzgen/mach
-[travis_ci_badge]: https://travis-ci.org/fitzgen/mach.png?branch=master
 [crates.io]: https://crates.io/crates/mach
 [Latest Version]: https://img.shields.io/crates/v/mach.svg
 [docs]: https://docs.rs/mach/badge.svg
