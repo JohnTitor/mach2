@@ -154,8 +154,8 @@ fn main() {
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
             "ipc_port" => true,
 
-            // FIXME:
-            "vm_region_submap_info_64" => true,
+            // FIXME: Changed in XCode 11, figure out what's changed.
+            "vm_region_submap_info_64" if xcode >= Xcode(11, 0) => true,
 
             _ => false,
         }
@@ -168,8 +168,8 @@ fn main() {
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
             "ipc_port_t" => true,
 
-            // FIXME
-            "vm_region_submap_info_data_64_t" => true,
+            // FIXME: Changed in XCode 11, see `vm_region_submap_info_data_64`'s comment.
+            "vm_region_submap_info_data_64_t" if xcode >= Xcode(11, 0) => true,
 
             _ => false,
         }
@@ -186,7 +186,12 @@ fn main() {
     });
 
     cfg.skip_const(move |s| match s {
-        "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" | "VM_PROT_NO_CHANGE" => true,
+        "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" if xcode <= Xcode(11, 0) => true,
+
+        // FIXME: Somehow it fails, like:
+        // bad VM_PROT_NO_CHANGE value at byte 0: rust: 8 (0x8) != c 0 (0x0)
+        // bad VM_PROT_NO_CHANGE value at byte 3: rust: 0 (0x0) != c 1 (0x1)
+        "VM_PROT_NO_CHANGE" if xcode >= Xcode(13, 0) => true,
         _ => false,
     });
 

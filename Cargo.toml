@@ -15,13 +15,11 @@ maintenance = { status = "passively-maintained" }
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
 libc = { version = "0.2", default-features = false }
-rustc-std-workspace-core = { version = "1.0.0", optional = true }
 
 [features]
 default = []
-# Enables deprecated and removed APIs.
-deprecated = []
-rustc-dep-of-std = ['rustc-std-workspace-core', 'libc/rustc-dep-of-std']
+# Uses newer APIs
+unstable = []
 
 [workspace]
 members = ["mach-test"]

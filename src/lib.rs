@@ -2,21 +2,16 @@
 #![allow(non_upper_case_globals)]
 #![deny(missing_debug_implementations)]
 #![deny(missing_copy_implementations)]
-#![cfg_attr(feature = "rustc-dep-of-std", feature(no_core))]
-#![cfg_attr(feature = "rustc-dep-of-std", no_core)]
-#![cfg_attr(not(feature = "rustc-dep-of-std"), no_std)]
 #![allow(
     clippy::module_name_repetitions,
     clippy::cast_sign_loss,
     clippy::cast_possible_truncation,
     clippy::trivially_copy_pass_by_ref
 )]
+#![no_std]
 
 #[cfg(not(any(target_os = "macos", target_os = "ios")))]
-compile_error!("mach requires MacOSX or iOS");
-
-#[cfg(feature = "rustc-dep-of-std")]
-extern crate rustc_std_workspace_core as core;
+compile_error!("mach requires macOS or iOS");
 
 extern crate libc;
 
