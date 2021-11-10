@@ -44,11 +44,7 @@ fn main() {
 
     let mut cfg = ctest::TestGenerator::new();
 
-    // Older Xcode versions fail with:
-    // error: unknown warning option '-Wno-address-of-packed-member'
-    if xcode.0 < 8 {
-        cfg.flag("-Wno-unknown-warning-option");
-    }
+    cfg.flag("-Wno-unknown-warning-option");
 
     // Include the header files where the C APIs are defined
     cfg.header("mach/boolean.h")
@@ -57,11 +53,8 @@ fn main() {
         .header("mach/clock.h")
         .header("mach/clock_priv.h")
         .header("mach/clock_reply.h")
-        .header("mach/clock_types.h");
-
-    if xcode >= Xcode(8, 0) {
-        cfg.header("mach/dyld_kernel.h");
-    }
+        .header("mach/clock_types.h")
+        .header("mach/dyld_kernel.h");
 
     cfg.header("mach/error.h")
         .header("mach/exc.h")
@@ -119,9 +112,8 @@ fn main() {
         .header("mach/thread_policy.h")
         .header("mach/thread_special_ports.h");
 
-    cfg.header("mach/thread_state.h");
-
-    cfg.header("mach/thread_status.h")
+    cfg.header("mach/thread_state.h")
+        .header("mach/thread_status.h")
         .header("mach/thread_switch.h")
         .header("mach/time_value.h")
         .header("mach/vm_attributes.h")
