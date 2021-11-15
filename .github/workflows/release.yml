@@ -1,0 +1,24 @@
+name: Make a new release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure rustup
+        run: |
+          rustup override set stable
+          rustup update stable
+
+      - name: cargo login
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: cargo publish
+        run: |
+          cargo update
+          cargo publish
