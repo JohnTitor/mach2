@@ -29,6 +29,11 @@ mod tests {
             assert!(vm_page_size > 0);
             assert!(vm_page_size % 2 == 0);
             assert_eq!(mach_vm_round_page(1), vm_page_size as mach_vm_size_t);
+
+            #[cfg(target_arch = "aarch64")]
+            assert_eq!(vm_page_size, 16384);
+
+            #[cfg(not(target_arch = "aarch64"))]
             assert_eq!(vm_page_size, 4096);
         }
     }
