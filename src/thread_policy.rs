@@ -86,26 +86,20 @@ pub type thread_throughput_qos_policy_data_t = thread_throughput_qos_policy;
 
 pub const THREAD_STANDARD_POLICY_COUNT: mach_msg_type_number_t = 0;
 pub const THREAD_EXTENDED_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_extended_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_extended_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_TIME_CONSTRAINT_POLICY_DATA: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_time_constraint_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_time_constraint_policy>() / core::mem::size_of::<integer_t>())
+        as _;
 pub const THREAD_PRECEDENCE_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_precedence_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_precedence_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_AFFINITY_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_affinity_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_affinity_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_BACKGROUND_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_background_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_background_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_LATENCY_QOS_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_latency_qos_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_latency_qos_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_THROUGHPUT_QOS_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_throughput_qos_policy>() /
-    core::mem::size_of::<integer_t>()) as _;
+    (core::mem::size_of::<thread_throughput_qos_policy>() / core::mem::size_of::<integer_t>()) as _;
 
 extern "C" {
     pub fn thread_policy_set(
