@@ -9,7 +9,7 @@ use vm_types::{integer_t, natural_t};
 
 pub type thread_policy_flavor_t = natural_t;
 
-pub const THREAD_STANDARD_POLICY: thread_policy_flavor_t = 0;
+pub const THREAD_STANDARD_POLICY: thread_policy_flavor_t = 1;
 pub const THREAD_EXTENDED_POLICY: thread_policy_flavor_t = 1;
 pub const THREAD_TIME_CONSTRAINT_POLICY: thread_policy_flavor_t = 2;
 pub const THREAD_PRECEDENCE_POLICY: thread_policy_flavor_t = 3;
@@ -21,7 +21,7 @@ pub const THREAD_THROUGHPUT_QOS_POLICY: thread_policy_flavor_t = 8;
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct thread_standard_policy {
-    pub _0: natural_t,
+    pub no_data: natural_t,
 }
 
 #[repr(C)]
@@ -87,7 +87,7 @@ pub type thread_throughput_qos_policy_data_t = thread_throughput_qos_policy;
 pub const THREAD_STANDARD_POLICY_COUNT: mach_msg_type_number_t = 0;
 pub const THREAD_EXTENDED_POLICY_COUNT: mach_msg_type_number_t =
     (core::mem::size_of::<thread_extended_policy>() / core::mem::size_of::<integer_t>()) as _;
-pub const THREAD_TIME_CONSTRAINT_POLICY_DATA: mach_msg_type_number_t =
+pub const THREAD_TIME_CONSTRAINT_POLICY_COUNT: mach_msg_type_number_t =
     (core::mem::size_of::<thread_time_constraint_policy>() / core::mem::size_of::<integer_t>())
         as _;
 pub const THREAD_PRECEDENCE_POLICY_COUNT: mach_msg_type_number_t =
