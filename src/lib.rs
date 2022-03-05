@@ -40,6 +40,7 @@ pub mod structs;
 pub mod task;
 pub mod task_info;
 pub mod thread_act;
+pub mod thread_policy;
 pub mod thread_status;
 pub mod traps;
 pub mod vm;

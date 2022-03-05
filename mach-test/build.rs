@@ -287,7 +287,15 @@ fn main() {
         | "dyld_kernel_process_info"
         | "mach_timespec"
         | "mach_vm_read_entry"
-        | "mach_timebase_info" => format!("struct {}", ty),
+        | "mach_timebase_info"
+        | "thread_standard_policy"
+        | "thread_extended_policy"
+        | "thread_time_constraint_policy"
+        | "thread_precedence_policy"
+        | "thread_affinity_policy"
+        | "thread_background_policy"
+        | "thread_latency_qos_policy"
+        | "thread_throughput_qos_policy" => format!("struct {}", ty),
         _ if is_struct => format!("{}", ty),
         _ => ty.to_string(),
     });
