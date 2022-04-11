@@ -61,6 +61,7 @@ impl x86_thread_state64_t {
     }
 }
 
+#[cfg(target_arch = "aarch64")]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct arm_thread_state64_t {
@@ -73,6 +74,7 @@ pub struct arm_thread_state64_t {
     pub __pad: u32,
 }
 
+#[cfg(target_arch = "aarch64")]
 impl arm_thread_state64_t {
     pub fn new() -> Self {
         Default::default()
