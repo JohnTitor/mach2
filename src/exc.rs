@@ -47,7 +47,7 @@ extern "C" {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
+#[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__exception_raise_t {
     pub Head: mach_msg_header_t,
@@ -63,7 +63,7 @@ pub struct __Request__exception_raise_t {
 }
 
 #[repr(C)]
-#[allow(dead_code)]
+#[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Reply__exception_raise_t {
     pub Head: mach_msg_header_t,
