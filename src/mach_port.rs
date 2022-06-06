@@ -3,7 +3,7 @@
 use kern_return::kern_return_t;
 use mach_types::ipc_space_t;
 use message::mach_msg_type_name_t;
-use port::{mach_port_name_t, mach_port_right_t, mach_port_t};
+use port::{mach_port_delta_t, mach_port_name_t, mach_port_right_t, mach_port_t};
 
 extern "C" {
     pub fn mach_port_allocate(
@@ -25,5 +25,11 @@ extern "C" {
         msgt_name: mach_msg_type_name_t,
         poly: *mut mach_port_t,
         polyPoly: *mut mach_msg_type_name_t,
+    ) -> kern_return_t;
+    pub fn mach_port_mod_refs(
+        task: ipc_space_t,
+        name: mach_port_name_t,
+        right: mach_port_right_t,
+        delta: mach_port_delta_t,
     ) -> kern_return_t;
 }
