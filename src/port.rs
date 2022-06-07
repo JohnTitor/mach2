@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/port.h`
 
-use vm_types::natural_t;
+use vm_types::{integer_t, natural_t};
 
 pub type mach_port_name_t = natural_t;
 
@@ -24,3 +24,5 @@ pub const MACH_PORT_RIGHT_PORT_SET: mach_port_right_t = 3;
 pub const MACH_PORT_RIGHT_DEAD_NAME: mach_port_right_t = 4;
 pub const MACH_PORT_RIGHT_LABELH: mach_port_right_t = 5;
 pub const MACH_PORT_RIGHT_NUMBER: mach_port_right_t = 6;
+
+pub type mach_port_delta_t = integer_t;
