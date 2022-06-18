@@ -31,7 +31,7 @@ jobs:
           - '11.7.0'
           - '12.5.1'
           - '13.1.0'
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - uses: maxim-lobanov/setup-xcode@v1
@@ -48,7 +48,7 @@ jobs:
           - aarch64-apple-ios
           - aarch64-apple-ios-sim
           - x86_64-apple-ios
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - uses: maxim-lobanov/setup-xcode@v1
@@ -57,7 +57,7 @@ jobs:
       - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly NOCTEST=1 NORUN=1 ci/run.sh
 
   style_check:
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - uses: maxim-lobanov/setup-xcode@v1
