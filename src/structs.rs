@@ -329,7 +329,7 @@ impl i386_float_state_t {
             fpu_xmm6: Default::default(),
             fpu_xmm7: Default::default(),
             fpu_rsrv4: [0; 14 * 16],
-            fpu_reserved1: 0
+            fpu_reserved1: 0,
         }
     }
 
@@ -448,7 +448,7 @@ impl i386_avx_state_t {
             fpu_ymmh4: Default::default(),
             fpu_ymmh5: Default::default(),
             fpu_ymmh6: Default::default(),
-            fpu_ymmh7: Default::default()
+            fpu_ymmh7: Default::default(),
         }
     }
 
@@ -594,7 +594,7 @@ pub struct x86_float_state64_t {
     pub fpu_xmm13: xmm_reg_t,
     pub fpu_xmm14: xmm_reg_t,
     pub fpu_xmm15: xmm_reg_t,
-    pub fpu_rsrv4: [i8; 6*16],
+    pub fpu_rsrv4: [i8; 6 * 16],
     pub fpu_reserved1: i32,
 }
 
@@ -640,7 +640,7 @@ impl x86_float_state64_t {
             fpu_xmm14: Default::default(),
             fpu_xmm15: Default::default(),
             fpu_rsrv4: [0; 6 * 16],
-            fpu_reserved1: 0
+            fpu_reserved1: 0,
         }
     }
 
@@ -785,7 +785,7 @@ impl x86_avx_state64_t {
             fpu_ymmh12: Default::default(),
             fpu_ymmh13: Default::default(),
             fpu_ymmh14: Default::default(),
-            fpu_ymmh15: Default::default()
+            fpu_ymmh15: Default::default(),
         }
     }
 
