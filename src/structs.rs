@@ -490,6 +490,7 @@ impl arm_thread_state64_t {
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+#[cfg(feature = "unstable")]
 pub struct x86_thread_state64_t {
     pub rax: u64,
     pub rbx: u64,
@@ -515,6 +516,33 @@ pub struct x86_thread_state64_t {
 }
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+#[cfg(not(feature = "unstable"))]
+pub struct x86_thread_state64_t {
+    pub __rax: u64,
+    pub __rbx: u64,
+    pub __rcx: u64,
+    pub __rdx: u64,
+    pub __rdi: u64,
+    pub __rsi: u64,
+    pub __rbp: u64,
+    pub __rsp: u64,
+    pub __r8: u64,
+    pub __r9: u64,
+    pub __r10: u64,
+    pub __r11: u64,
+    pub __r12: u64,
+    pub __r13: u64,
+    pub __r14: u64,
+    pub __r15: u64,
+    pub __rip: u64,
+    pub __rflags: u64,
+    pub __cs: u64,
+    pub __fs: u64,
+    pub __gs: u64,
+}
+
 impl x86_thread_state64_t {
     pub fn new() -> Self {
         Default::default()
