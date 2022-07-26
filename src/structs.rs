@@ -3,6 +3,7 @@
 use mem;
 use message::mach_msg_type_number_t;
 
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct x86_thread_state64_t {
@@ -29,6 +30,7 @@ pub struct x86_thread_state64_t {
     pub __gs: u64,
 }
 
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 impl x86_thread_state64_t {
     pub fn new() -> Self {
         Self {
