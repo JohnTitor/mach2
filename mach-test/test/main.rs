@@ -19,6 +19,7 @@ use mach2::mach_time::*;
 use mach2::mach_types::*;
 use mach2::memory_object_types::*;
 use mach2::message::*;
+use mach2::ndr::*;
 use mach2::port::*;
 use mach2::structs::*;
 use mach2::task::*;
