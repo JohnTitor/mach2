@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/thread_act.defs`.
 
-use exception_types::exception_mask_t;
+use exception_types::{exception_behavior_t, exception_mask_t};
 use kern_return::kern_return_t;
 use mach_types::{thread_act_t, thread_port_t};
 use message::mach_msg_type_number_t;
@@ -26,7 +26,7 @@ extern "C" {
         thread: thread_port_t,
         exception_mask: exception_mask_t,
         new_port: mach_port_t,
-        behavior: libc::c_uint,
+        behavior: exception_behavior_t,
         new_flavor: thread_state_flavor_t,
     ) -> kern_return_t;
 
