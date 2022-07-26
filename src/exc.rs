@@ -1,6 +1,6 @@
 //! This module roughly corresponds to `mach/exc.h`.
 
-use crate::vm_types::integer_t;
+use vm_types::integer_t;
 use exception_types::{exception_data_t, exception_type_t};
 use kern_return::kern_return_t;
 use message::{
