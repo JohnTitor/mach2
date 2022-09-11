@@ -237,7 +237,7 @@ impl mach_msg_ool_ports_descriptor_t {
         deallocate: bool,
         copy: mach_msg_copy_options_t,
         disposition: mach_msg_type_name_t,
-        count: mach_msg_size_t
+        count: mach_msg_size_t,
     ) -> Self {
         Self {
             address,
