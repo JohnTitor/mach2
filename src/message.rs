@@ -204,7 +204,7 @@ impl mach_msg_ool_descriptor_t {
         address: *mut ::libc::c_void,
         deallocate: bool,
         copy: mach_msg_copy_options_t,
-        size: u32,
+        size: mach_msg_size_t,
     ) -> Self {
         Self {
             address,
@@ -229,6 +229,25 @@ pub struct mach_msg_ool_ports_descriptor_t {
     pub type_: u8,       // mach_msg_descriptor_type_t bitfield
     #[cfg(target_pointer_width = "64")]
     pub count: mach_msg_size_t,
+}
+
+impl mach_msg_ool_ports_descriptor_t {
+    pub fn new(
+        address: *mut ::libc::c_void,
+        deallocate: bool,
+        copy: mach_msg_copy_options_t,
+        disposition: mach_msg_type_name_t,
+        count: mach_msg_size_t
+    ) -> Self {
+        Self {
+            address,
+            deallocate: if deallocate { 1 } else { 0 },
+            copy: copy as u8,
+            disposition: disposition as u8,
+            type_: MACH_MSG_OOL_PORTS_DESCRIPTOR as u8,
+            count,
+        }
+    }
 }
 
 extern "C" {
