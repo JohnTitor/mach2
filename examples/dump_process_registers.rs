@@ -12,11 +12,19 @@ use mach2::kern_return::KERN_SUCCESS;
 use mach2::mach_types::{task_t, thread_act_array_t};
 use mach2::message::mach_msg_type_number_t;
 use mach2::port::mach_port_name_t;
-use mach2::structs::x86_thread_state64_t;
 use mach2::task::{task_resume, task_suspend, task_threads};
 use mach2::thread_act::thread_get_state;
-use mach2::thread_status::x86_THREAD_STATE64;
 use mach2::traps::{mach_task_self, task_for_pid};
+
+#[cfg(target_arch = "aarch64")]
+use mach2::structs::arm_thread_state64_t as thread_state64_t;
+#[cfg(target_arch = "aarch64")]
+use mach2::thread_status::ARM_THREAD_STATE64 as THREAD_STATE64;
+
+#[cfg(target_arch = "x86_64")]
+use mach2::structs::x86_thread_state64_t as thread_state64_t;
+#[cfg(target_arch = "x86_64")]
+use mach2::thread_status::x86_THREAD_STATE64 as THREAD_STATE64;
 
 use std::io::prelude::*;
 
@@ -111,13 +119,13 @@ fn main() {
     unsafe {
         let threads =
             Vec::from_raw_parts(thread_list, thread_count as usize, thread_count as usize);
-        let state = x86_thread_state64_t::new();
-        let state_count = x86_thread_state64_t::count();
+        let state = thread_state64_t::new();
+        let state_count = thread_state64_t::count();
         for (idx, &thread) in threads.iter().enumerate() {
             println!("Thread {}:", idx);
             let kret = thread_get_state(
                 thread,
-                x86_THREAD_STATE64,
+                THREAD_STATE64,
                 mem::transmute(&state),
                 mem::transmute(&state_count),
             );
