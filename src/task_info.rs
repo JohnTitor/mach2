@@ -5,9 +5,14 @@ use vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t};
 pub const TASK_INFO_MAX: ::libc::c_uint = 1024;
 pub const TASK_BASIC_INFO_32: ::libc::c_uint = 4;
 pub const TASK_BASIC2_INFO_32: ::libc::c_uint = 6;
+#[cfg(target_arch = "x86_64")]
 pub const TASK_BASIC_INFO_64: ::libc::c_uint = 5;
+#[cfg(target_arch = "aarch64")]
+pub const TASK_BASIC_INFO_64: ::libc::c_uint = 18;
 #[cfg(target_arch = "x86_64")]
 pub const TASK_BASIC_INFO: ::libc::c_uint = 5;
+#[cfg(target_arch = "aarch64")]
+pub const TASK_BASIC_INFO: ::libc::c_uint = 18;
 #[cfg(target_arch = "x86")]
 pub const TASK_BASIC_INFO: ::libc::c_uint = 4;
 pub const TASK_EVENTS_INFO: ::libc::c_uint = 2;
