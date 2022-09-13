@@ -14,13 +14,18 @@ use mach2::message::mach_msg_type_number_t;
 use mach2::port::mach_port_name_t;
 use mach2::task::{task_resume, task_suspend, task_threads};
 use mach2::thread_act::thread_get_state;
-use mach2::thread_status::x86_THREAD_STATE64;
 use mach2::traps::{mach_task_self, task_for_pid};
+use mach2::vm::mach_vm_deallocate;
+
+#[cfg(target_arch = "x86_64")]
+use mach2::thread_status::x86_THREAD_STATE64 as THREAD_STATE64;
+#[cfg(target_arch = "aarch64")]
+use mach2::thread_status::ARM_THREAD_STATE64 as THREAD_STATE64;
 
 #[cfg(target_arch = "aarch64")]
-use mach2::structs::arm_thread_state64_t;
+use mach2::structs::arm_thread_state64_t as thread_state64_t;
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use mach2::structs::x86_thread_state64_t;
+use mach2::structs::x86_thread_state64_t as thread_state64_t;
 
 use std::io::prelude::*;
 
@@ -50,16 +55,6 @@ fn resume(task: task_t) {
             panic!();
         }
     }
-}
-
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-fn get_thread_state_and_count() -> (x86_thread_state64_t, mach_msg_type_number_t) {
-    (x86_thread_state64_t::new(), x86_thread_state64_t::count())
-}
-
-#[cfg(target_arch = "aarch64")]
-fn get_thread_state_and_count() -> (arm_thread_state64_t, mach_msg_type_number_t) {
-    (arm_thread_state64_t::new(), arm_thread_state64_t::count())
 }
 
 fn main() {
@@ -123,16 +118,15 @@ fn main() {
     println!("Task is running {} threads", &thread_count);
 
     unsafe {
-        let threads =
-            Vec::from_raw_parts(thread_list, thread_count as usize, thread_count as usize);
-
-        let (state, state_count) = get_thread_state_and_count();
+        let threads = std::slice::from_raw_parts(thread_list, thread_count as usize);
+        let state = thread_state64_t::new();
+        let state_count = thread_state64_t::count();
 
         for (idx, &thread) in threads.iter().enumerate() {
             println!("Thread {}:", idx);
             let kret = thread_get_state(
                 thread,
-                x86_THREAD_STATE64,
+                THREAD_STATE64,
                 mem::transmute(&state),
                 mem::transmute(&state_count),
             );
@@ -144,6 +138,12 @@ fn main() {
 
             println!("{:?}", state);
         }
+
+        mach_vm_deallocate(
+            mach_task_self(),
+            thread_list as _,
+            ((thread_count as usize) * mem::size_of::<libc::c_int>()) as _,
+        );
     }
 
     resume(task as task_t);
