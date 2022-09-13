@@ -263,7 +263,7 @@ impl i386_thread_state32_t {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Eq)]
+#[derive(Copy, Clone)]
 pub struct i386_float_state_t {
     pub fpu_reserved: [i32; 2],
     pub fpu_fcw: fp_control_t,
@@ -419,10 +419,12 @@ impl PartialEq for i386_float_state_t {
             self.fpu_xmm5 == other.fpu_xmm5 &&
             self.fpu_xmm6 == other.fpu_xmm6 &&
             self.fpu_xmm7 == other.fpu_xmm7 &&
-            <[i8]>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
+            <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
             self.fpu_reserved1 == other.fpu_reserved1
     }
 }
+
+impl Eq for i386_float_state_t {}
 
 impl Hash for i386_float_state_t {
     fn hash<H: Hasher>(&self, state: &mut H) {
@@ -457,7 +459,7 @@ impl Hash for i386_float_state_t {
         self.fpu_xmm6.hash(state);
         self.fpu_xmm7.hash(state);
         self.fpu_rsrv4.len().hash(state);
-        for val in self.fpu_rsrv4 {
+        for val in &self.fpu_rsrv4 {
             val.hash(state);
         }
         self.fpu_reserved1.hash(state);
