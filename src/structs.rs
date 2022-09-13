@@ -1284,46 +1284,46 @@ impl Debug for x86_float_state64_t {
 
 impl PartialEq for x86_float_state64_t {
     fn eq(&self, other: &Self) -> bool {
-        self.fpu_reserved == other.fpu_reserved &&
-        self.fpu_fcw == other.fpu_fcw &&
-        self.fpu_fsw == other.fpu_fsw &&
-        self.fpu_ftw == other.fpu_ftw &&
-        self.fpu_rsrv1 == other.fpu_rsrv1 &&
-        self.fpu_fop == other.fpu_fop &&
-        self.fpu_ip == other.fpu_ip &&
-        self.fpu_cs == other.fpu_cs &&
-        self.fpu_rsrv2 == other.fpu_rsrv2 &&
-        self.fpu_dp == other.fpu_dp &&
-        self.fpu_ds == other.fpu_ds &&
-        self.fpu_rsrv3 == other.fpu_rsrv3 &&
-        self.fpu_mxcsr == other.fpu_mxcsr &&
-        self.fpu_mxcsrmask == other.fpu_mxcsrmask &&
-        self.fpu_stmm0 == other.fpu_stmm0 &&
-        self.fpu_stmm1 == other.fpu_stmm1 &&
-        self.fpu_stmm2 == other.fpu_stmm2 &&
-        self.fpu_stmm3 == other.fpu_stmm3 &&
-        self.fpu_stmm4 == other.fpu_stmm4 &&
-        self.fpu_stmm5 == other.fpu_stmm5 &&
-        self.fpu_stmm6 == other.fpu_stmm6 &&
-        self.fpu_stmm7 == other.fpu_stmm7 &&
-        self.fpu_xmm0 == other.fpu_xmm0 &&
-        self.fpu_xmm1 == other.fpu_xmm1 &&
-        self.fpu_xmm2 == other.fpu_xmm2 &&
-        self.fpu_xmm3 == other.fpu_xmm3 &&
-        self.fpu_xmm4 == other.fpu_xmm4 &&
-        self.fpu_xmm5 == other.fpu_xmm5 &&
-        self.fpu_xmm6 == other.fpu_xmm6 &&
-        self.fpu_xmm7 == other.fpu_xmm7 &&
-        self.fpu_xmm8 == other.fpu_xmm8 &&
-        self.fpu_xmm9 == other.fpu_xmm9 &&
-        self.fpu_xmm10 == other.fpu_xmm10 &&
-        self.fpu_xmm11 == other.fpu_xmm11 &&
-        self.fpu_xmm12 == other.fpu_xmm12 &&
-        self.fpu_xmm13 == other.fpu_xmm13 &&
-        self.fpu_xmm14 == other.fpu_xmm14 &&
-        self.fpu_xmm15 == other.fpu_xmm15 &&
-        <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
-        self.fpu_reserved1 == other.fpu_reserved1
+        self.fpu_reserved == other.fpu_reserved
+            && self.fpu_fcw == other.fpu_fcw
+            && self.fpu_fsw == other.fpu_fsw
+            && self.fpu_ftw == other.fpu_ftw
+            && self.fpu_rsrv1 == other.fpu_rsrv1
+            && self.fpu_fop == other.fpu_fop
+            && self.fpu_ip == other.fpu_ip
+            && self.fpu_cs == other.fpu_cs
+            && self.fpu_rsrv2 == other.fpu_rsrv2
+            && self.fpu_dp == other.fpu_dp
+            && self.fpu_ds == other.fpu_ds
+            && self.fpu_rsrv3 == other.fpu_rsrv3
+            && self.fpu_mxcsr == other.fpu_mxcsr
+            && self.fpu_mxcsrmask == other.fpu_mxcsrmask
+            && self.fpu_stmm0 == other.fpu_stmm0
+            && self.fpu_stmm1 == other.fpu_stmm1
+            && self.fpu_stmm2 == other.fpu_stmm2
+            && self.fpu_stmm3 == other.fpu_stmm3
+            && self.fpu_stmm4 == other.fpu_stmm4
+            && self.fpu_stmm5 == other.fpu_stmm5
+            && self.fpu_stmm6 == other.fpu_stmm6
+            && self.fpu_stmm7 == other.fpu_stmm7
+            && self.fpu_xmm0 == other.fpu_xmm0
+            && self.fpu_xmm1 == other.fpu_xmm1
+            && self.fpu_xmm2 == other.fpu_xmm2
+            && self.fpu_xmm3 == other.fpu_xmm3
+            && self.fpu_xmm4 == other.fpu_xmm4
+            && self.fpu_xmm5 == other.fpu_xmm5
+            && self.fpu_xmm6 == other.fpu_xmm6
+            && self.fpu_xmm7 == other.fpu_xmm7
+            && self.fpu_xmm8 == other.fpu_xmm8
+            && self.fpu_xmm9 == other.fpu_xmm9
+            && self.fpu_xmm10 == other.fpu_xmm10
+            && self.fpu_xmm11 == other.fpu_xmm11
+            && self.fpu_xmm12 == other.fpu_xmm12
+            && self.fpu_xmm13 == other.fpu_xmm13
+            && self.fpu_xmm14 == other.fpu_xmm14
+            && self.fpu_xmm15 == other.fpu_xmm15
+            && <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4)
+            && self.fpu_reserved1 == other.fpu_reserved1
     }
 }
 
@@ -1758,63 +1758,63 @@ impl Debug for x86_avx_state64_t {
 
 impl PartialEq for x86_avx_state64_t {
     fn eq(&self, other: &Self) -> bool {
-        self.fpu_reserved == other.fpu_reserved &&
-        self.fpu_fcw == other.fpu_fcw &&
-        self.fpu_fsw == other.fpu_fsw &&
-        self.fpu_ftw == other.fpu_ftw &&
-        self.fpu_rsrv1 == other.fpu_rsrv1 &&
-        self.fpu_fop == other.fpu_fop &&
-        self.fpu_ip == other.fpu_ip &&
-        self.fpu_cs == other.fpu_cs &&
-        self.fpu_rsrv2 == other.fpu_rsrv2 &&
-        self.fpu_dp == other.fpu_dp &&
-        self.fpu_ds == other.fpu_ds &&
-        self.fpu_rsrv3 == other.fpu_rsrv3 &&
-        self.fpu_mxcsr == other.fpu_mxcsr &&
-        self.fpu_mxcsrmask == other.fpu_mxcsrmask &&
-        self.fpu_stmm0 == other.fpu_stmm0 &&
-        self.fpu_stmm1 == other.fpu_stmm1 &&
-        self.fpu_stmm2 == other.fpu_stmm2 &&
-        self.fpu_stmm3 == other.fpu_stmm3 &&
-        self.fpu_stmm4 == other.fpu_stmm4 &&
-        self.fpu_stmm5 == other.fpu_stmm5 &&
-        self.fpu_stmm6 == other.fpu_stmm6 &&
-        self.fpu_stmm7 == other.fpu_stmm7 &&
-        self.fpu_xmm0 == other.fpu_xmm0 &&
-        self.fpu_xmm1 == other.fpu_xmm1 &&
-        self.fpu_xmm2 == other.fpu_xmm2 &&
-        self.fpu_xmm3 == other.fpu_xmm3 &&
-        self.fpu_xmm4 == other.fpu_xmm4 &&
-        self.fpu_xmm5 == other.fpu_xmm5 &&
-        self.fpu_xmm6 == other.fpu_xmm6 &&
-        self.fpu_xmm7 == other.fpu_xmm7 &&
-        self.fpu_xmm8 == other.fpu_xmm8 &&
-        self.fpu_xmm9 == other.fpu_xmm9 &&
-        self.fpu_xmm10 == other.fpu_xmm10 &&
-        self.fpu_xmm11 == other.fpu_xmm11 &&
-        self.fpu_xmm12 == other.fpu_xmm12 &&
-        self.fpu_xmm13 == other.fpu_xmm13 &&
-        self.fpu_xmm14 == other.fpu_xmm14 &&
-        self.fpu_xmm15 == other.fpu_xmm15 &&
-        <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
-        self.fpu_reserved1 == other.fpu_reserved1 &&
-        <[i8] as PartialEq<[i8]>>::eq(&self.avx_reserved1, &other.avx_reserved1) &&
-        self.fpu_ymmh0 == other.fpu_ymmh0 &&
-        self.fpu_ymmh1 == other.fpu_ymmh1 &&
-        self.fpu_ymmh2 == other.fpu_ymmh2 &&
-        self.fpu_ymmh3 == other.fpu_ymmh3 &&
-        self.fpu_ymmh4 == other.fpu_ymmh4 &&
-        self.fpu_ymmh5 == other.fpu_ymmh5 &&
-        self.fpu_ymmh6 == other.fpu_ymmh6 &&
-        self.fpu_ymmh7 == other.fpu_ymmh7 &&
-        self.fpu_ymmh8 == other.fpu_ymmh8 &&
-        self.fpu_ymmh9 == other.fpu_ymmh9 &&
-        self.fpu_ymmh10 == other.fpu_ymmh10 &&
-        self.fpu_ymmh11 == other.fpu_ymmh11 &&
-        self.fpu_ymmh12 == other.fpu_ymmh12 &&
-        self.fpu_ymmh13 == other.fpu_ymmh13 &&
-        self.fpu_ymmh14 == other.fpu_ymmh14 &&
-        self.fpu_ymmh15 == other.fpu_ymmh15
+        self.fpu_reserved == other.fpu_reserved
+            && self.fpu_fcw == other.fpu_fcw
+            && self.fpu_fsw == other.fpu_fsw
+            && self.fpu_ftw == other.fpu_ftw
+            && self.fpu_rsrv1 == other.fpu_rsrv1
+            && self.fpu_fop == other.fpu_fop
+            && self.fpu_ip == other.fpu_ip
+            && self.fpu_cs == other.fpu_cs
+            && self.fpu_rsrv2 == other.fpu_rsrv2
+            && self.fpu_dp == other.fpu_dp
+            && self.fpu_ds == other.fpu_ds
+            && self.fpu_rsrv3 == other.fpu_rsrv3
+            && self.fpu_mxcsr == other.fpu_mxcsr
+            && self.fpu_mxcsrmask == other.fpu_mxcsrmask
+            && self.fpu_stmm0 == other.fpu_stmm0
+            && self.fpu_stmm1 == other.fpu_stmm1
+            && self.fpu_stmm2 == other.fpu_stmm2
+            && self.fpu_stmm3 == other.fpu_stmm3
+            && self.fpu_stmm4 == other.fpu_stmm4
+            && self.fpu_stmm5 == other.fpu_stmm5
+            && self.fpu_stmm6 == other.fpu_stmm6
+            && self.fpu_stmm7 == other.fpu_stmm7
+            && self.fpu_xmm0 == other.fpu_xmm0
+            && self.fpu_xmm1 == other.fpu_xmm1
+            && self.fpu_xmm2 == other.fpu_xmm2
+            && self.fpu_xmm3 == other.fpu_xmm3
+            && self.fpu_xmm4 == other.fpu_xmm4
+            && self.fpu_xmm5 == other.fpu_xmm5
+            && self.fpu_xmm6 == other.fpu_xmm6
+            && self.fpu_xmm7 == other.fpu_xmm7
+            && self.fpu_xmm8 == other.fpu_xmm8
+            && self.fpu_xmm9 == other.fpu_xmm9
+            && self.fpu_xmm10 == other.fpu_xmm10
+            && self.fpu_xmm11 == other.fpu_xmm11
+            && self.fpu_xmm12 == other.fpu_xmm12
+            && self.fpu_xmm13 == other.fpu_xmm13
+            && self.fpu_xmm14 == other.fpu_xmm14
+            && self.fpu_xmm15 == other.fpu_xmm15
+            && <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4)
+            && self.fpu_reserved1 == other.fpu_reserved1
+            && <[i8] as PartialEq<[i8]>>::eq(&self.avx_reserved1, &other.avx_reserved1)
+            && self.fpu_ymmh0 == other.fpu_ymmh0
+            && self.fpu_ymmh1 == other.fpu_ymmh1
+            && self.fpu_ymmh2 == other.fpu_ymmh2
+            && self.fpu_ymmh3 == other.fpu_ymmh3
+            && self.fpu_ymmh4 == other.fpu_ymmh4
+            && self.fpu_ymmh5 == other.fpu_ymmh5
+            && self.fpu_ymmh6 == other.fpu_ymmh6
+            && self.fpu_ymmh7 == other.fpu_ymmh7
+            && self.fpu_ymmh8 == other.fpu_ymmh8
+            && self.fpu_ymmh9 == other.fpu_ymmh9
+            && self.fpu_ymmh10 == other.fpu_ymmh10
+            && self.fpu_ymmh11 == other.fpu_ymmh11
+            && self.fpu_ymmh12 == other.fpu_ymmh12
+            && self.fpu_ymmh13 == other.fpu_ymmh13
+            && self.fpu_ymmh14 == other.fpu_ymmh14
+            && self.fpu_ymmh15 == other.fpu_ymmh15
     }
 }
 
