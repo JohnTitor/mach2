@@ -18,9 +18,14 @@ use mach2::traps::{mach_task_self, task_for_pid};
 use mach2::vm::mach_vm_deallocate;
 
 #[cfg(target_arch = "aarch64")]
-use mach2::structs::arm_thread_state64_t;
+use mach2::thread_status::ARM_THREAD_STATE64 as THREAD_STATE64;
+#[cfg(target_arch = "x86_64")]
+use mach2::thread_status::x86_THREAD_STATE64 as THREAD_STATE64;
+
+#[cfg(target_arch = "aarch64")]
+use mach2::structs::arm_thread_state64_t as thread_state64_t;
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use mach2::structs::x86_thread_state64_t;
+use mach2::structs::x86_thread_state64_t as thread_state64_t;
 
 use std::io::prelude::*;
 
