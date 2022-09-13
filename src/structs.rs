@@ -389,38 +389,38 @@ impl Debug for i386_float_state_t {
 
 impl PartialEq for i386_float_state_t {
     fn eq(&self, other: &Self) -> bool {
-        self.fpu_reserved == other.fpu_reserved &&
-            self.fpu_fcw == other.fpu_fcw &&
-            self.fpu_fsw == other.fpu_fsw &&
-            self.fpu_ftw == other.fpu_ftw &&
-            self.fpu_rsrv1 == other.fpu_rsrv1 &&
-            self.fpu_fop == other.fpu_fop &&
-            self.fpu_ip == other.fpu_ip &&
-            self.fpu_cs == other.fpu_cs &&
-            self.fpu_rsrv2 == other.fpu_rsrv2 &&
-            self.fpu_dp == other.fpu_dp &&
-            self.fpu_ds == other.fpu_ds &&
-            self.fpu_rsrv3 == other.fpu_rsrv3 &&
-            self.fpu_mxcsr == other.fpu_mxcsr &&
-            self.fpu_mxcsrmask == other.fpu_mxcsrmask &&
-            self.fpu_stmm0 == other.fpu_stmm0 &&
-            self.fpu_stmm1 == other.fpu_stmm1 &&
-            self.fpu_stmm2 == other.fpu_stmm2 &&
-            self.fpu_stmm3 == other.fpu_stmm3 &&
-            self.fpu_stmm4 == other.fpu_stmm4 &&
-            self.fpu_stmm5 == other.fpu_stmm5 &&
-            self.fpu_stmm6 == other.fpu_stmm6 &&
-            self.fpu_stmm7 == other.fpu_stmm7 &&
-            self.fpu_xmm0 == other.fpu_xmm0 &&
-            self.fpu_xmm1 == other.fpu_xmm1 &&
-            self.fpu_xmm2 == other.fpu_xmm2 &&
-            self.fpu_xmm3 == other.fpu_xmm3 &&
-            self.fpu_xmm4 == other.fpu_xmm4 &&
-            self.fpu_xmm5 == other.fpu_xmm5 &&
-            self.fpu_xmm6 == other.fpu_xmm6 &&
-            self.fpu_xmm7 == other.fpu_xmm7 &&
-            <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
-            self.fpu_reserved1 == other.fpu_reserved1
+        self.fpu_reserved == other.fpu_reserved
+            && self.fpu_fcw == other.fpu_fcw
+            && self.fpu_fsw == other.fpu_fsw
+            && self.fpu_ftw == other.fpu_ftw
+            && self.fpu_rsrv1 == other.fpu_rsrv1
+            && self.fpu_fop == other.fpu_fop
+            && self.fpu_ip == other.fpu_ip
+            && self.fpu_cs == other.fpu_cs
+            && self.fpu_rsrv2 == other.fpu_rsrv2
+            && self.fpu_dp == other.fpu_dp
+            && self.fpu_ds == other.fpu_ds
+            && self.fpu_rsrv3 == other.fpu_rsrv3
+            && self.fpu_mxcsr == other.fpu_mxcsr
+            && self.fpu_mxcsrmask == other.fpu_mxcsrmask
+            && self.fpu_stmm0 == other.fpu_stmm0
+            && self.fpu_stmm1 == other.fpu_stmm1
+            && self.fpu_stmm2 == other.fpu_stmm2
+            && self.fpu_stmm3 == other.fpu_stmm3
+            && self.fpu_stmm4 == other.fpu_stmm4
+            && self.fpu_stmm5 == other.fpu_stmm5
+            && self.fpu_stmm6 == other.fpu_stmm6
+            && self.fpu_stmm7 == other.fpu_stmm7
+            && self.fpu_xmm0 == other.fpu_xmm0
+            && self.fpu_xmm1 == other.fpu_xmm1
+            && self.fpu_xmm2 == other.fpu_xmm2
+            && self.fpu_xmm3 == other.fpu_xmm3
+            && self.fpu_xmm4 == other.fpu_xmm4
+            && self.fpu_xmm5 == other.fpu_xmm5
+            && self.fpu_xmm6 == other.fpu_xmm6
+            && self.fpu_xmm7 == other.fpu_xmm7
+            && <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4)
+            && self.fpu_reserved1 == other.fpu_reserved1
     }
 }
 
@@ -459,9 +459,7 @@ impl Hash for i386_float_state_t {
         self.fpu_xmm6.hash(state);
         self.fpu_xmm7.hash(state);
         self.fpu_rsrv4.len().hash(state);
-        for val in &self.fpu_rsrv4 {
-            val.hash(state);
-        }
+        (&self.fpu_rsrv4 as &[i8]).hash(state);
         self.fpu_reserved1.hash(state);
     }
 }
@@ -594,7 +592,7 @@ impl Ord for i386_float_state_t {
             Ordering::Equal => (),
             ord => return ord,
         }
-        match <[i8]>::cmp(&self.fpu_rsrv4, &other.fpu_rsrv4) {
+        match self.fpu_rsrv4.cmp(&other.fpu_rsrv4) {
             Ordering::Equal => (),
             ord => return ord,
         }
@@ -623,7 +621,7 @@ impl i386_exception_state_t {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Hash, PartialOrd, PartialEq, Eq, Ord)]
+#[derive(Copy, Clone)]
 pub struct i386_avx_state_t {
     pub fpu_reserved: [i32; 2],
     pub fpu_fcw: fp_control_t,
@@ -726,6 +724,325 @@ impl Default for i386_avx_state_t {
     }
 }
 
+impl Debug for i386_avx_state_t {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let mut ds = f.debug_struct("i386_avx_state_t");
+        ds.field("fpu_reserved", &self.fpu_reserved);
+        ds.field("fpu_fcw", &self.fpu_fcw);
+        ds.field("fpu_fsw", &self.fpu_fsw);
+        ds.field("fpu_ftw", &self.fpu_ftw);
+        ds.field("fpu_rsrv1", &self.fpu_rsrv1);
+        ds.field("fpu_fop", &self.fpu_fop);
+        ds.field("fpu_ip", &self.fpu_ip);
+        ds.field("fpu_cs", &self.fpu_cs);
+        ds.field("fpu_rsrv2", &self.fpu_rsrv2);
+        ds.field("fpu_dp", &self.fpu_dp);
+        ds.field("fpu_ds", &self.fpu_ds);
+        ds.field("fpu_rsrv3", &self.fpu_rsrv3);
+        ds.field("fpu_mxcsr", &self.fpu_mxcsr);
+        ds.field("fpu_mxcsrmask", &self.fpu_mxcsrmask);
+        ds.field("fpu_stmm0", &self.fpu_stmm0);
+        ds.field("fpu_stmm1", &self.fpu_stmm1);
+        ds.field("fpu_stmm2", &self.fpu_stmm2);
+        ds.field("fpu_stmm3", &self.fpu_stmm3);
+        ds.field("fpu_stmm4", &self.fpu_stmm4);
+        ds.field("fpu_stmm5", &self.fpu_stmm5);
+        ds.field("fpu_stmm6", &self.fpu_stmm6);
+        ds.field("fpu_stmm7", &self.fpu_stmm7);
+        ds.field("fpu_xmm0", &self.fpu_xmm0);
+        ds.field("fpu_xmm1", &self.fpu_xmm1);
+        ds.field("fpu_xmm2", &self.fpu_xmm2);
+        ds.field("fpu_xmm3", &self.fpu_xmm3);
+        ds.field("fpu_xmm4", &self.fpu_xmm4);
+        ds.field("fpu_xmm5", &self.fpu_xmm5);
+        ds.field("fpu_xmm6", &self.fpu_xmm6);
+        ds.field("fpu_xmm7", &self.fpu_xmm7);
+        ds.field("fpu_rsrv4", &(&self.fpu_rsrv4 as &[_]));
+        ds.field("fpu_reserved1", &self.fpu_reserved1);
+        ds.field("avx_reserved1", &(&self.avx_reserved1 as &[_]));
+        ds.field("fpu_ymmh0", &self.fpu_ymmh0);
+        ds.field("fpu_ymmh1", &self.fpu_ymmh1);
+        ds.field("fpu_ymmh2", &self.fpu_ymmh2);
+        ds.field("fpu_ymmh3", &self.fpu_ymmh3);
+        ds.field("fpu_ymmh4", &self.fpu_ymmh4);
+        ds.field("fpu_ymmh5", &self.fpu_ymmh5);
+        ds.field("fpu_ymmh6", &self.fpu_ymmh6);
+        ds.field("fpu_ymmh7", &self.fpu_ymmh7);
+        ds.finish()
+    }
+}
+
+impl PartialEq for i386_avx_state_t {
+    fn eq(&self, other: &Self) -> bool {
+        self.fpu_reserved == other.fpu_reserved
+            && self.fpu_fcw == other.fpu_fcw
+            && self.fpu_fsw == other.fpu_fsw
+            && self.fpu_ftw == other.fpu_ftw
+            && self.fpu_rsrv1 == other.fpu_rsrv1
+            && self.fpu_fop == other.fpu_fop
+            && self.fpu_ip == other.fpu_ip
+            && self.fpu_cs == other.fpu_cs
+            && self.fpu_rsrv2 == other.fpu_rsrv2
+            && self.fpu_dp == other.fpu_dp
+            && self.fpu_ds == other.fpu_ds
+            && self.fpu_rsrv3 == other.fpu_rsrv3
+            && self.fpu_mxcsr == other.fpu_mxcsr
+            && self.fpu_mxcsrmask == other.fpu_mxcsrmask
+            && self.fpu_stmm0 == other.fpu_stmm0
+            && self.fpu_stmm1 == other.fpu_stmm1
+            && self.fpu_stmm2 == other.fpu_stmm2
+            && self.fpu_stmm3 == other.fpu_stmm3
+            && self.fpu_stmm4 == other.fpu_stmm4
+            && self.fpu_stmm5 == other.fpu_stmm5
+            && self.fpu_stmm6 == other.fpu_stmm6
+            && self.fpu_stmm7 == other.fpu_stmm7
+            && self.fpu_xmm0 == other.fpu_xmm0
+            && self.fpu_xmm1 == other.fpu_xmm1
+            && self.fpu_xmm2 == other.fpu_xmm2
+            && self.fpu_xmm3 == other.fpu_xmm3
+            && self.fpu_xmm4 == other.fpu_xmm4
+            && self.fpu_xmm5 == other.fpu_xmm5
+            && self.fpu_xmm6 == other.fpu_xmm6
+            && self.fpu_xmm7 == other.fpu_xmm7
+            && <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4)
+            && self.fpu_reserved1 == other.fpu_reserved1
+            && <[i8] as PartialEq<[i8]>>::eq(&self.avx_reserved1, &other.avx_reserved1)
+            && self.fpu_ymmh0 == other.fpu_ymmh0
+            && self.fpu_ymmh1 == other.fpu_ymmh1
+            && self.fpu_ymmh2 == other.fpu_ymmh2
+            && self.fpu_ymmh3 == other.fpu_ymmh3
+            && self.fpu_ymmh4 == other.fpu_ymmh4
+            && self.fpu_ymmh5 == other.fpu_ymmh5
+            && self.fpu_ymmh6 == other.fpu_ymmh6
+            && self.fpu_ymmh7 == other.fpu_ymmh7
+    }
+}
+
+impl Eq for i386_avx_state_t {}
+
+impl Hash for i386_avx_state_t {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.fpu_reserved.hash(state);
+        self.fpu_fcw.hash(state);
+        self.fpu_fsw.hash(state);
+        self.fpu_ftw.hash(state);
+        self.fpu_rsrv1.hash(state);
+        self.fpu_fop.hash(state);
+        self.fpu_ip.hash(state);
+        self.fpu_cs.hash(state);
+        self.fpu_rsrv2.hash(state);
+        self.fpu_dp.hash(state);
+        self.fpu_ds.hash(state);
+        self.fpu_rsrv3.hash(state);
+        self.fpu_mxcsr.hash(state);
+        self.fpu_mxcsrmask.hash(state);
+        self.fpu_stmm0.hash(state);
+        self.fpu_stmm1.hash(state);
+        self.fpu_stmm2.hash(state);
+        self.fpu_stmm3.hash(state);
+        self.fpu_stmm4.hash(state);
+        self.fpu_stmm5.hash(state);
+        self.fpu_stmm6.hash(state);
+        self.fpu_stmm7.hash(state);
+        self.fpu_xmm0.hash(state);
+        self.fpu_xmm1.hash(state);
+        self.fpu_xmm2.hash(state);
+        self.fpu_xmm3.hash(state);
+        self.fpu_xmm4.hash(state);
+        self.fpu_xmm5.hash(state);
+        self.fpu_xmm6.hash(state);
+        self.fpu_xmm7.hash(state);
+        (&self.fpu_rsrv4 as &[i8]).hash(state);
+        self.fpu_reserved1.hash(state);
+        (&self.avx_reserved1 as &[i8]).hash(state);
+        self.fpu_ymmh0.hash(state);
+        self.fpu_ymmh1.hash(state);
+        self.fpu_ymmh2.hash(state);
+        self.fpu_ymmh3.hash(state);
+        self.fpu_ymmh4.hash(state);
+        self.fpu_ymmh5.hash(state);
+        self.fpu_ymmh6.hash(state);
+        self.fpu_ymmh7.hash(state);
+    }
+}
+
+impl PartialOrd for i386_avx_state_t {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Self::cmp(self, other))
+    }
+}
+
+impl Ord for i386_avx_state_t {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.fpu_reserved.cmp(&other.fpu_reserved) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fcw.cmp(&other.fpu_fcw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fsw.cmp(&other.fpu_fsw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ftw.cmp(&other.fpu_ftw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv1.cmp(&other.fpu_rsrv1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fop.cmp(&other.fpu_fop) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ip.cmp(&other.fpu_ip) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_cs.cmp(&other.fpu_cs) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv2.cmp(&other.fpu_rsrv2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_dp.cmp(&other.fpu_dp) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ds.cmp(&other.fpu_ds) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv3.cmp(&other.fpu_rsrv3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsr.cmp(&other.fpu_mxcsr) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsrmask.cmp(&other.fpu_mxcsrmask) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm0.cmp(&other.fpu_stmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm1.cmp(&other.fpu_stmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm2.cmp(&other.fpu_stmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm3.cmp(&other.fpu_stmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm4.cmp(&other.fpu_stmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm5.cmp(&other.fpu_stmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm6.cmp(&other.fpu_stmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm7.cmp(&other.fpu_stmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm0.cmp(&other.fpu_xmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm1.cmp(&other.fpu_xmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm2.cmp(&other.fpu_xmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm3.cmp(&other.fpu_xmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm4.cmp(&other.fpu_xmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm5.cmp(&other.fpu_xmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm6.cmp(&other.fpu_xmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm7.cmp(&other.fpu_xmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv4.cmp(&other.fpu_rsrv4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_reserved1.cmp(&other.fpu_reserved1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.avx_reserved1.cmp(&other.avx_reserved1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh0.cmp(&other.fpu_ymmh0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh1.cmp(&other.fpu_ymmh1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh2.cmp(&other.fpu_ymmh2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh3.cmp(&other.fpu_ymmh3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh4.cmp(&other.fpu_ymmh4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh5.cmp(&other.fpu_ymmh5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh6.cmp(&other.fpu_ymmh6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh7.cmp(&other.fpu_ymmh7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+
+        Ordering::Equal
+    }
+}
+
 #[cfg(target_arch = "aarch64")]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -817,7 +1134,7 @@ impl x86_thread_state64_t {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Hash, PartialOrd, PartialEq, Eq, Ord)]
+#[derive(Copy, Clone)]
 pub struct x86_float_state64_t {
     pub fpu_reserved: [i32; 2],
     pub fpu_fcw: fp_control_t,
@@ -918,6 +1235,318 @@ impl Default for x86_float_state64_t {
     }
 }
 
+impl Debug for x86_float_state64_t {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let mut ds = f.debug_struct("x86_float_state64_t");
+        ds.field("fpu_reserved", &self.fpu_reserved);
+        ds.field("fpu_fcw", &self.fpu_fcw);
+        ds.field("fpu_fsw", &self.fpu_fsw);
+        ds.field("fpu_ftw", &self.fpu_ftw);
+        ds.field("fpu_rsrv1", &self.fpu_rsrv1);
+        ds.field("fpu_fop", &self.fpu_fop);
+        ds.field("fpu_ip", &self.fpu_ip);
+        ds.field("fpu_cs", &self.fpu_cs);
+        ds.field("fpu_rsrv2", &self.fpu_rsrv2);
+        ds.field("fpu_dp", &self.fpu_dp);
+        ds.field("fpu_ds", &self.fpu_ds);
+        ds.field("fpu_rsrv3", &self.fpu_rsrv3);
+        ds.field("fpu_mxcsr", &self.fpu_mxcsr);
+        ds.field("fpu_mxcsrmask", &self.fpu_mxcsrmask);
+        ds.field("fpu_stmm0", &self.fpu_stmm0);
+        ds.field("fpu_stmm1", &self.fpu_stmm1);
+        ds.field("fpu_stmm2", &self.fpu_stmm2);
+        ds.field("fpu_stmm3", &self.fpu_stmm3);
+        ds.field("fpu_stmm4", &self.fpu_stmm4);
+        ds.field("fpu_stmm5", &self.fpu_stmm5);
+        ds.field("fpu_stmm6", &self.fpu_stmm6);
+        ds.field("fpu_stmm7", &self.fpu_stmm7);
+        ds.field("fpu_xmm0", &self.fpu_xmm0);
+        ds.field("fpu_xmm1", &self.fpu_xmm1);
+        ds.field("fpu_xmm2", &self.fpu_xmm2);
+        ds.field("fpu_xmm3", &self.fpu_xmm3);
+        ds.field("fpu_xmm4", &self.fpu_xmm4);
+        ds.field("fpu_xmm5", &self.fpu_xmm5);
+        ds.field("fpu_xmm6", &self.fpu_xmm6);
+        ds.field("fpu_xmm7", &self.fpu_xmm7);
+        ds.field("fpu_xmm8", &self.fpu_xmm8);
+        ds.field("fpu_xmm9", &self.fpu_xmm9);
+        ds.field("fpu_xmm10", &self.fpu_xmm10);
+        ds.field("fpu_xmm11", &self.fpu_xmm11);
+        ds.field("fpu_xmm12", &self.fpu_xmm12);
+        ds.field("fpu_xmm13", &self.fpu_xmm13);
+        ds.field("fpu_xmm14", &self.fpu_xmm14);
+        ds.field("fpu_xmm15", &self.fpu_xmm15);
+        ds.field("fpu_rsrv4", &(&self.fpu_rsrv4 as &[i8]));
+        ds.field("fpu_reserved1", &self.fpu_reserved1);
+        ds.finish()
+    }
+}
+
+impl PartialEq for x86_float_state64_t {
+    fn eq(&self, other: &Self) -> bool {
+        self.fpu_reserved == other.fpu_reserved &&
+        self.fpu_fcw == other.fpu_fcw &&
+        self.fpu_fsw == other.fpu_fsw &&
+        self.fpu_ftw == other.fpu_ftw &&
+        self.fpu_rsrv1 == other.fpu_rsrv1 &&
+        self.fpu_fop == other.fpu_fop &&
+        self.fpu_ip == other.fpu_ip &&
+        self.fpu_cs == other.fpu_cs &&
+        self.fpu_rsrv2 == other.fpu_rsrv2 &&
+        self.fpu_dp == other.fpu_dp &&
+        self.fpu_ds == other.fpu_ds &&
+        self.fpu_rsrv3 == other.fpu_rsrv3 &&
+        self.fpu_mxcsr == other.fpu_mxcsr &&
+        self.fpu_mxcsrmask == other.fpu_mxcsrmask &&
+        self.fpu_stmm0 == other.fpu_stmm0 &&
+        self.fpu_stmm1 == other.fpu_stmm1 &&
+        self.fpu_stmm2 == other.fpu_stmm2 &&
+        self.fpu_stmm3 == other.fpu_stmm3 &&
+        self.fpu_stmm4 == other.fpu_stmm4 &&
+        self.fpu_stmm5 == other.fpu_stmm5 &&
+        self.fpu_stmm6 == other.fpu_stmm6 &&
+        self.fpu_stmm7 == other.fpu_stmm7 &&
+        self.fpu_xmm0 == other.fpu_xmm0 &&
+        self.fpu_xmm1 == other.fpu_xmm1 &&
+        self.fpu_xmm2 == other.fpu_xmm2 &&
+        self.fpu_xmm3 == other.fpu_xmm3 &&
+        self.fpu_xmm4 == other.fpu_xmm4 &&
+        self.fpu_xmm5 == other.fpu_xmm5 &&
+        self.fpu_xmm6 == other.fpu_xmm6 &&
+        self.fpu_xmm7 == other.fpu_xmm7 &&
+        self.fpu_xmm8 == other.fpu_xmm8 &&
+        self.fpu_xmm9 == other.fpu_xmm9 &&
+        self.fpu_xmm10 == other.fpu_xmm10 &&
+        self.fpu_xmm11 == other.fpu_xmm11 &&
+        self.fpu_xmm12 == other.fpu_xmm12 &&
+        self.fpu_xmm13 == other.fpu_xmm13 &&
+        self.fpu_xmm14 == other.fpu_xmm14 &&
+        self.fpu_xmm15 == other.fpu_xmm15 &&
+        <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
+        self.fpu_reserved1 == other.fpu_reserved1
+    }
+}
+
+impl Eq for x86_float_state64_t {}
+
+impl Hash for x86_float_state64_t {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.fpu_reserved.hash(state);
+        self.fpu_fcw.hash(state);
+        self.fpu_fsw.hash(state);
+        self.fpu_ftw.hash(state);
+        self.fpu_rsrv1.hash(state);
+        self.fpu_fop.hash(state);
+        self.fpu_ip.hash(state);
+        self.fpu_cs.hash(state);
+        self.fpu_rsrv2.hash(state);
+        self.fpu_dp.hash(state);
+        self.fpu_ds.hash(state);
+        self.fpu_rsrv3.hash(state);
+        self.fpu_mxcsr.hash(state);
+        self.fpu_mxcsrmask.hash(state);
+        self.fpu_stmm0.hash(state);
+        self.fpu_stmm1.hash(state);
+        self.fpu_stmm2.hash(state);
+        self.fpu_stmm3.hash(state);
+        self.fpu_stmm4.hash(state);
+        self.fpu_stmm5.hash(state);
+        self.fpu_stmm6.hash(state);
+        self.fpu_stmm7.hash(state);
+        self.fpu_xmm0.hash(state);
+        self.fpu_xmm1.hash(state);
+        self.fpu_xmm2.hash(state);
+        self.fpu_xmm3.hash(state);
+        self.fpu_xmm4.hash(state);
+        self.fpu_xmm5.hash(state);
+        self.fpu_xmm6.hash(state);
+        self.fpu_xmm7.hash(state);
+        self.fpu_xmm8.hash(state);
+        self.fpu_xmm9.hash(state);
+        self.fpu_xmm10.hash(state);
+        self.fpu_xmm11.hash(state);
+        self.fpu_xmm12.hash(state);
+        self.fpu_xmm13.hash(state);
+        self.fpu_xmm14.hash(state);
+        self.fpu_xmm15.hash(state);
+        (&self.fpu_rsrv4 as &[i8]).hash(state);
+        self.fpu_reserved1.hash(state);
+    }
+}
+
+impl PartialOrd for x86_float_state64_t {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Self::cmp(self, other))
+    }
+}
+
+impl Ord for x86_float_state64_t {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.fpu_reserved.cmp(&other.fpu_reserved) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fcw.cmp(&other.fpu_fcw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fsw.cmp(&other.fpu_fsw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ftw.cmp(&other.fpu_ftw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv1.cmp(&other.fpu_rsrv1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fop.cmp(&other.fpu_fop) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ip.cmp(&other.fpu_ip) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_cs.cmp(&other.fpu_cs) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv2.cmp(&other.fpu_rsrv2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_dp.cmp(&other.fpu_dp) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ds.cmp(&other.fpu_ds) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv3.cmp(&other.fpu_rsrv3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsr.cmp(&other.fpu_mxcsr) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsrmask.cmp(&other.fpu_mxcsrmask) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm0.cmp(&other.fpu_stmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm1.cmp(&other.fpu_stmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm2.cmp(&other.fpu_stmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm3.cmp(&other.fpu_stmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm4.cmp(&other.fpu_stmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm5.cmp(&other.fpu_stmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm6.cmp(&other.fpu_stmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm7.cmp(&other.fpu_stmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm0.cmp(&other.fpu_xmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm1.cmp(&other.fpu_xmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm2.cmp(&other.fpu_xmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm3.cmp(&other.fpu_xmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm4.cmp(&other.fpu_xmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm5.cmp(&other.fpu_xmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm6.cmp(&other.fpu_xmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm7.cmp(&other.fpu_xmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm8.cmp(&other.fpu_xmm8) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm9.cmp(&other.fpu_xmm9) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm10.cmp(&other.fpu_xmm10) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm11.cmp(&other.fpu_xmm11) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm12.cmp(&other.fpu_xmm12) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm13.cmp(&other.fpu_xmm13) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm14.cmp(&other.fpu_xmm14) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm15.cmp(&other.fpu_xmm15) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv4.cmp(&other.fpu_rsrv4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_reserved1.cmp(&other.fpu_reserved1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+
+        Ordering::Equal
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct x86_exception_state64_t {
@@ -928,7 +1557,7 @@ pub struct x86_exception_state64_t {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Hash, PartialOrd, PartialEq, Eq, Ord)]
+#[derive(Copy, Clone)]
 pub struct x86_avx_state64_t {
     pub fpu_reserved: [i32; 2],
     pub fpu_fcw: fp_control_t,
@@ -1060,6 +1689,437 @@ impl x86_avx_state64_t {
 impl Default for x86_avx_state64_t {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl Debug for x86_avx_state64_t {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let mut ds = f.debug_struct("x86_avx_state64_t");
+        ds.field("fpu_reserved", &self.fpu_reserved);
+        ds.field("fpu_fcw", &self.fpu_fcw);
+        ds.field("fpu_fsw", &self.fpu_fsw);
+        ds.field("fpu_ftw", &self.fpu_ftw);
+        ds.field("fpu_rsrv1", &self.fpu_rsrv1);
+        ds.field("fpu_fop", &self.fpu_fop);
+        ds.field("fpu_ip", &self.fpu_ip);
+        ds.field("fpu_cs", &self.fpu_cs);
+        ds.field("fpu_rsrv2", &self.fpu_rsrv2);
+        ds.field("fpu_dp", &self.fpu_dp);
+        ds.field("fpu_ds", &self.fpu_ds);
+        ds.field("fpu_rsrv3", &self.fpu_rsrv3);
+        ds.field("fpu_mxcsr", &self.fpu_mxcsr);
+        ds.field("fpu_mxcsrmask", &self.fpu_mxcsrmask);
+        ds.field("fpu_stmm0", &self.fpu_stmm0);
+        ds.field("fpu_stmm1", &self.fpu_stmm1);
+        ds.field("fpu_stmm2", &self.fpu_stmm2);
+        ds.field("fpu_stmm3", &self.fpu_stmm3);
+        ds.field("fpu_stmm4", &self.fpu_stmm4);
+        ds.field("fpu_stmm5", &self.fpu_stmm5);
+        ds.field("fpu_stmm6", &self.fpu_stmm6);
+        ds.field("fpu_stmm7", &self.fpu_stmm7);
+        ds.field("fpu_xmm0", &self.fpu_xmm0);
+        ds.field("fpu_xmm1", &self.fpu_xmm1);
+        ds.field("fpu_xmm2", &self.fpu_xmm2);
+        ds.field("fpu_xmm3", &self.fpu_xmm3);
+        ds.field("fpu_xmm4", &self.fpu_xmm4);
+        ds.field("fpu_xmm5", &self.fpu_xmm5);
+        ds.field("fpu_xmm6", &self.fpu_xmm6);
+        ds.field("fpu_xmm7", &self.fpu_xmm7);
+        ds.field("fpu_xmm8", &self.fpu_xmm8);
+        ds.field("fpu_xmm9", &self.fpu_xmm9);
+        ds.field("fpu_xmm10", &self.fpu_xmm10);
+        ds.field("fpu_xmm11", &self.fpu_xmm11);
+        ds.field("fpu_xmm12", &self.fpu_xmm12);
+        ds.field("fpu_xmm13", &self.fpu_xmm13);
+        ds.field("fpu_xmm14", &self.fpu_xmm14);
+        ds.field("fpu_xmm15", &self.fpu_xmm15);
+        ds.field("fpu_rsrv4", &(&self.fpu_rsrv4 as &[i8]));
+        ds.field("fpu_reserved1", &self.fpu_reserved1);
+        ds.field("avx_reserved1", &(&self.avx_reserved1 as &[i8]));
+        ds.field("fpu_ymmh0", &self.fpu_ymmh0);
+        ds.field("fpu_ymmh1", &self.fpu_ymmh1);
+        ds.field("fpu_ymmh2", &self.fpu_ymmh2);
+        ds.field("fpu_ymmh3", &self.fpu_ymmh3);
+        ds.field("fpu_ymmh4", &self.fpu_ymmh4);
+        ds.field("fpu_ymmh5", &self.fpu_ymmh5);
+        ds.field("fpu_ymmh6", &self.fpu_ymmh6);
+        ds.field("fpu_ymmh7", &self.fpu_ymmh7);
+        ds.field("fpu_ymmh8", &self.fpu_ymmh8);
+        ds.field("fpu_ymmh9", &self.fpu_ymmh9);
+        ds.field("fpu_ymmh10", &self.fpu_ymmh10);
+        ds.field("fpu_ymmh11", &self.fpu_ymmh11);
+        ds.field("fpu_ymmh12", &self.fpu_ymmh12);
+        ds.field("fpu_ymmh13", &self.fpu_ymmh13);
+        ds.field("fpu_ymmh14", &self.fpu_ymmh14);
+        ds.field("fpu_ymmh15", &self.fpu_ymmh15);
+        ds.finish()
+    }
+}
+
+impl PartialEq for x86_avx_state64_t {
+    fn eq(&self, other: &Self) -> bool {
+        self.fpu_reserved == other.fpu_reserved &&
+        self.fpu_fcw == other.fpu_fcw &&
+        self.fpu_fsw == other.fpu_fsw &&
+        self.fpu_ftw == other.fpu_ftw &&
+        self.fpu_rsrv1 == other.fpu_rsrv1 &&
+        self.fpu_fop == other.fpu_fop &&
+        self.fpu_ip == other.fpu_ip &&
+        self.fpu_cs == other.fpu_cs &&
+        self.fpu_rsrv2 == other.fpu_rsrv2 &&
+        self.fpu_dp == other.fpu_dp &&
+        self.fpu_ds == other.fpu_ds &&
+        self.fpu_rsrv3 == other.fpu_rsrv3 &&
+        self.fpu_mxcsr == other.fpu_mxcsr &&
+        self.fpu_mxcsrmask == other.fpu_mxcsrmask &&
+        self.fpu_stmm0 == other.fpu_stmm0 &&
+        self.fpu_stmm1 == other.fpu_stmm1 &&
+        self.fpu_stmm2 == other.fpu_stmm2 &&
+        self.fpu_stmm3 == other.fpu_stmm3 &&
+        self.fpu_stmm4 == other.fpu_stmm4 &&
+        self.fpu_stmm5 == other.fpu_stmm5 &&
+        self.fpu_stmm6 == other.fpu_stmm6 &&
+        self.fpu_stmm7 == other.fpu_stmm7 &&
+        self.fpu_xmm0 == other.fpu_xmm0 &&
+        self.fpu_xmm1 == other.fpu_xmm1 &&
+        self.fpu_xmm2 == other.fpu_xmm2 &&
+        self.fpu_xmm3 == other.fpu_xmm3 &&
+        self.fpu_xmm4 == other.fpu_xmm4 &&
+        self.fpu_xmm5 == other.fpu_xmm5 &&
+        self.fpu_xmm6 == other.fpu_xmm6 &&
+        self.fpu_xmm7 == other.fpu_xmm7 &&
+        self.fpu_xmm8 == other.fpu_xmm8 &&
+        self.fpu_xmm9 == other.fpu_xmm9 &&
+        self.fpu_xmm10 == other.fpu_xmm10 &&
+        self.fpu_xmm11 == other.fpu_xmm11 &&
+        self.fpu_xmm12 == other.fpu_xmm12 &&
+        self.fpu_xmm13 == other.fpu_xmm13 &&
+        self.fpu_xmm14 == other.fpu_xmm14 &&
+        self.fpu_xmm15 == other.fpu_xmm15 &&
+        <[i8] as PartialEq<[i8]>>::eq(&self.fpu_rsrv4, &other.fpu_rsrv4) &&
+        self.fpu_reserved1 == other.fpu_reserved1 &&
+        <[i8] as PartialEq<[i8]>>::eq(&self.avx_reserved1, &other.avx_reserved1) &&
+        self.fpu_ymmh0 == other.fpu_ymmh0 &&
+        self.fpu_ymmh1 == other.fpu_ymmh1 &&
+        self.fpu_ymmh2 == other.fpu_ymmh2 &&
+        self.fpu_ymmh3 == other.fpu_ymmh3 &&
+        self.fpu_ymmh4 == other.fpu_ymmh4 &&
+        self.fpu_ymmh5 == other.fpu_ymmh5 &&
+        self.fpu_ymmh6 == other.fpu_ymmh6 &&
+        self.fpu_ymmh7 == other.fpu_ymmh7 &&
+        self.fpu_ymmh8 == other.fpu_ymmh8 &&
+        self.fpu_ymmh9 == other.fpu_ymmh9 &&
+        self.fpu_ymmh10 == other.fpu_ymmh10 &&
+        self.fpu_ymmh11 == other.fpu_ymmh11 &&
+        self.fpu_ymmh12 == other.fpu_ymmh12 &&
+        self.fpu_ymmh13 == other.fpu_ymmh13 &&
+        self.fpu_ymmh14 == other.fpu_ymmh14 &&
+        self.fpu_ymmh15 == other.fpu_ymmh15
+    }
+}
+
+impl Eq for x86_avx_state64_t {}
+
+impl Hash for x86_avx_state64_t {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.fpu_reserved.hash(state);
+        self.fpu_fcw.hash(state);
+        self.fpu_fsw.hash(state);
+        self.fpu_ftw.hash(state);
+        self.fpu_rsrv1.hash(state);
+        self.fpu_fop.hash(state);
+        self.fpu_ip.hash(state);
+        self.fpu_cs.hash(state);
+        self.fpu_rsrv2.hash(state);
+        self.fpu_dp.hash(state);
+        self.fpu_ds.hash(state);
+        self.fpu_rsrv3.hash(state);
+        self.fpu_mxcsr.hash(state);
+        self.fpu_mxcsrmask.hash(state);
+        self.fpu_stmm0.hash(state);
+        self.fpu_stmm1.hash(state);
+        self.fpu_stmm2.hash(state);
+        self.fpu_stmm3.hash(state);
+        self.fpu_stmm4.hash(state);
+        self.fpu_stmm5.hash(state);
+        self.fpu_stmm6.hash(state);
+        self.fpu_stmm7.hash(state);
+        self.fpu_xmm0.hash(state);
+        self.fpu_xmm1.hash(state);
+        self.fpu_xmm2.hash(state);
+        self.fpu_xmm3.hash(state);
+        self.fpu_xmm4.hash(state);
+        self.fpu_xmm5.hash(state);
+        self.fpu_xmm6.hash(state);
+        self.fpu_xmm7.hash(state);
+        self.fpu_xmm8.hash(state);
+        self.fpu_xmm9.hash(state);
+        self.fpu_xmm10.hash(state);
+        self.fpu_xmm11.hash(state);
+        self.fpu_xmm12.hash(state);
+        self.fpu_xmm13.hash(state);
+        self.fpu_xmm14.hash(state);
+        self.fpu_xmm15.hash(state);
+        (&self.fpu_rsrv4 as &[i8]).hash(state);
+        self.fpu_reserved1.hash(state);
+        (&self.avx_reserved1 as &[i8]).hash(state);
+        self.fpu_ymmh0.hash(state);
+        self.fpu_ymmh1.hash(state);
+        self.fpu_ymmh2.hash(state);
+        self.fpu_ymmh3.hash(state);
+        self.fpu_ymmh4.hash(state);
+        self.fpu_ymmh5.hash(state);
+        self.fpu_ymmh6.hash(state);
+        self.fpu_ymmh7.hash(state);
+        self.fpu_ymmh8.hash(state);
+        self.fpu_ymmh9.hash(state);
+        self.fpu_ymmh10.hash(state);
+        self.fpu_ymmh11.hash(state);
+        self.fpu_ymmh12.hash(state);
+        self.fpu_ymmh13.hash(state);
+        self.fpu_ymmh14.hash(state);
+        self.fpu_ymmh15.hash(state);
+    }
+}
+
+impl PartialOrd for x86_avx_state64_t {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(Self::cmp(self, other))
+    }
+}
+
+impl Ord for x86_avx_state64_t {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.fpu_reserved.cmp(&other.fpu_reserved) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fcw.cmp(&other.fpu_fcw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fsw.cmp(&other.fpu_fsw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ftw.cmp(&other.fpu_ftw) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv1.cmp(&other.fpu_rsrv1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_fop.cmp(&other.fpu_fop) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ip.cmp(&other.fpu_ip) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_cs.cmp(&other.fpu_cs) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv2.cmp(&other.fpu_rsrv2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_dp.cmp(&other.fpu_dp) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ds.cmp(&other.fpu_ds) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv3.cmp(&other.fpu_rsrv3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsr.cmp(&other.fpu_mxcsr) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_mxcsrmask.cmp(&other.fpu_mxcsrmask) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm0.cmp(&other.fpu_stmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm1.cmp(&other.fpu_stmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm2.cmp(&other.fpu_stmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm3.cmp(&other.fpu_stmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm4.cmp(&other.fpu_stmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm5.cmp(&other.fpu_stmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm6.cmp(&other.fpu_stmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_stmm7.cmp(&other.fpu_stmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm0.cmp(&other.fpu_xmm0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm1.cmp(&other.fpu_xmm1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm2.cmp(&other.fpu_xmm2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm3.cmp(&other.fpu_xmm3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm4.cmp(&other.fpu_xmm4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm5.cmp(&other.fpu_xmm5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm6.cmp(&other.fpu_xmm6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm7.cmp(&other.fpu_xmm7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm8.cmp(&other.fpu_xmm8) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm9.cmp(&other.fpu_xmm9) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm10.cmp(&other.fpu_xmm10) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm11.cmp(&other.fpu_xmm11) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm12.cmp(&other.fpu_xmm12) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm13.cmp(&other.fpu_xmm13) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm14.cmp(&other.fpu_xmm14) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_xmm15.cmp(&other.fpu_xmm15) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_rsrv4.cmp(&other.fpu_rsrv4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_reserved1.cmp(&other.fpu_reserved1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.avx_reserved1.cmp(&other.avx_reserved1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh0.cmp(&other.fpu_ymmh0) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh1.cmp(&other.fpu_ymmh1) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh2.cmp(&other.fpu_ymmh2) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh3.cmp(&other.fpu_ymmh3) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh4.cmp(&other.fpu_ymmh4) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh5.cmp(&other.fpu_ymmh5) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh6.cmp(&other.fpu_ymmh6) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh7.cmp(&other.fpu_ymmh7) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh8.cmp(&other.fpu_ymmh8) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh9.cmp(&other.fpu_ymmh9) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh10.cmp(&other.fpu_ymmh10) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh11.cmp(&other.fpu_ymmh11) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh12.cmp(&other.fpu_ymmh12) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh13.cmp(&other.fpu_ymmh13) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh14.cmp(&other.fpu_ymmh14) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+        match self.fpu_ymmh15.cmp(&other.fpu_ymmh15) {
+            Ordering::Equal => (),
+            ord => return ord,
+        }
+
+        Ordering::Equal
     }
 }
 
