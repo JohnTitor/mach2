@@ -31,7 +31,6 @@ Available crate feature:
 * **unstable** (disabled by default): Exposes newly changed APIs. Enabling this may
   bring breaking changes (see the breaking change policy).
 
-
 ### Breaking change policy
 
 We do the following steps when an item is changed/removed on latest toolchain:
@@ -45,6 +44,31 @@ For instance, if const `FOO` value is changed from `3` to `4`,
 we expose the newer one, i.e. `4`, under `unstable` first.
 So the `unstable` users should notice the change on the first release since deprecating.
 After a month or more, all the users should notice it.
+
+## Examples
+
+Examples can be found in the [examples](./examples) directory of this repository.
+
+Since [`examples/dump_process_registers.rs`](./examples/dump_process_registers.rs) makes use of the `task_for_pid()` function, which requires elevated privileges, it is necessary to disable System Integrity Protection (SIP) and to be part of the `admin` or `_developer` group in order to run the example. However, do note that disabling SIP is in no way encouraged, and should only be done for development/debugging purposes.
+
+1. Reboot macOS in recovery mode.
+2. Click on `Options`.
+3. Log in to your user.
+4. In the menu click on `Utilities` and then `Terminal`.
+5. In the terminal type the following command to disable SIP: `csrutil disable` (`csrutil enable` to re-enable SIP).
+6. Reboot your machine.
+
+To run the example, build it as follows:
+
+```
+cargo b --example dump_process_registers
+```
+
+Then run it using `sudo`:
+
+```
+sudo ./target/debug/examples/dump_process_registers
+```
 
 ## Platform support
 
