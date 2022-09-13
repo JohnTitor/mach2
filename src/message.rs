@@ -165,6 +165,15 @@ pub struct mach_msg_trailer_t {
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct mach_msg_type_descriptor {
+    pub pad1: natural_t,
+    pub pad2: mach_msg_size_t,
+    pub pad3: [u8; 3],
+    pub type_: u8, // mach_msg_descriptor_type_t bitfield
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct mach_msg_port_descriptor_t {
     pub name: mach_port_t,
     pub pad1: mach_msg_size_t,
