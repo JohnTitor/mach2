@@ -25,4 +25,10 @@ pub const MACH_PORT_RIGHT_DEAD_NAME: mach_port_right_t = 4;
 pub const MACH_PORT_RIGHT_LABELH: mach_port_right_t = 5;
 pub const MACH_PORT_RIGHT_NUMBER: mach_port_right_t = 6;
 
+pub type mach_port_urefs_t = natural_t;
 pub type mach_port_delta_t = integer_t;
+
+pub type mach_port_seqno_t = natural_t;
+pub type mach_port_mscount_t = natural_t;
+pub type mach_port_msgcount_t = natural_t;
+pub type mach_port_rights_t = natural_t;
