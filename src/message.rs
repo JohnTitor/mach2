@@ -1,7 +1,7 @@
 //! This module corresponds to `mach/message.h`.
 
 use kern_return::kern_return_t;
-use port::{mach_port_name_t, mach_port_t};
+use port::{mach_port_name_t, mach_port_seqno_t, mach_port_t};
 use vm_types::{integer_t, natural_t};
 
 pub type mach_msg_timeout_t = natural_t;
@@ -13,6 +13,8 @@ pub type mach_msg_size_t = natural_t;
 pub type mach_msg_copy_options_t = ::libc::c_uint;
 pub type mach_msg_descriptor_type_t = ::libc::c_uint;
 pub type mach_msg_type_name_t = ::libc::c_uint;
+
+pub type mach_msg_guard_flags_t = ::libc::c_uint;
 
 pub type mach_msg_trailer_type_t = ::libc::c_uint;
 pub type mach_msg_trailer_size_t = ::libc::c_uint;
@@ -59,10 +61,16 @@ pub const MACH_MSG_PHYSICAL_COPY: mach_msg_copy_options_t = 0;
 pub const MACH_MSG_VIRTUAL_COPY: mach_msg_copy_options_t = 1;
 pub const MACH_MSG_ALLOCATE: mach_msg_copy_options_t = 2;
 
+pub const MACH_MSG_GUARD_FLAGS_NONE: mach_msg_guard_flags_t = 0;
+pub const MACH_MSG_GUARD_FLAGS_IMMOVABLE_RECEIVE: mach_msg_guard_flags_t = 1;
+pub const MACH_MSG_GUARD_FLAGS_UNGUARDED_ON_SEND: mach_msg_guard_flags_t = 2;
+pub const MACH_MSG_GUARD_FLAGS_MASK: mach_msg_guard_flags_t = 3;
+
 pub const MACH_MSG_PORT_DESCRIPTOR: mach_msg_descriptor_type_t = 0;
 pub const MACH_MSG_OOL_DESCRIPTOR: mach_msg_descriptor_type_t = 1;
 pub const MACH_MSG_OOL_PORTS_DESCRIPTOR: mach_msg_descriptor_type_t = 2;
 pub const MACH_MSG_OOL_VOLATILE_DESCRIPTOR: mach_msg_descriptor_type_t = 3;
+pub const MACH_MSG_GUARDED_PORT_DESCRIPTOR: mach_msg_descriptor_type_t = 4;
 
 pub const MACH_MSG_OPTION_NONE: mach_msg_option_t = 0x0000_0000;
 
@@ -73,19 +81,37 @@ pub const MACH_RCV_LARGE: mach_msg_option_t = 0x0000_0004;
 pub const MACH_RCV_LARGE_IDENTITY: mach_msg_option_t = 0x0000_0008;
 
 pub const MACH_SEND_TIMEOUT: mach_msg_option_t = 0x0000_0010;
+pub const MACH_SEND_OVERRIDE: mach_msg_option_t = 0x0000_0020;
 pub const MACH_SEND_INTERRUPT: mach_msg_option_t = 0x0000_0040;
 pub const MACH_SEND_NOTIFY: mach_msg_option_t = 0x0000_0080;
 pub const MACH_SEND_ALWAYS: mach_msg_option_t = 0x0001_0000;
+pub const MACH_SEND_FILTER_NONFATAL: mach_msg_option_t = 0x0001_0000;
 pub const MACH_SEND_TRAILER: mach_msg_option_t = 0x0002_0000;
 pub const MACH_SEND_NOIMPORTANCE: mach_msg_option_t = 0x0004_0000;
 pub const MACH_SEND_NODENAP: mach_msg_option_t = MACH_SEND_NOIMPORTANCE;
 pub const MACH_SEND_IMPORTANCE: mach_msg_option_t = 0x0008_0000;
+pub const MACH_SEND_SYNC_OVERRIDE: mach_msg_option_t = 0x0010_0000;
+pub const MACH_SEND_PROPAGATE_QOS: mach_msg_option_t = 0x0020_0000;
+pub const MACH_SEND_SYNC_USE_THRPRI: mach_msg_option_t = MACH_SEND_PROPAGATE_QOS;
 
 pub const MACH_RCV_TIMEOUT: mach_msg_option_t = 0x0000_0100;
 pub const MACH_RCV_NOTIFY: mach_msg_option_t = 0x0000_0000;
 pub const MACH_RCV_INTERRUPT: mach_msg_option_t = 0x0000_0400;
 pub const MACH_RCV_VOUCHER: mach_msg_option_t = 0x0000_0800;
 pub const MACH_RCV_OVERWRITE: mach_msg_option_t = 0x0000_0000;
+pub const MACH_RCV_GUARDED_DESC: mach_msg_option_t = 0x0000_1000;
+pub const MACH_RCV_SYNC_WAIT: mach_msg_option_t = 0x0000_4000;
+pub const MACH_RCV_SYNC_PEEK: mach_msg_option_t = 0x0000_8000;
+
+pub const MACH_MSG_STRICT_REPLY: mach_msg_option_t = 0x0000_0200;
+
+pub const MACH_RCV_TRAILER_NULL: mach_msg_trailer_type_t = 0;
+pub const MACH_RCV_TRAILER_SEQNO: mach_msg_trailer_type_t = 1;
+pub const MACH_RCV_TRAILER_SENDER: mach_msg_trailer_type_t = 2;
+pub const MACH_RCV_TRAILER_AUDIT: mach_msg_trailer_type_t = 3;
+pub const MACH_RCV_TRAILER_CTX: mach_msg_trailer_type_t = 4;
+pub const MACH_RCV_TRAILER_AV: mach_msg_trailer_type_t = 7;
+pub const MACH_RCV_TRAILER_LABELS: mach_msg_trailer_type_t = 8;
 
 pub const MACH_MSG_SUCCESS: mach_msg_return_t = 0x0000_0000;
 
@@ -111,7 +137,10 @@ pub const MACH_SEND_TOO_LARGE: mach_msg_return_t = 0x1000_000e;
 pub const MACH_SEND_INVALID_TYPE: mach_msg_return_t = 0x1000_000f;
 pub const MACH_SEND_INVALID_HEADER: mach_msg_return_t = 0x1000_0010;
 pub const MACH_SEND_INVALID_TRAILER: mach_msg_return_t = 0x1000_0011;
+pub const MACH_SEND_INVALID_CONTEXT: mach_msg_return_t = 0x1000_0012;
 pub const MACH_SEND_INVALID_RT_OOL_SIZE: mach_msg_return_t = 0x1000_0015;
+pub const MACH_SEND_NO_GRANT_DEST: mach_msg_return_t = 0x1000_0016;
+pub const MACH_SEND_MSG_FILTERED: mach_msg_return_t = 0x1000_0017;
 
 pub const MACH_RCV_IN_PROGRESS: mach_msg_return_t = 0x1000_4001;
 pub const MACH_RCV_INVALID_NAME: mach_msg_return_t = 0x1000_4002;
@@ -129,6 +158,7 @@ pub const MACH_RCV_INVALID_TYPE: mach_msg_return_t = 0x1000_400d;
 pub const MACH_RCV_SCATTER_SMALL: mach_msg_return_t = 0x1000_400e;
 pub const MACH_RCV_INVALID_TRAILER: mach_msg_return_t = 0x1000_400f;
 pub const MACH_RCV_IN_PROGRESS_TIMED: mach_msg_return_t = 0x1000_4011;
+pub const MACH_RCV_INVALID_REPLY: mach_msg_return_t = 0x1000_4012;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -161,6 +191,45 @@ pub const MACH_MSG_TRAILER_FORMAT_0: mach_msg_trailer_type_t = 0;
 pub struct mach_msg_trailer_t {
     pub msgh_trailer_type: mach_msg_trailer_type_t,
     pub msgh_trailer_size: mach_msg_trailer_size_t,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct mach_msg_seqno_trailer_t {
+    pub msgh_trailer_type: mach_msg_trailer_type_t,
+    pub msgh_trailer_size: mach_msg_trailer_size_t,
+    pub msgh_seqno: mach_port_seqno_t,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct security_token_t {
+    pub val: [::libc::c_uint; 2],
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct mach_msg_security_trailer_t {
+    pub msgh_trailer_type: mach_msg_trailer_type_t,
+    pub msgh_trailer_size: mach_msg_trailer_size_t,
+    pub msgh_seqno: mach_port_seqno_t,
+    pub msgh_sender: security_token_t,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct audit_token_t {
+    pub val: [::libc::c_uint; 8],
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct mach_msg_audit_trailer_t {
+    pub msgh_trailer_type: mach_msg_trailer_type_t,
+    pub msgh_trailer_size: mach_msg_trailer_size_t,
+    pub msgh_seqno: mach_port_seqno_t,
+    pub msgh_sender: security_token_t,
+    pub msgh_audit: audit_token_t,
 }
 
 #[repr(C)]
