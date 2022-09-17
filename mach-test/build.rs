@@ -133,6 +133,9 @@ fn main() {
     cfg.skip_struct(move |s| {
         match s {
             // TODO: this type is a bitfield and must be verified by hand
+            "mach_msg_type_descriptor_t" |
+
+            // TODO: this type is a bitfield and must be verified by hand
             "mach_msg_port_descriptor_t" |
 
             // TODO: this type is a bitfield and must be verified by hand
