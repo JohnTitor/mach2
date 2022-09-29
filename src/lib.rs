@@ -38,6 +38,8 @@ pub mod message;
 pub mod ndr;
 pub mod port;
 pub mod structs;
+pub mod sync_policy;
+pub mod semaphore;
 pub mod task;
 pub mod task_info;
 pub mod thread_act;
