@@ -41,4 +41,10 @@ extern "C" {
         context: mach_port_context_t,
         name: *mut mach_port_name_t,
     ) -> kern_return_t;
+    pub fn mach_port_destruct(
+        task: ipc_space_t,
+        name: mach_port_name_t,
+        srdelta: mach_port_delta_t,
+        guard: mach_port_context_t,
+    ) -> kern_return_t;
 }
