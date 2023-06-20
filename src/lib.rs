@@ -45,6 +45,7 @@ pub mod task_info;
 pub mod thread_act;
 pub mod thread_policy;
 pub mod thread_status;
+pub mod time_value;
 pub mod traps;
 pub mod vm;
 pub mod vm_attributes;
