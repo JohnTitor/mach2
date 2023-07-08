@@ -3,7 +3,7 @@
 use super::vm_types::natural_t;
 
 pub type thread_state_t = *mut natural_t;
-pub type thread_state_flavor_t = ::libc::c_int;
+pub type thread_state_flavor_t = ::libc::c_uint;
 
 #[cfg(target_arch = "aarch64")]
 mod aarch64 {
