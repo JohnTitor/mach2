@@ -5,20 +5,64 @@ use core::mem;
 use super::message::mach_msg_type_number_t;
 
 #[cfg(target_arch = "aarch64")]
+pub type arm_thread_state32_t = __darwin_arm_thread_state;
+#[cfg(target_arch = "aarch64")]
+pub type arm_thread_state64_t = __darwin_arm_thread_state64;
+#[cfg(target_arch = "aarch64")]
+pub type arm_state_hdr_t = arm_state_hdr;
+#[cfg(target_arch = "aarch64")]
+pub type arm_unified_thread_state_t = arm_unified_thread_state;
+
+#[cfg(target_arch = "aarch64")]
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
-pub struct arm_thread_state64_t {
-    pub __x: [u64; 29],
+#[derive(Debug, Copy, Clone)]
+pub struct arm_state_hdr {
+    pub flavor: u32,
+    pub count: u32,
+}
+
+#[cfg(target_arch = "aarch64")]
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct arm_unified_thread_state {
+    pub ash: arm_state_hdr_t,
+    pub uts: arm_unified_thread_state__bindgen_ty_1,
+}
+
+#[cfg(target_arch = "aarch64")]
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub union arm_unified_thread_state__bindgen_ty_1 {
+    pub ts_32: arm_thread_state32_t,
+    pub ts_64: arm_thread_state64_t,
+}
+
+#[cfg(target_arch = "aarch64")]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __darwin_arm_thread_state {
+    pub __r: [u32; 13usize],
+    pub __sp: u32,
+    pub __lr: u32,
+    pub __pc: u32,
+    pub __cpsr: u32,
+}
+
+#[cfg(target_arch = "aarch64")]
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Default)]
+pub struct __darwin_arm_thread_state64 {
+    pub __x: [u64; 29usize],
     pub __fp: u64,
     pub __lr: u64,
     pub __sp: u64,
     pub __pc: u64,
     pub __cpsr: u32,
-    pub __flags: u32,
+    pub __pad: u32,
 }
 
 #[cfg(target_arch = "aarch64")]
-impl arm_thread_state64_t {
+impl __darwin_arm_thread_state64 {
     pub fn new() -> Self {
         Default::default()
     }
