@@ -39,6 +39,7 @@ pub const TASK_DEBUG_INFO_INTERNAL: ::libc::c_uint = 29;
 
 pub type task_flavor_t = natural_t;
 pub type task_info_t = *mut integer_t;
+pub type task_dyld_info_data_t = task_dyld_info;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]

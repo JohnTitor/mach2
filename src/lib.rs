@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types)]
 #![allow(non_upper_case_globals)]
-#![deny(missing_debug_implementations)]
 #![deny(missing_copy_implementations)]
 #![allow(
     clippy::module_name_repetitions,
@@ -23,6 +22,7 @@ pub mod exc;
 pub mod exception_types;
 pub mod kern_return;
 pub mod libproc;
+pub mod loader;
 pub mod mach_init;
 pub mod mach_port;
 pub mod mach_time;
@@ -30,6 +30,7 @@ pub mod mach_types;
 pub mod memory_object_types;
 pub mod message;
 pub mod ndr;
+pub mod nlist;
 pub mod port;
 pub mod structs;
 pub mod task;

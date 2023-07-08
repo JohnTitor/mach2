@@ -1,11 +1,12 @@
-//! This module corresponds to `mach/task.defs`.
+//! This module corresponds to `mach/task.h`.
 
 use super::{
     kern_return::kern_return_t,
-    mach_types::{task_name_t, task_t, thread_act_array_t},
+    mach_types::{task_name_t, task_t, thread_act_array_t, thread_act_t},
     message::mach_msg_type_number_t,
     port::mach_port_t,
     task_info::{task_flavor_t, task_info_t},
+    thread_status::{thread_state_flavor_t, thread_state_t},
 };
 
 pub type task_special_port_t = ::libc::c_int;
@@ -39,5 +40,12 @@ extern "C" {
         flavor: task_flavor_t,
         task_info_in: task_info_t,
         task_info_inCnt: mach_msg_type_number_t,
+    ) -> kern_return_t;
+    pub fn thread_create_running(
+        parent_task: task_t,
+        flavor: thread_state_flavor_t,
+        new_state: thread_state_t,
+        new_stateCnt: mach_msg_type_number_t,
+        child_act: *mut thread_act_t,
     ) -> kern_return_t;
 }
