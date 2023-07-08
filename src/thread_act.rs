@@ -1,11 +1,11 @@
 //! This module corresponds to `mach/thread_act.defs`.
 
-use exception_types::{exception_behavior_t, exception_mask_t};
-use kern_return::kern_return_t;
-use mach_types::{thread_act_t, thread_port_t};
-use message::mach_msg_type_number_t;
-use port::mach_port_t;
-use thread_status::{thread_state_flavor_t, thread_state_t};
+use super::exception_types::{exception_behavior_t, exception_mask_t};
+use super::kern_return::kern_return_t;
+use super::mach_types::{thread_act_t, thread_port_t};
+use super::message::mach_msg_type_number_t;
+use super::port::mach_port_t;
+use super::thread_status::{thread_state_flavor_t, thread_state_t};
 
 extern "C" {
     pub fn thread_get_state(

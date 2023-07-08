@@ -1,6 +1,6 @@
 //! This module roughly corresponds to `mach/vm_statistics.h`
 
-use vm_types::{integer_t, natural_t};
+use super::vm_types::{integer_t, natural_t};
 
 pub type vm_statistics_t = *mut vm_statistics;
 pub type vm_statistics_data_t = vm_statistics;

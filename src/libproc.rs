@@ -1,6 +1,6 @@
 //! This module roughly corresponds to `libproc.h`.
 
-use kern_return::kern_return_t;
+use super::kern_return::kern_return_t;
 
 pub const PROC_PIDPATHINFO_MAXSIZE: ::libc::c_uint = 4096;
 

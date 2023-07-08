@@ -1,8 +1,8 @@
 //! This module corresponds to `bootstrap.h`
 
-use boolean::boolean_t;
-use kern_return::kern_return_t;
-use port::mach_port_t;
+use super::boolean::boolean_t;
+use super::kern_return::kern_return_t;
+use super::port::mach_port_t;
 
 pub const BOOTSTRAP_MAX_NAME_LEN: ::libc::c_uint = 128;
 pub const BOOTSTRAP_MAX_CMD_LEN: ::libc::c_uint = 512;

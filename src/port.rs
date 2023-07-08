@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/port.h`
 
-use vm_types::{integer_t, natural_t};
+use super::vm_types::{integer_t, natural_t};
 
 pub type mach_port_name_t = natural_t;
 

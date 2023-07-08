@@ -1,6 +1,6 @@
 //! This module roughly corresponds to `mach/task_info.h`.
 
-use vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t};
+use super::vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t};
 
 pub const TASK_INFO_MAX: ::libc::c_uint = 1024;
 pub const TASK_BASIC_INFO_32: ::libc::c_uint = 4;

@@ -1,14 +1,14 @@
 //! This module roughly corresponds to `mach/exc.h`.
 
-use exception_types::{exception_data_t, exception_type_t};
-use kern_return::kern_return_t;
-use message::{
+use super::exception_types::{exception_data_t, exception_type_t};
+use super::kern_return::kern_return_t;
+use super::message::{
     mach_msg_body_t, mach_msg_header_t, mach_msg_port_descriptor_t, mach_msg_type_number_t,
 };
-use ndr::NDR_record_t;
-use port::mach_port_t;
-use thread_status::thread_state_t;
-use vm_types::integer_t;
+use super::ndr::NDR_record_t;
+use super::port::mach_port_t;
+use super::thread_status::thread_state_t;
+use super::vm_types::integer_t;
 
 pub const exc_MSG_COUNT: ::libc::c_uint = 3;
 

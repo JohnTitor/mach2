@@ -10,27 +10,19 @@
 )]
 #![no_std]
 
-#[cfg(not(any(target_os = "macos", target_os = "ios")))]
-compile_error!("mach requires macOS or iOS");
-
-extern crate libc;
-
-#[allow(unused_imports)]
-use core::{clone, cmp, default, fmt, hash, marker, mem, option};
-
 pub mod boolean;
 pub mod bootstrap;
 pub mod clock;
 pub mod clock_priv;
 pub mod clock_reply;
-pub mod clock_types; // TODO: test
-pub mod dyld_images; // TODO: test
+pub mod clock_types;
+pub mod dyld_images;
 pub mod dyld_kernel;
-pub mod error; // TODO: test
+pub mod error;
 pub mod exc;
 pub mod exception_types;
 pub mod kern_return;
-pub mod libproc;  // TODO: test
+pub mod libproc;
 pub mod mach_init;
 pub mod mach_port;
 pub mod mach_time;

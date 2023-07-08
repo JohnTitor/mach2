@@ -1,5 +1,5 @@
 //! This module corresponds to `mach/mach_time.h`
-use kern_return::kern_return_t;
+use super::kern_return::kern_return_t;
 pub type mach_timebase_info_t = *mut mach_timebase_info;
 pub type mach_timebase_info_data_t = mach_timebase_info;
 

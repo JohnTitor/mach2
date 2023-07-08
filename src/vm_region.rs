@@ -1,13 +1,13 @@
 //! This module roughly corresponds to `mach/vm_region.h`.
 
-use boolean::boolean_t;
-use mem;
-use memory_object_types::{memory_object_offset_t, vm_object_id_t};
-use message::mach_msg_type_number_t;
-use vm_behavior::vm_behavior_t;
-use vm_inherit::vm_inherit_t;
-use vm_prot::vm_prot_t;
-use vm_types::{mach_vm_address_t, mach_vm_size_t};
+use super::boolean::boolean_t;
+use core::mem;
+use super::memory_object_types::{memory_object_offset_t, vm_object_id_t};
+use super::message::mach_msg_type_number_t;
+use super::vm_behavior::vm_behavior_t;
+use super::vm_inherit::vm_inherit_t;
+use super::vm_prot::vm_prot_t;
+use super::vm_types::{mach_vm_address_t, mach_vm_size_t};
 
 pub type vm32_object_id_t = u32;
 

@@ -2,10 +2,10 @@
 
 pub const clock_MSG_COUNT: ::libc::c_uint = 3;
 
-use clock_types::{alarm_type_t, clock_attr_t, clock_flavor_t, mach_timespec_t};
-use kern_return::kern_return_t;
-use mach_types::{clock_reply_t, clock_serv_t};
-use message::mach_msg_type_number_t;
+use super::clock_types::{alarm_type_t, clock_attr_t, clock_flavor_t, mach_timespec_t};
+use super::kern_return::kern_return_t;
+use super::mach_types::{clock_reply_t, clock_serv_t};
+use super::message::mach_msg_type_number_t;
 
 extern "C" {
     pub fn clock_get_time(

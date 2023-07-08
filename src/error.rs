@@ -1,6 +1,6 @@
 //! This module roughly corresponds to `mach/mach_error.h`.
 
-use kern_return::kern_return_t;
+use super::kern_return::kern_return_t;
 
 pub type mach_error_t = kern_return_t;
 

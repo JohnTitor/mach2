@@ -1,11 +1,11 @@
 //! This module corresponds to `mach/thread_policy.h`.
 
-use boolean::boolean_t;
-use kern_return::kern_return_t;
+use super::boolean::boolean_t;
+use super::kern_return::kern_return_t;
 use libc::thread_policy_t;
-use mach_types::thread_t;
-use message::mach_msg_type_number_t;
-use vm_types::{integer_t, natural_t};
+use super::mach_types::thread_t;
+use super::message::mach_msg_type_number_t;
+use super::vm_types::{integer_t, natural_t};
 
 pub type thread_policy_flavor_t = natural_t;
 

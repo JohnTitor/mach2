@@ -2,8 +2,8 @@
 
 #![allow(non_snake_case)]
 
-use mach_types::uuid_t;
-use port::mach_port_t;
+use super::mach_types::uuid_t;
+use super::port::mach_port_t;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
