@@ -1,4 +1,4 @@
-//! This module roughly corresponds to `mach/mach_vm.defs`.
+//! This module roughly corresponds to `mach/mach_vm.h`.
 
 use super::{
     boolean::boolean_t,
@@ -202,6 +202,7 @@ pub type arm_thread_state32_t = __darwin_arm_thread_state;
 pub type arm_thread_state64_t = __darwin_arm_thread_state64;
 pub type arm_state_hdr_t = arm_state_hdr;
 pub type arm_unified_thread_state_t = arm_unified_thread_state;
+pub type thread_basic_info_data_t = thread_basic_info;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -244,6 +245,19 @@ pub struct __darwin_arm_thread_state64 {
     pub __pc: u64,
     pub __cpsr: u32,
     pub __pad: u32,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct thread_basic_info {
+    pub user_time: libc::time_value_t,
+    pub system_time: libc::time_value_t,
+    pub cpu_usage: integer_t,
+    pub policy: libc::policy_t,
+    pub run_state: integer_t,
+    pub flags: integer_t,
+    pub suspend_count: integer_t,
+    pub sleep_time: integer_t,
 }
 
 #[cfg(test)]
