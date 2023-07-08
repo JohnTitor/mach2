@@ -1,8 +1,6 @@
 //! This module corresponds to `bootstrap.h`
 
-use super::boolean::boolean_t;
-use super::kern_return::kern_return_t;
-use super::port::mach_port_t;
+use super::{boolean::boolean_t, kern_return::kern_return_t, port::mach_port_t};
 
 pub const BOOTSTRAP_MAX_NAME_LEN: ::libc::c_uint = 128;
 pub const BOOTSTRAP_MAX_CMD_LEN: ::libc::c_uint = 512;
@@ -47,11 +45,7 @@ extern "C" {
     ) -> kern_return_t;
     pub fn bootstrap_unprivileged(bp: mach_port_t, unpriv_port: *mut mach_port_t) -> kern_return_t;
     pub fn bootstrap_parent(bp: mach_port_t, parent_port: *mut mach_port_t) -> kern_return_t;
-    pub fn bootstrap_register(
-        bp: mach_port_t,
-        service_name: *mut ::libc::c_char,
-        sp: mach_port_t,
-    ) -> kern_return_t;
+    pub fn bootstrap_register(bp: mach_port_t, service_name: *mut ::libc::c_char, sp: mach_port_t) -> kern_return_t;
     pub fn bootstrap_create_service(
         bp: mach_port_t,
         service_name: *mut ::libc::c_char,

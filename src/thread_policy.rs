@@ -1,11 +1,14 @@
 //! This module corresponds to `mach/thread_policy.h`.
 
-use super::boolean::boolean_t;
-use super::kern_return::kern_return_t;
 use libc::thread_policy_t;
-use super::mach_types::thread_t;
-use super::message::mach_msg_type_number_t;
-use super::vm_types::{integer_t, natural_t};
+
+use super::{
+    boolean::boolean_t,
+    kern_return::kern_return_t,
+    mach_types::thread_t,
+    message::mach_msg_type_number_t,
+    vm_types::{integer_t, natural_t},
+};
 
 pub type thread_policy_flavor_t = natural_t;
 
@@ -88,8 +91,7 @@ pub const THREAD_STANDARD_POLICY_COUNT: mach_msg_type_number_t = 0;
 pub const THREAD_EXTENDED_POLICY_COUNT: mach_msg_type_number_t =
     (core::mem::size_of::<thread_extended_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_TIME_CONSTRAINT_POLICY_COUNT: mach_msg_type_number_t =
-    (core::mem::size_of::<thread_time_constraint_policy>() / core::mem::size_of::<integer_t>())
-        as _;
+    (core::mem::size_of::<thread_time_constraint_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_PRECEDENCE_POLICY_COUNT: mach_msg_type_number_t =
     (core::mem::size_of::<thread_precedence_policy>() / core::mem::size_of::<integer_t>()) as _;
 pub const THREAD_AFFINITY_POLICY_COUNT: mach_msg_type_number_t =

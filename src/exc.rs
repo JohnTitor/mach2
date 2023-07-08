@@ -1,14 +1,14 @@
 //! This module roughly corresponds to `mach/exc.h`.
 
-use super::exception_types::{exception_data_t, exception_type_t};
-use super::kern_return::kern_return_t;
-use super::message::{
-    mach_msg_body_t, mach_msg_header_t, mach_msg_port_descriptor_t, mach_msg_type_number_t,
+use super::{
+    exception_types::{exception_data_t, exception_type_t},
+    kern_return::kern_return_t,
+    message::{mach_msg_body_t, mach_msg_header_t, mach_msg_port_descriptor_t, mach_msg_type_number_t},
+    ndr::NDR_record_t,
+    port::mach_port_t,
+    thread_status::thread_state_t,
+    vm_types::integer_t,
 };
-use super::ndr::NDR_record_t;
-use super::port::mach_port_t;
-use super::thread_status::thread_state_t;
-use super::vm_types::integer_t;
 
 pub const exc_MSG_COUNT: ::libc::c_uint = 3;
 
@@ -52,11 +52,11 @@ extern "C" {
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__exception_raise_t {
     pub Head: mach_msg_header_t,
-    /* start of the kernel processed data */
+    // start of the kernel processed data
     pub msgh_body: mach_msg_body_t,
     pub thread: mach_msg_port_descriptor_t,
     pub task: mach_msg_port_descriptor_t,
-    /* end of the kernel processed data */
+    // end of the kernel processed data
     pub NDR: NDR_record_t,
     pub exception: exception_type_t,
     pub codeCnt: mach_msg_type_number_t,

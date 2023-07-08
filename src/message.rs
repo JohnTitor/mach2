@@ -1,8 +1,10 @@
 //! This module corresponds to `mach/message.h`.
 
-use super::kern_return::kern_return_t;
-use super::port::{mach_port_name_t, mach_port_seqno_t, mach_port_t};
-use super::vm_types::{integer_t, natural_t};
+use super::{
+    kern_return::kern_return_t,
+    port::{mach_port_name_t, mach_port_seqno_t, mach_port_t},
+    vm_types::{integer_t, natural_t},
+};
 
 pub type mach_msg_timeout_t = natural_t;
 

@@ -2,8 +2,7 @@
 
 #![allow(non_snake_case)]
 
-use super::mach_types::uuid_t;
-use super::port::mach_port_t;
+use super::{mach_types::uuid_t, port::mach_port_t};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -73,11 +72,7 @@ pub struct dyld_image_info {
 pub type dyld_image_mode = ::libc::c_uint;
 
 pub type dyld_image_notifier = ::core::option::Option<
-    unsafe extern "C" fn(
-        mode: dyld_image_mode,
-        infoCount: ::libc::c_uint,
-        info: *const dyld_image_info,
-    ),
+    unsafe extern "C" fn(mode: dyld_image_mode, infoCount: ::libc::c_uint, info: *const dyld_image_info),
 >;
 
 #[repr(C, align(16))]

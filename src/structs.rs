@@ -1,6 +1,7 @@
 //! This module corresponds to `mach/i386/_structs.h` and `mach/arm/_structs.h`.
 
 use core::mem;
+
 use super::message::mach_msg_type_number_t;
 
 #[cfg(target_arch = "aarch64")]

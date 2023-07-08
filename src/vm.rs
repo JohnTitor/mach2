@@ -1,25 +1,25 @@
 //! This module roughly corresponds to `mach/mach_vm.defs`.
 
-use super::boolean::boolean_t;
-use super::kern_return::kern_return_t;
-use super::mach_types::{mem_entry_name_port_t, vm_task_entry_t};
-use super::memory_object_types::{memory_object_offset_t, memory_object_size_t};
-use super::message::mach_msg_type_number_t;
-use super::port::mach_port_t;
-use super::vm_attributes::{vm_machine_attribute_t, vm_machine_attribute_val_t};
-use super::vm_behavior::vm_behavior_t;
-use super::vm_inherit::vm_inherit_t;
-use super::vm_prot::vm_prot_t;
-use super::vm_purgable::vm_purgable_t;
-use super::vm_region::mach_vm_read_entry_t;
-use super::vm_region::{
-    vm_page_info_flavor_t, vm_page_info_t, vm_region_flavor_t, vm_region_info_t,
-    vm_region_recurse_info_t,
-};
-use super::vm_sync::vm_sync_t;
-use super::vm_types::{
-    integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_map_t,
-    vm_offset_t, vm_size_t,
+use super::{
+    boolean::boolean_t,
+    kern_return::kern_return_t,
+    mach_types::{mem_entry_name_port_t, vm_task_entry_t},
+    memory_object_types::{memory_object_offset_t, memory_object_size_t},
+    message::mach_msg_type_number_t,
+    port::mach_port_t,
+    vm_attributes::{vm_machine_attribute_t, vm_machine_attribute_val_t},
+    vm_behavior::vm_behavior_t,
+    vm_inherit::vm_inherit_t,
+    vm_prot::vm_prot_t,
+    vm_purgable::vm_purgable_t,
+    vm_region::{
+        mach_vm_read_entry_t, vm_page_info_flavor_t, vm_page_info_t, vm_region_flavor_t, vm_region_info_t,
+        vm_region_recurse_info_t,
+    },
+    vm_sync::vm_sync_t,
+    vm_types::{
+        integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_map_t, vm_offset_t, vm_size_t,
+    },
 };
 
 extern "C" {
@@ -201,9 +201,7 @@ extern "C" {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::kern_return::KERN_SUCCESS;
-    use crate::traps::mach_task_self;
-    use crate::vm_statistics::VM_FLAGS_ANYWHERE;
+    use crate::{kern_return::KERN_SUCCESS, traps::mach_task_self, vm_statistics::VM_FLAGS_ANYWHERE};
 
     #[test]
     fn mach_vm_allocate_sanity() {
@@ -212,10 +210,7 @@ mod tests {
             let task = mach_task_self();
 
             let mut address: mach_vm_address_t = 0;
-            assert_eq!(
-                mach_vm_allocate(task, &mut address, size, VM_FLAGS_ANYWHERE),
-                KERN_SUCCESS
-            );
+            assert_eq!(mach_vm_allocate(task, &mut address, size, VM_FLAGS_ANYWHERE), KERN_SUCCESS);
             assert_eq!(mach_vm_deallocate(task, address, size), KERN_SUCCESS);
         }
     }
@@ -223,11 +218,15 @@ mod tests {
     #[test]
     fn mach_vm_region_sanity() {
         use core::mem;
-        use crate::vm_prot::{VM_PROT_EXECUTE, VM_PROT_READ};
-        use crate::vm_region::{vm_region_basic_info_64, VM_REGION_BASIC_INFO_64};
+
+        use crate::{
+            vm_prot::{VM_PROT_EXECUTE, VM_PROT_READ},
+            vm_region::{vm_region_basic_info_64, VM_REGION_BASIC_INFO_64},
+        };
         unsafe {
             let mut size = 0x10;
             let mut object_name = 0;
+            #[allow(clippy::fn_to_numeric_cast)]
             let mut address = mach_vm_region_sanity as mach_vm_address_t;
             let mut info: vm_region_basic_info_64 = mem::zeroed();
             let mut info_size = vm_region_basic_info_64::count();

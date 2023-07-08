@@ -1,7 +1,9 @@
 //! This module roughly corresponds to `mach/dyld_kernel.h`.
 
-use super::boolean::boolean_t;
-use super::mach_types::{fsid_t, fsobj_id_t, uuid_t};
+use super::{
+    boolean::boolean_t,
+    mach_types::{fsid_t, fsobj_id_t, uuid_t},
+};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
