@@ -68,7 +68,6 @@ fn main() {
         .header("mach/host_special_ports.h")
         .header("mach/kern_return.h")
         .header("mach/kmod.h")
-        .header("mach/lock_set.h")
         .header("mach/mach.h")
         .header("mach/mach_error.h")
         .header("mach/mach_host.h")
@@ -104,7 +103,6 @@ fn main() {
         .header("mach/sync_policy.h")
         .header("mach/task.h")
         .header("mach/task_info.h")
-        // .header("mach/task_inspect.h");
         .header("mach/task_policy.h")
         .header("mach/task_special_ports.h")
         .header("mach/thread_act.h")
@@ -129,6 +127,11 @@ fn main() {
         .header("mach/vm_sync.h")
         .header("mach/vm_task.h")
         .header("mach/vm_types.h");
+
+    // The below doesn't exist in Xcode 14:
+    if xcode < Xcode(14, 0) {
+        cfg.header("mach/lock_set.h");
+    }
 
     cfg.skip_struct(move |s| {
         match s {
@@ -166,6 +169,9 @@ fn main() {
             // FIXME: Changed in XCode 11, see `vm_region_submap_info_data_64`'s comment.
             "vm_region_submap_info_data_64_t" if xcode >= Xcode(11, 0) => true,
 
+            // FIXME: Unavailable since Xcode 14:
+            "io_master_t" if xcode >= Xcode(14, 0) => true,
+
             _ => false,
         }
     });
@@ -187,6 +193,9 @@ fn main() {
         // bad VM_PROT_NO_CHANGE value at byte 0: rust: 8 (0x8) != c 0 (0x0)
         // bad VM_PROT_NO_CHANGE value at byte 3: rust: 0 (0x0) != c 1 (0x1)
         "VM_PROT_NO_CHANGE" if xcode >= Xcode(13, 0) => true,
+
+        // FIXME: Unavailable since Xcode 14:
+        "EXC_CORPSE_VARIANT_BIT" if xcode >= Xcode(14, 0) => true,
         _ => false,
     });
 
