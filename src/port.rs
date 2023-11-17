@@ -11,6 +11,7 @@ pub struct ipc_port;
 pub type ipc_port_t = *mut ipc_port;
 
 pub type mach_port_t = ::libc::c_uint;
+pub type mach_port_array_t = *mut mach_port_t;
 
 pub const MACH_PORT_NULL: mach_port_t = 0;
 pub const MACH_PORT_DEAD: mach_port_t = !0;
