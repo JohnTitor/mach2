@@ -14,6 +14,9 @@ extern "C" {
     ) -> kern_return_t;
     pub fn semaphore_signal(semaphore: *mut semaphore_t) -> kern_return_t;
     pub fn semaphore_wait(semaphore: *mut semaphore_t) -> kern_return_t;
-    pub fn semaphore_timedwait(semaphore: *mut semaphore_t, timeout: mach_timespec_t) -> kern_return_t;
+    pub fn semaphore_timedwait(
+        semaphore: *mut semaphore_t,
+        timeout: mach_timespec_t,
+    ) -> kern_return_t;
     pub fn semaphore_destroy(task: task_t, semaphore: *mut semaphore_t) -> kern_return_t;
 }
