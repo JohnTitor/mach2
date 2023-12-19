@@ -177,6 +177,10 @@ fn main() {
     });
 
     cfg.skip_fn(move |s| {
+        // FIXME: The return type of these functions are different in Xcode 13 or higher.
+        if s.starts_with("semaphore") {
+            return true;
+        }
         match s {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
