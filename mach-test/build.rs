@@ -157,9 +157,6 @@ fn main() {
             // FIXME: Changed in XCode 11, figure out what's changed.
             "vm_region_submap_info_64" if xcode >= Xcode(11, 0) => true,
 
-            // FIXME: somehow test fails:
-            "mach_header" => true,
-
             _ => false,
         }
     });
@@ -190,9 +187,6 @@ fn main() {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
             "mach_task_self" | "current_task" => true,
-
-            // FIXME: somehow test fails (must use 'struct' tag to refer to type 'mach_header'):
-            "_dyld_get_image_header" => true,
 
             _ => false,
         }
@@ -293,36 +287,11 @@ fn main() {
         }
     });
 
-    cfg.type_name(|ty, is_struct, _is_union| match ty {
-        // struct foo in Rust should translate to struct foo in C:
-        "vm_region_basic_info_64"
-        | "vm_region_basic_info"
-        | "vm_region_extended_info"
-        | "vm_region_top_info"
-        | "vm_region_submap_info"
-        | "vm_region_submap_info_64"
-        | "vm_region_submap_short_info_64"
-        | "vm_page_info_basic"
-        | "vm_statistics"
-        | "task_dyld_info"
-        | "time_value"
-        | "fsid"
-        | "fsobj_id"
-        | "dyld_kernel_image_info"
-        | "dyld_kernel_process_info"
-        | "mach_timespec"
-        | "mach_vm_read_entry"
-        | "mach_timebase_info"
-        | "thread_standard_policy"
-        | "thread_extended_policy"
-        | "thread_time_constraint_policy"
-        | "thread_precedence_policy"
-        | "thread_affinity_policy"
-        | "thread_background_policy"
-        | "thread_latency_qos_policy"
-        | "thread_throughput_qos_policy" => format!("struct {}", ty),
-        _ if is_struct => format!("{}", ty),
-        _ => ty.to_string(),
+    cfg.type_name(move |ty, is_struct, is_union| match ty {
+        t if is_union => format!("union {}", t),
+        t if t.ends_with("_t") => t.to_string(),
+        t if is_struct => format!("struct {}", t),
+        t => t.to_string(),
     });
 
     cfg.skip_roundtrip(move |s| match s {
