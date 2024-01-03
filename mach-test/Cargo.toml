@@ -9,7 +9,7 @@ mach2 = { path = ".." }
 libc = "0.2"
 
 [build-dependencies]
-ctest = { package = "ctest2", version = "0.4.2" }
+ctest = { package = "ctest2", version = "0.4.7" }
 
 [[test]]
 name = "main"
