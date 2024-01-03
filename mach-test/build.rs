@@ -297,6 +297,7 @@ fn main() {
         | "vm_page_info_basic"
         | "vm_statistics"
         | "task_dyld_info"
+        | "time_value"
         | "fsid"
         | "fsobj_id"
         | "dyld_kernel_image_info"

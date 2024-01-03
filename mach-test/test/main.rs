@@ -29,6 +29,7 @@ use mach2::task_info::*;
 use mach2::thread_act::*;
 use mach2::thread_policy::*;
 use mach2::thread_status::*;
+use mach2::time_value::*;
 use mach2::traps::*;
 use mach2::vm::*;
 use mach2::vm_attributes::*;
