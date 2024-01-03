@@ -46,6 +46,8 @@ fn main() {
 
     cfg.flag("-Wno-unknown-warning-option");
 
+    cfg.header("mach-o/loader.h").header("mach-o/dyld.h");
+
     // Include the header files where the C APIs are defined
     cfg.header("mach/boolean.h")
         .header("bootstrap.h")
@@ -155,6 +157,9 @@ fn main() {
             // FIXME: Changed in XCode 11, figure out what's changed.
             "vm_region_submap_info_64" if xcode >= Xcode(11, 0) => true,
 
+            // FIXME: somehow test fails:
+            "mach_header" => true,
+
             _ => false,
         }
     });
@@ -185,6 +190,9 @@ fn main() {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
             "mach_task_self" | "current_task" => true,
+
+            // FIXME: somehow test fails (must use 'struct' tag to refer to type 'mach_header'):
+            "_dyld_get_image_header" => true,
 
             _ => false,
         }
