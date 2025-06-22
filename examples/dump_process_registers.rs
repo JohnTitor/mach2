@@ -118,6 +118,7 @@ fn main() {
     println!("Task is running {} threads", &thread_count);
 
     unsafe {
+        #[allow(invalid_null_arguments)]
         let threads = std::slice::from_raw_parts(thread_list, thread_count as usize);
         let state = thread_state64_t::new();
         let state_count = thread_state64_t::count();
