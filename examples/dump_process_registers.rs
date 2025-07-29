@@ -145,6 +145,8 @@ fn main() {
             thread_list as _,
             ((thread_count as usize) * mem::size_of::<libc::c_int>()) as _,
         );
+
+        println!("mach_host={:?}", mach2::mach_init::mach_host_self());
     }
 
     resume(task as task_t);
