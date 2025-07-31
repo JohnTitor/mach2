@@ -198,6 +198,70 @@ pub struct task_vm_info {
     pub limit_bytes_remaining: u64,
     pub decompressions: integer_t,
     pub ledger_swapins: i64,
-	pub ledger_tag_neural_nofootprint_total: i64,
-	pub ledger_tag_neural_nofootprint_peak: i64,
+    pub ledger_tag_neural_nofootprint_total: i64,
+    pub ledger_tag_neural_nofootprint_peak: i64,
+}
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct mach_task_basic_info {
+    pub virtual_size: mach_vm_size_t,
+    pub resident_size: mach_vm_size_t,
+    pub resident_size_max: mach_vm_size_t,
+    pub user_time: time_value_t,
+    pub system_time: time_value_t,
+    pub policy: policy_t,
+    pub suspend_count: integer_t,
+}
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_trace_memory_info {
+    pub user_memory_address: u64,
+    pub buffer_size: u64,
+    pub mailbox_array_size: u64,
+}
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_wait_state_info {
+    pub total_wait_state_time: u64,
+    pub total_wait_sfi_state_time: u64,
+    pub _reserved: [u32; 4],
+}
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct gpu_energy_data {
+    pub task_gpu_utilisation: u64,
+    pub task_gpu_stat_reserved0: u64,
+    pub task_gpu_stat_reserved1: u64,
+    pub task_gpu_stat_reserved2: u64,
+}
+
+#[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_power_info_v2 {
+    pub cpu_energy: task_power_info,
+    pub gpu_energy: gpu_energy_data,
+    pub task_energy: u64,
+    pub task_ptime: u64,
+    pub task_pset_switches: u64,
+}
+
+#[cfg(not(any(target_arch = "arm", target_arch = "aarch64")))]
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_power_info_v2 {
+    pub cpu_energy: task_power_info,
+    pub gpu_energy: gpu_energy_data,
+    pub task_ptime: u64,
+    pub task_pset_switches: u64,
+}
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_flags_info {
+    pub flags: u32,
 }
