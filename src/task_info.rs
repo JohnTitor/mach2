@@ -1,7 +1,9 @@
 //! This module roughly corresponds to `mach/task_info.h`.
 
+use mem;
+use message::{audit_token_t, security_token_t};
 use time_value::time_value_t;
-use vm_statistics::vm_extmod_statistics_data_t;
+use vm_statistics::{vm_extmod_statistics_data_t, vm_purgeable_info};
 use vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t, vm_size_t};
 
 pub const TASK_INFO_MAX: ::libc::c_uint = 1024;
@@ -54,6 +56,9 @@ pub struct task_basic_info_32 {
     pub policy: policy_t,
 }
 
+pub const TASK_BASIC_INFO_32_COUNT: u32 =
+    (mem::size_of::<task_basic_info_32>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_basic_info_64 {
@@ -65,6 +70,9 @@ pub struct task_basic_info_64 {
     pub policy: policy_t,
 }
 
+pub const TASK_BASIC_INFO_64_COUNT: u32 =
+    (mem::size_of::<task_basic_info_64>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_basic_info {
@@ -75,6 +83,9 @@ pub struct task_basic_info {
     pub system_time: time_value_t,
     pub policy: policy_t,
 }
+
+pub const TASK_BASIC_INFO_COUNT: u32 =
+    (mem::size_of::<task_basic_info>() / mem::size_of::<natural_t>()) as u32;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -89,12 +100,18 @@ pub struct task_events_info {
     pub csw: integer_t,
 }
 
+pub const TASK_EVENTS_INFO_COUNT: u32 =
+    (mem::size_of::<task_events_info>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_thread_times_info {
     pub user_time: time_value_t,
     pub system_time: time_value_t,
 }
+
+pub const TASK_THREAD_TIMES_INFO_COUNT: u32 =
+    (mem::size_of::<task_thread_times_info>() / mem::size_of::<natural_t>()) as u32;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -105,6 +122,9 @@ pub struct task_absolutetime_info {
     pub threads_system: u64,
 }
 
+pub const TASK_ABSOLUTETIME_INFO_COUNT: u32 =
+    (mem::size_of::<task_absolutetime_info>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_kernelmemory_info {
@@ -113,6 +133,15 @@ pub struct task_kernelmemory_info {
     pub total_salloc: u64,
     pub total_sfree: u64,
 }
+
+pub const TASK_KERNELMEMORY_INFO_COUNT: u32 =
+    (mem::size_of::<task_kernelmemory_info>() / mem::size_of::<natural_t>()) as u32;
+
+pub const TASK_SECURITY_TOKEN_COUNT: u32 =
+    (mem::size_of::<security_token_t>() / mem::size_of::<natural_t>()) as u32;
+
+pub const TASK_AUDIT_TOKEN_COUNT: u32 =
+    (mem::size_of::<audit_token_t>() / mem::size_of::<natural_t>()) as u32;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -131,12 +160,18 @@ pub struct task_dyld_info {
     pub all_image_info_format: integer_t,
 }
 
+pub const TASK_DYLD_INFO_COUNT: u32 =
+    (mem::size_of::<task_dyld_info>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_extmod_info {
     pub task_uuid: [::libc::c_uchar; 16usize],
     pub extmod_statistics: vm_extmod_statistics_data_t,
 }
+
+pub const TASK_EXTMOD_INFO_COUNT: u32 =
+    (mem::size_of::<task_extmod_info>() / mem::size_of::<natural_t>()) as u32;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -148,6 +183,9 @@ pub struct task_power_info {
     pub task_timer_wakeups_bin_1: u64,
     pub task_timer_wakeups_bin_2: u64,
 }
+
+pub const TASK_POWER_INFO_COUNT: u32 =
+    (mem::size_of::<task_power_info>() / mem::size_of::<natural_t>()) as u32;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -214,6 +252,9 @@ pub struct mach_task_basic_info {
     pub suspend_count: integer_t,
 }
 
+pub const MACH_TASK_BASIC_INFO_COUNT: u32 =
+    (mem::size_of::<mach_task_basic_info>() / mem::size_of::<natural_t>()) as u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_trace_memory_info {
@@ -260,8 +301,16 @@ pub struct task_power_info_v2 {
     pub task_pset_switches: u64,
 }
 
+pub const TASK_POWER_INFO_V2_COUNT: u32 =
+    (mem::size_of::<task_power_info_v2>() / mem::size_of::<natural_t>()) as u32;
+
+pub type task_purgable_info_t = vm_purgeable_info;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_flags_info {
     pub flags: u32,
 }
+
+pub const TASK_FLAGS_INFO_COUNT: u32 =
+    (mem::size_of::<task_flags_info>() / mem::size_of::<natural_t>()) as u32;
