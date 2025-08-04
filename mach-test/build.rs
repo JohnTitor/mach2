@@ -290,6 +290,7 @@ fn main() {
     cfg.type_name(move |ty, is_struct, is_union| match ty {
         t if is_union => format!("union {}", t),
         t if t.ends_with("_t") => t.to_string(),
+        t @ "gpu_energy_data" => t.to_string(),
         t if is_struct => format!("struct {}", t),
         t => t.to_string(),
     });
