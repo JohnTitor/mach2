@@ -13,7 +13,7 @@ pub struct arm_thread_state64_t {
     pub __sp: u64,
     pub __pc: u64,
     pub __cpsr: u32,
-    pub __flags: u32,
+    pub __pad: u32,
 }
 
 #[cfg(target_arch = "aarch64")]
