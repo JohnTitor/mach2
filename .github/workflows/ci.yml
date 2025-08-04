@@ -7,20 +7,25 @@ on:
 
 jobs:
   xcode_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+          - target: aarch64-apple-darwin
     runs-on: macos-15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1
         with:
           xcode-version: '16.4.0'
-      - run: TARGET=x86_64-apple-darwin RUST_VERSION=nightly ci/run.sh
+      - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly ci/run.sh
 
   target_test:
     strategy:
       fail-fast: false
       matrix:
         target:
-          - aarch64-apple-darwin
           - aarch64-apple-ios
           - aarch64-apple-ios-sim
           - x86_64-apple-ios
