@@ -8,7 +8,7 @@ A Rust interface to the **user-space** API of the Mach 3.0 kernel exposed in
 
 This library does not expose the **kernel-space** API of the Mach 3.0 kernel
 exposed in
-`SDK/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach`. 
+`SDK/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach`.
 
 That is, if you are writing a kernel-resident device drivers or some other
 kernel extensions you have to use something else. The user-space kernel API is
@@ -22,7 +22,7 @@ Add the following to your `Cargo.toml` to conditionally include mach on those
 platforms that support it.
 
 ```toml
-[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies.mach]
+[target.'cfg(target_vendor = "apple")'.dependencies.mach]
 version = "0.4"
 ```
 
