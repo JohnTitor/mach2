@@ -11,8 +11,8 @@ extern "C" {
     pub fn thread_get_state(
         target_act: thread_act_t,
         flavor: thread_state_flavor_t,
-        new_state: thread_state_t,
-        new_state_count: *mut mach_msg_type_number_t,
+        old_state: thread_state_t,
+        old_state_count: *mut mach_msg_type_number_t,
     ) -> kern_return_t;
 
     pub fn thread_set_state(
