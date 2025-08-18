@@ -3,13 +3,15 @@ name = "mach-test"
 version = "0.1.0"
 authors = ["gnzlbg <gonzalobg88@gmail.com>"]
 build = "build.rs"
+edition = "2024"
 
 [dependencies]
 mach2 = { path = ".." }
 libc = "0.2"
 
 [build-dependencies]
-ctest = "0.4"
+# FIXME: Use a published version of ctest
+ctest = { git = "https://github.com/rust-lang/libc.git", rev = "443954669399abec95751b0b220fd5f9ef26ea49"}
 
 [[test]]
 name = "main"
