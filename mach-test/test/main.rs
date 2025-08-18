@@ -1,8 +1,5 @@
 #![allow(bad_style)]
 
-extern crate libc;
-extern crate mach2;
-
 use mach2::boolean::*;
 use mach2::bootstrap::*;
 use mach2::clock::*;
@@ -37,9 +34,6 @@ use mach2::vm::*;
 use mach2::vm_attributes::*;
 use mach2::vm_behavior::*;
 use mach2::vm_inherit::*;
-// FIXME: vm_page_size is not used => not tested?
-#[allow(unused_imports)]
-use mach2::vm_page_size::*;
 use mach2::vm_prot::*;
 use mach2::vm_purgable::*;
 use mach2::vm_region::*;
