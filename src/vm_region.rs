@@ -6,7 +6,7 @@ use crate::message::mach_msg_type_number_t;
 use crate::vm_behavior::vm_behavior_t;
 use crate::vm_inherit::vm_inherit_t;
 use crate::vm_prot::vm_prot_t;
-use crate::vm_types::{mach_vm_address_t, mach_vm_size_t};
+use crate::vm_types::{mach_vm_address_t, mach_vm_size_t, natural_t};
 use core::mem;
 
 pub type vm32_object_id_t = u32;
@@ -22,10 +22,22 @@ pub type vm_region_basic_info_64_t = *mut vm_region_basic_info_64;
 pub type vm_region_basic_info_data_64_t = vm_region_basic_info_64;
 pub type vm_region_basic_info_t = *mut vm_region_basic_info;
 pub type vm_region_basic_info_data_t = vm_region_basic_info;
+pub const VM_REGION_BASIC_INFO_COUNT_64: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_basic_info_data_64_t>() / mem::size_of::<libc::c_int>())
+        as mach_msg_type_number_t;
+pub const VM_REGION_BASIC_INFO_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_basic_info_data_t>() / mem::size_of::<libc::c_int>())
+        as mach_msg_type_number_t;
 pub type vm_region_extended_info_t = *mut vm_region_extended_info;
 pub type vm_region_extended_info_data_t = vm_region_extended_info;
 pub type vm_region_top_info_t = *mut vm_region_top_info;
 pub type vm_region_top_info_data_t = vm_region_top_info;
+pub const VM_REGION_EXTENDED_INFO_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_extended_info_data_t>() / mem::size_of::<natural_t>())
+        as mach_msg_type_number_t;
+pub const VM_REGION_TOP_INFO_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_top_info_data_t>() / mem::size_of::<natural_t>())
+        as mach_msg_type_number_t;
 pub type vm_region_submap_info_t = *mut vm_region_submap_info;
 pub type vm_region_submap_info_data_t = vm_region_submap_info;
 pub type vm_region_submap_info_64_t = *mut vm_region_submap_info_64;
@@ -37,6 +49,17 @@ pub type vm_page_info_flavor_t = libc::c_int;
 pub type vm_page_info_basic_t = *mut vm_page_info_basic;
 pub type vm_page_info_basic_data_t = vm_page_info_basic;
 pub type mach_vm_read_entry_t = [mach_vm_read_entry; VM_MAP_ENTRY_MAX as usize];
+pub const VM_REGION_SUBMAP_INFO_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_submap_info_data_t>() / mem::size_of::<natural_t>())
+        as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_SHORT_INFO_COUNT_64: mach_msg_type_number_t =
+    (mem::size_of::<vm_region_submap_short_info_data_64_t>() / mem::size_of::<natural_t>())
+        as mach_msg_type_number_t;
+pub const VM_PAGE_INFO_BASIC_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_page_info_basic_data_t>() / mem::size_of::<libc::c_int>())
+        as mach_msg_type_number_t;
+pub const VM_REGION_FLAG_JIT_ENABLED: libc::c_ushort = 0x1;
+pub const VM_REGION_FLAG_TPRO_ENABLED: libc::c_ushort = 0x2;
 
 pub const VM_REGION_INFO_MAX: libc::c_int = 1 << 10;
 pub const VM_MAP_ENTRY_MAX: libc::c_int = 1 << 8;
@@ -55,6 +78,7 @@ pub const SM_SHARED: libc::c_uchar = 4;
 pub const SM_TRUESHARED: libc::c_uchar = 5;
 pub const SM_PRIVATE_ALIASED: libc::c_uchar = 6;
 pub const SM_SHARED_ALIASED: libc::c_uchar = 7;
+pub const SM_LARGE_PAGE: libc::c_uchar = 8;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
@@ -180,7 +204,9 @@ pub struct vm_region_submap_info_64 {
     pub behavior: vm_behavior_t,
     pub object_id: vm32_object_id_t,
     pub user_wired_count: libc::c_ushort,
+    pub flags: libc::c_ushort,
     pub pages_reusable: libc::c_uint,
+    pub object_id_full: vm_object_id_t,
 }
 
 impl vm_region_submap_info_64 {
@@ -205,6 +231,7 @@ pub struct vm_region_submap_short_info_64 {
     pub behavior: vm_behavior_t,
     pub object_id: vm32_object_id_t,
     pub user_wired_count: libc::c_ushort,
+    pub flags: libc::c_ushort,
 }
 
 impl vm_region_submap_short_info_64 {

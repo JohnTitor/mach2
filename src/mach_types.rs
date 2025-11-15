@@ -4,10 +4,19 @@ use crate::port::mach_port_t;
 
 pub type task_t = mach_port_t;
 pub type task_name_t = mach_port_t;
+pub type task_policy_set_t = mach_port_t;
+pub type task_policy_get_t = mach_port_t;
+pub type task_inspect_t = mach_port_t;
+pub type task_read_t = mach_port_t;
 pub type task_suspension_token_t = mach_port_t;
+pub type task_id_token_t = mach_port_t;
 pub type thread_t = mach_port_t;
 pub type thread_act_t = mach_port_t;
+pub type thread_inspect_t = mach_port_t;
+pub type thread_read_t = mach_port_t;
 pub type ipc_space_t = mach_port_t;
+pub type ipc_space_read_t = mach_port_t;
+pub type ipc_space_inspect_t = mach_port_t;
 pub type coalition_t = mach_port_t;
 pub type host_t = mach_port_t;
 pub type host_priv_t = mach_port_t;
@@ -21,6 +30,11 @@ pub type ledger_t = mach_port_t;
 pub type alarm_t = mach_port_t;
 pub type clock_serv_t = mach_port_t;
 pub type clock_ctrl_t = mach_port_t;
+pub type arcade_register_t = mach_port_t;
+pub type ipc_eventlink_t = mach_port_t;
+pub type eventlink_port_pair_t = [mach_port_t; 2];
+pub type mach_eventlink_t = mach_port_t;
+pub type kcdata_object_t = mach_port_t;
 
 pub type processor_set_name_t = processor_set_t;
 
@@ -30,6 +44,7 @@ pub type mem_entry_name_port_t = mach_port_t;
 pub type exception_handler_t = mach_port_t;
 pub type exception_handler_array_t = *mut exception_handler_t;
 pub type vm_task_entry_t = mach_port_t;
+pub type io_main_t = mach_port_t;
 pub type io_master_t = mach_port_t;
 pub type UNDServerRef = mach_port_t;
 
@@ -68,10 +83,16 @@ pub type exception_port_arrary_t = exception_handler_array_t;
 
 pub const TASK_NULL: task_t = 0;
 pub const TASK_NAME_NULL: task_name_t = 0;
+pub const TASK_INSPECT_NULL: task_inspect_t = 0;
+pub const TASK_READ_NULL: task_read_t = 0;
 pub const THREAD_NULL: thread_t = 0;
+pub const THREAD_INSPECT_NULL: thread_inspect_t = 0;
+pub const THREAD_READ_NULL: thread_read_t = 0;
 pub const TID_NULL: u64 = 0;
 pub const THR_ACT_NULL: thread_act_t = 0;
 pub const IPC_SPACE_NULL: ipc_space_t = 0;
+pub const IPC_SPACE_READ_NULL: ipc_space_read_t = 0;
+pub const IPC_SPACE_INSPECT_NULL: ipc_space_inspect_t = 0;
 pub const COALITION_NULL: coalition_t = 0;
 pub const HOST_NULL: host_t = 0;
 pub const HOST_PRIV_NULL: host_priv_t = 0;
@@ -84,6 +105,11 @@ pub const LEDGER_NULL: ledger_t = 0;
 pub const ALARM_NULL: alarm_t = 0;
 pub const CLOCK_NULL: libc::clock_t = 0;
 pub const UND_SERVER_NULL: UNDServerRef = 0;
+pub const ARCADE_REG_NULL: arcade_register_t = 0;
+pub const MACH_EVENTLINK_NULL: mach_eventlink_t = 0;
+pub const IPC_EVENTLINK_NULL: ipc_eventlink_t = 0;
+pub const TASK_ID_TOKEN_NULL: task_id_token_t = 0;
+pub const KCDATA_OBJECT_NULL: kcdata_object_t = 0;
 
 // <sys/_types.h>: typedef	unsigned char	__darwin_uuid_t[16];
 pub type uuid_t = [libc::c_uchar; 16];
