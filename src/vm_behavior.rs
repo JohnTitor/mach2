@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/vm_behavior.h`.
 
-pub type vm_behavior_t = ::libc::c_int;
+pub type vm_behavior_t = libc::c_int;
 
 pub const VM_BEHAVIOR_DEFAULT: vm_behavior_t = 0;
 pub const VM_BEHAVIOR_RANDOM: vm_behavior_t = 1;

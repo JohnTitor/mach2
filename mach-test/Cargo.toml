@@ -1,9 +1,9 @@
 [package]
 name = "mach-test"
 version = "0.1.0"
-authors = ["gnzlbg <gonzalobg88@gmail.com>"]
+authors = ["Yuki Okushi <huyuumi.dev@gmail.com>"]
 build = "build.rs"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 mach2 = { path = ".." }

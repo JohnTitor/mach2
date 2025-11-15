@@ -1,5 +1,11 @@
 extern crate ctest;
 
+use std::env;
+use std::fs;
+#[cfg(unix)]
+use std::os::unix::fs::PermissionsExt;
+use std::path::{Path, PathBuf};
+
 #[derive(Eq, Ord, PartialEq, PartialOrd, Copy, Clone, Debug)]
 struct Xcode(pub u32, pub u32);
 
@@ -38,6 +44,8 @@ impl Xcode {
 }
 
 fn main() {
+    inject_libc_extern();
+
     let xcode = Xcode::version();
     // kept on purpose for debugging:
     // println!("cargo:warning=\"Xcode version: {:?}\"", xcode);
@@ -283,12 +291,10 @@ fn main() {
         }
     });
 
-    cfg.rename_struct_ty(move |ty| {
-        match ty {
-            t if t.ends_with("_t") => Some(t.to_string()),
-            t @ "gpu_energy_data" => Some(t.to_string()),
-            t => Some(format!("struct {}", t)),
-        }
+    cfg.rename_struct_ty(move |ty| match ty {
+        t if t.ends_with("_t") => Some(t.to_string()),
+        t @ "gpu_energy_data" => Some(t.to_string()),
+        t => Some(format!("struct {}", t)),
     });
 
     cfg.skip_roundtrip(move |s| match s {
@@ -303,4 +309,79 @@ fn main() {
     // Generate the tests, passing the path to the `*-sys` library as well as
     // the module to generate.
     ctest::generate_test(&mut cfg, "../src/lib.rs", "all.rs").unwrap();
+}
+
+fn inject_libc_extern() {
+    if env::var_os("CTEST_LIBC_WRAPPER_INSTALLED").is_some() {
+        return;
+    }
+
+    let rustc = env::var("RUSTC").unwrap_or_else(|_| String::from("rustc"));
+
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR must be set"));
+    let profile_dir = out_dir
+        .ancestors()
+        .nth(3)
+        .expect("failed to locate Cargo profile directory");
+    let deps_dir = profile_dir.join("deps");
+
+    let libc_artifact = find_libc_artifact(&deps_dir)
+        .unwrap_or_else(|| panic!("failed to locate libc artifact in {}", deps_dir.display()));
+
+    let wrapper_path = create_rustc_wrapper(&out_dir);
+
+    unsafe {
+        env::set_var("CTEST_REAL_RUSTC", &rustc);
+        env::set_var("CTEST_LIBC_ARTIFACT", &libc_artifact);
+        env::set_var("RUSTC", &wrapper_path);
+        env::set_var("CTEST_LIBC_WRAPPER_INSTALLED", "1");
+    }
+}
+
+fn find_libc_artifact(dir: &Path) -> Option<PathBuf> {
+    let mut fallback = None;
+    let entries = fs::read_dir(dir).ok()?;
+    for entry in entries.flatten() {
+        let path = entry.path();
+        let file_name = path.file_name()?.to_string_lossy();
+        if !file_name.starts_with("liblibc-") {
+            continue;
+        }
+        match path.extension().and_then(|ext| ext.to_str()) {
+            Some("rlib") => return Some(path),
+            Some("rmeta") | Some("a") | Some("lib") if fallback.is_none() => {
+                fallback = Some(path);
+            }
+            _ => {}
+        }
+    }
+    fallback
+}
+
+fn create_rustc_wrapper(out_dir: &Path) -> PathBuf {
+    #[cfg(unix)]
+    {
+        let wrapper_path = out_dir.join("rustc-with-libc.sh");
+        let script = r#"#!/bin/sh
+exec "$CTEST_REAL_RUSTC" --extern "libc=$CTEST_LIBC_ARTIFACT" "$@"
+"#;
+        fs::write(&wrapper_path, script).expect("failed to write rustc wrapper script");
+        let mut perms = fs::metadata(&wrapper_path)
+            .and_then(|meta| Ok(meta.permissions()))
+            .expect("failed to read wrapper permissions");
+        perms.set_mode(0o755);
+        fs::set_permissions(&wrapper_path, perms)
+            .expect("failed to set executable bit on rustc wrapper script");
+        wrapper_path
+    }
+    #[cfg(not(unix))]
+    {
+        let wrapper_path = out_dir.join("rustc-with-libc.cmd");
+        let script = r#"@echo off
+setlocal
+"%CTEST_REAL_RUSTC%" --extern libc="%CTEST_LIBC_ARTIFACT%" %*
+"#;
+        fs::write(&wrapper_path, script).expect("failed to write rustc wrapper script");
+        wrapper_path
+    }
 }

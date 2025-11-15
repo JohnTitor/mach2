@@ -1,4 +1,4 @@
-use vm_types::integer_t;
+use crate::vm_types::integer_t;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
