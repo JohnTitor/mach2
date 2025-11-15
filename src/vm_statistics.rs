@@ -57,11 +57,14 @@ pub const VM_FLAGS_RESILIENT_CODESIGN: libc::c_int = 0x20;
 pub const VM_FLAGS_RESILIENT_MEDIA: libc::c_int = 0x40;
 pub const VM_FLAGS_PERMANENT: libc::c_int = 0x80;
 pub const VM_FLAGS_TPRO: libc::c_int = 0x1000;
+pub const VM_FLAGS_MTE: libc::c_int = 0x2000;
 pub const VM_FLAGS_OVERWRITE: libc::c_int = 0x4000;
 pub const VM_FLAGS_SUPERPAGE_MASK: libc::c_int = 0x0007_0000;
 pub const VM_FLAGS_RETURN_DATA_ADDR: libc::c_int = 0x0010_0000;
 pub const VM_FLAGS_RETURN_4K_DATA_ADDR: libc::c_int = 0x0080_0000;
 pub const VM_FLAGS_ALIAS_MASK: libc::c_int = -16_777_216; // 0xFF000000
+
+pub const VM_FLAGS_HW: libc::c_int = VM_FLAGS_TPRO | VM_FLAGS_MTE;
 
 pub const VM_FLAGS_USER_ALLOCATE: libc::c_int = VM_FLAGS_FIXED
     | VM_FLAGS_ANYWHERE
@@ -72,7 +75,7 @@ pub const VM_FLAGS_USER_ALLOCATE: libc::c_int = VM_FLAGS_FIXED
     | VM_FLAGS_PERMANENT
     | VM_FLAGS_OVERWRITE
     | VM_FLAGS_SUPERPAGE_MASK
-    | VM_FLAGS_TPRO
+    | VM_FLAGS_HW
     | VM_FLAGS_ALIAS_MASK;
 pub const VM_FLAGS_USER_MAP: libc::c_int =
     VM_FLAGS_USER_ALLOCATE | VM_FLAGS_RETURN_4K_DATA_ADDR | VM_FLAGS_RETURN_DATA_ADDR;
@@ -99,14 +102,17 @@ pub const GUARD_TYPE_VIRT_MEMORY: u32 = 5;
 pub type virtual_memory_guard_exception_code_t = u32;
 pub const kGUARD_EXC_DEALLOC_GAP: u32 = 1;
 pub const kGUARD_EXC_RECLAIM_COPYIO_FAILURE: u32 = 2;
-pub const kGUARD_EXC_SEC_LOOKUP_DENIED: u32 = 3;
 pub const kGUARD_EXC_RECLAIM_INDEX_FAILURE: u32 = 4;
-pub const kGUARD_EXC_SEC_RANGE_DENIED: u32 = 6;
-pub const kGUARD_EXC_SEC_ACCESS_FAULT: u32 = 7;
 pub const kGUARD_EXC_RECLAIM_DEALLOCATE_FAILURE: u32 = 8;
-pub const kGUARD_EXC_SEC_COPY_DENIED: u32 = 16;
-pub const kGUARD_EXC_SEC_SHARING_DENIED: u32 = 32;
-pub const kGUARD_EXC_SEC_ASYNC_ACCESS_FAULT: u32 = 64;
+pub const kGUARD_EXC_RECLAIM_ACCOUNTING_FAILURE: u32 = 9;
+pub const kGUARD_EXC_SEC_IOPL_ON_EXEC_PAGE: u32 = 10;
+pub const kGUARD_EXC_SEC_EXEC_ON_IOPL_PAGE: u32 = 11;
+pub const kGUARD_EXC_SEC_UPL_WRITE_ON_EXEC_REGION: u32 = 12;
+
+pub const kGUARD_EXC_SEC_ACCESS_FAULT: u32 = 98;
+pub const kGUARD_EXC_SEC_ASYNC_ACCESS_FAULT: u32 = 99;
+pub const kGUARD_EXC_SEC_COPY_DENIED: u32 = 100;
+pub const kGUARD_EXC_SEC_SHARING_DENIED: u32 = 101;
 
 #[inline]
 pub fn vm_statistics_truncate_to_32_bit(value: u64) -> u32 {
@@ -174,6 +180,7 @@ pub struct vm_statistics64 {
     pub external_page_count: natural_t,
     pub internal_page_count: natural_t,
     pub total_uncompressed_pages_in_compressor: u64,
+    pub swapped_count: u64,
 }
 
 #[repr(C, packed(8))]
