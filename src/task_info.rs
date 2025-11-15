@@ -1,6 +1,7 @@
 //! This module roughly corresponds to `mach/task_info.h`.
 
 use crate::message::{audit_token_t, security_token_t};
+use crate::policy::policy_t;
 use crate::time_value::time_value_t;
 use crate::vm_statistics::{vm_extmod_statistics_data_t, vm_purgeable_info};
 use crate::vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t, vm_size_t};
@@ -43,7 +44,6 @@ pub const TASK_DEBUG_INFO_INTERNAL: libc::c_uint = 29;
 
 pub type task_flavor_t = natural_t;
 pub type task_info_t = *mut integer_t;
-pub type policy_t = libc::c_int;
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]

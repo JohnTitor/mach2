@@ -74,13 +74,13 @@ sudo ./target/debug/examples/dump_process_registers
 
 The following table describes the current CI set-up:
 
-| Target                  | Min. Rust | XCode           | build | ctest | run |
-|-------------------------|-----------|-----------------|-------|-------|-----|
-| `x86_64-apple-darwin`   | 1.33.0    | 10.3.0 - 13.1.0 | ✓     | ✓     | ✓   |
-| `aarch64-apple-darwin`  | nightly   | 13.1.0          | ✓     | -     | -   |
-| `aarch64-apple-ios`     | nightly   | 13.1.0          | ✓     | -     | -   |
-| `aarch64-apple-ios-sim` | nightly   | 13.1.0          | ✓     | -     | -   |
-| `x86_64-apple-ios`      | nightly   | 13.1.0          | ✓     | -     | -   |
+| Target                  | XCode  | build | ctest | run |
+|-------------------------|--------|-------|-------|-----|
+| `x86_64-apple-darwin`   | 26.1.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-darwin`  | 26.1.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-ios`     | 26.1.0 | ✓     | -     | -   |
+| `aarch64-apple-ios-sim` | 26.1.0 | ✓     | -     | -   |
+| `x86_64-apple-ios`      | 26.1.0 | ✓     | -     | -   |
 
 ## License
 
