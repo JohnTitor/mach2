@@ -28,9 +28,9 @@ pub const TASK_HOST_PORT: task_special_port_t = 2;
 pub const TASK_NAME_PORT: task_special_port_t = 3;
 pub const TASK_BOOTSTRAP_PORT: task_special_port_t = 4;
 
-pub const task_MSG_COUNT: c_uint = 35;
+pub const task_MSG_COUNT: c_uint = 66;
 
-pub type task_policy_flavor_t = integer_t;
+pub type task_policy_flavor_t = natural_t;
 pub type task_policy_t = *mut integer_t;
 pub type policy_base_t = *mut integer_t;
 pub type policy_limit_t = *mut integer_t;
@@ -205,7 +205,7 @@ unsafe extern "C" {
     ) -> kern_return_t;
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__task_create_t {
@@ -231,7 +231,7 @@ pub struct __Request__task_threads_t {
     pub Head: mach_msg_header_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__mach_ports_register_t {
@@ -267,7 +267,7 @@ pub struct __Request__task_set_info_t {
     pub NDR: NDR_record_t,
     pub flavor: task_flavor_t,
     pub task_info_inCnt: mach_msg_type_number_t,
-    pub task_info_in: [integer_t; 10],
+    pub task_info_in: [integer_t; 94],
 }
 
 #[repr(C)]
@@ -319,7 +319,7 @@ pub struct __Request__thread_create_running_t {
     pub NDR: NDR_record_t,
     pub flavor: thread_state_flavor_t,
     pub new_stateCnt: mach_msg_type_number_t,
-    pub new_state: [natural_t; 144],
+    pub new_state: [natural_t; 1296],
 }
 
 #[repr(C)]
@@ -430,7 +430,7 @@ pub struct __Request__task_policy_t {
     pub change: boolean_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__task_set_emulation_t {
@@ -447,7 +447,7 @@ pub struct __Request__task_get_emulation_vector_t {
     pub Head: mach_msg_header_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__task_set_emulation_vector_t {
@@ -459,7 +459,7 @@ pub struct __Request__task_set_emulation_vector_t {
     pub emulation_vectorCnt: mach_msg_type_number_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Request__task_set_ras_pc_t {
@@ -530,7 +530,7 @@ pub struct __Request__task_set_state_t {
     pub NDR: NDR_record_t,
     pub flavor: thread_state_flavor_t,
     pub new_stateCnt: mach_msg_type_number_t,
-    pub new_state: [natural_t; 144],
+    pub new_state: [natural_t; 1296],
 }
 
 #[repr(C)]
@@ -551,7 +551,7 @@ pub struct __Reply__task_terminate_t {
     pub RetCode: kern_return_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Reply__task_threads_t {
@@ -571,7 +571,7 @@ pub struct __Reply__mach_ports_register_t {
     pub RetCode: kern_return_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Reply__mach_ports_lookup_t {
@@ -590,7 +590,7 @@ pub struct __Reply__task_info_t {
     pub NDR: NDR_record_t,
     pub RetCode: kern_return_t,
     pub task_info_outCnt: mach_msg_type_number_t,
-    pub task_info_out: [integer_t; 10],
+    pub task_info_out: [integer_t; 94],
 }
 
 #[repr(C)]
@@ -685,7 +685,7 @@ pub struct __Reply__task_get_exception_ports_t {
 pub struct __Reply__task_swap_exception_ports_t {
     pub Head: mach_msg_header_t,
     pub msgh_body: mach_msg_body_t,
-    pub old_handlerss: [mach_msg_port_descriptor_t; 32],
+    pub old_handlers: [mach_msg_port_descriptor_t; 32],
     pub NDR: NDR_record_t,
     pub masksCnt: mach_msg_type_number_t,
     pub masks: [exception_mask_t; 32],
@@ -768,7 +768,7 @@ pub struct __Reply__task_set_emulation_t {
     pub RetCode: kern_return_t,
 }
 
-#[repr(C)]
+#[repr(C, packed(4))]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]
 pub struct __Reply__task_get_emulation_vector_t {
@@ -842,7 +842,7 @@ pub struct __Reply__task_get_state_t {
     pub NDR: NDR_record_t,
     pub RetCode: kern_return_t,
     pub old_stateCnt: mach_msg_type_number_t,
-    pub old_state: [natural_t; 144],
+    pub old_state: [natural_t; 1296],
 }
 
 #[repr(C)]

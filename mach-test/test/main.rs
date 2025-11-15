@@ -20,6 +20,8 @@ use mach2::memory_object_types::*;
 use mach2::message::*;
 use mach2::ndr::*;
 use mach2::port::*;
+// FIXME: semaphore is not used => not tested?
+#[allow(unused_imports)]
 use mach2::semaphore::*;
 use mach2::structs::*;
 use mach2::sync_policy::*;
@@ -43,9 +45,6 @@ use mach2::vm_region::*;
 use mach2::vm_statistics::*;
 use mach2::vm_sync::*;
 use mach2::vm_types::*;
-
-// These types are not re-exported by mach2::types but they are required.
-use libc::{c_int, c_uchar, c_uint, c_ulonglong, clock_t};
 
 // Imported by mach, but kept private:
 unsafe extern "C" {
