@@ -16,9 +16,13 @@ use mach2::mach_init::*;
 use mach2::mach_port::*;
 use mach2::mach_time::*;
 use mach2::mach_types::*;
+use mach2::mach_voucher_types::*;
 use mach2::memory_object_types::*;
 use mach2::message::*;
+use mach2::mig::*;
 use mach2::ndr::*;
+use mach2::notify::*;
+use mach2::policy::*;
 use mach2::port::*;
 // FIXME: semaphore is not used => not tested?
 #[allow(unused_imports)]
@@ -27,9 +31,13 @@ use mach2::structs::*;
 use mach2::sync_policy::*;
 use mach2::task::*;
 use mach2::task_info::*;
+use mach2::task_special_ports::*;
 use mach2::thread_act::*;
 use mach2::thread_policy::*;
+use mach2::thread_special_ports::*;
+use mach2::thread_state::*;
 use mach2::thread_status::*;
+use mach2::thread_switch::*;
 use mach2::time_value::*;
 use mach2::traps::*;
 use mach2::vm::*;

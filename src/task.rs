@@ -1,4 +1,4 @@
-//! This module corresponds to `mach/task.defs`.
+//! This module corresponds to `mach/task.h`.
 
 use crate::boolean::boolean_t;
 use crate::exception_types::{
@@ -15,25 +15,18 @@ use crate::message::{
     mach_msg_port_descriptor_t, mach_msg_type_number_t,
 };
 use crate::ndr::NDR_record_t;
+use crate::policy::{policy_base_t, policy_limit_t, policy_t};
 use crate::port::{mach_port_array_t, mach_port_t};
-use crate::task_info::{policy_t, task_flavor_t, task_info_t};
+use crate::task_info::{task_flavor_t, task_info_t};
+use crate::task_special_ports::task_special_port_t;
 use crate::thread_status::{thread_state_flavor_t, thread_state_t};
 use crate::vm_types::{integer_t, natural_t, vm_address_t};
 use core::ffi::{c_int, c_uint};
-
-pub type task_special_port_t = c_int;
-
-pub const TASK_KERNEL_PORT: task_special_port_t = 1;
-pub const TASK_HOST_PORT: task_special_port_t = 2;
-pub const TASK_NAME_PORT: task_special_port_t = 3;
-pub const TASK_BOOTSTRAP_PORT: task_special_port_t = 4;
 
 pub const task_MSG_COUNT: c_uint = 66;
 
 pub type task_policy_flavor_t = natural_t;
 pub type task_policy_t = *mut integer_t;
-pub type policy_base_t = *mut integer_t;
-pub type policy_limit_t = *mut integer_t;
 pub type emulation_vector_t = *mut integer_t;
 
 unsafe extern "C" {
