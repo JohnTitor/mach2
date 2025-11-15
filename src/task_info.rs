@@ -306,6 +306,9 @@ pub const TASK_POWER_INFO_V2_COUNT: u32 =
 
 pub type task_purgable_info_t = vm_purgeable_info;
 
+pub type task_exc_guard_behavior_t = u32;
+pub type task_corpse_forking_behavior_t = u32;
+
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
 pub struct task_flags_info {

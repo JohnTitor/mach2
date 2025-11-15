@@ -6,6 +6,19 @@ unsafe extern "C" {
     pub static vm_page_size: vm_size_t;
     pub static vm_page_mask: vm_size_t;
     pub static vm_page_shift: libc::c_int;
+    pub static vm_kernel_page_size: vm_size_t;
+    pub static vm_kernel_page_mask: vm_size_t;
+    pub static vm_kernel_page_shift: libc::c_int;
+}
+
+#[allow(clippy::missing_safety_doc)] // FIXME
+pub unsafe fn vm_trunc_page(x: vm_size_t) -> vm_size_t {
+    unsafe { x & !(vm_page_size - 1) }
+}
+
+#[allow(clippy::missing_safety_doc)] // FIXME
+pub unsafe fn vm_round_page(x: vm_size_t) -> vm_size_t {
+    unsafe { vm_trunc_page(x + (vm_page_size - 1)) }
 }
 
 #[allow(clippy::missing_safety_doc)] // FIXME
@@ -37,4 +50,14 @@ mod tests {
             assert_eq!(vm_page_size, 4096);
         }
     }
+}
+
+#[allow(clippy::missing_safety_doc)] // FIXME
+pub unsafe fn trunc_page_kernel(x: vm_size_t) -> vm_size_t {
+    unsafe { x & !vm_kernel_page_mask }
+}
+
+#[allow(clippy::missing_safety_doc)] // FIXME
+pub unsafe fn round_page_kernel(x: vm_size_t) -> vm_size_t {
+    unsafe { trunc_page_kernel(x + vm_kernel_page_mask) }
 }
