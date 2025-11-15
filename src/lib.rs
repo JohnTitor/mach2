@@ -13,8 +13,6 @@
 #[cfg(not(target_vendor = "apple"))]
 compile_error!("mach requires macOS, iOS, tvOS, watchOS or visionOS");
 
-extern crate libc;
-
 #[allow(unused_imports)]
 use core::{clone, cmp, default, fmt, hash, marker, mem, option};
 

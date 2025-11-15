@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/vm_sync.h`.
 
-pub type vm_sync_t = ::libc::c_uint;
+pub type vm_sync_t = libc::c_uint;
 
 pub const VM_SYNC_ASYNCHRONOUS: vm_sync_t = 1;
 pub const VM_SYNC_SYNCHRONOUS: vm_sync_t = 1 << 1;

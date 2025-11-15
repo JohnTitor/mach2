@@ -17,10 +17,10 @@ use mach2::thread_act::thread_get_state;
 use mach2::traps::{mach_task_self, task_for_pid};
 use mach2::vm::mach_vm_deallocate;
 
-#[cfg(target_arch = "x86_64")]
-use mach2::thread_status::x86_THREAD_STATE64 as THREAD_STATE64;
 #[cfg(target_arch = "aarch64")]
 use mach2::thread_status::ARM_THREAD_STATE64 as THREAD_STATE64;
+#[cfg(target_arch = "x86_64")]
+use mach2::thread_status::x86_THREAD_STATE64 as THREAD_STATE64;
 
 #[cfg(target_arch = "aarch64")]
 use mach2::structs::arm_thread_state64_t as thread_state64_t;
@@ -29,16 +29,16 @@ use mach2::structs::x86_thread_state64_t as thread_state64_t;
 
 use std::io::prelude::*;
 
-fn read_int() -> Result<::libc::c_int, ()> {
+fn read_int() -> Result<libc::c_int, ()> {
     let stdin = io::stdin();
     let mut line = String::new();
 
     stdin.read_line(&mut line).ok().unwrap();
-    let mut value: ::libc::c_int = 0;
+    let mut value: libc::c_int = 0;
 
     for c in line.chars().take_while(|&c| c != '\n') {
         if let Some(d) = c.to_digit(10) {
-            value = value * 10 + (d as ::libc::c_int);
+            value = value * 10 + (d as libc::c_int);
         } else {
             return Err(());
         }

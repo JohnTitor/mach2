@@ -1,8 +1,5 @@
 #![allow(bad_style)]
 
-extern crate libc;
-extern crate mach2;
-
 use mach2::boolean::*;
 use mach2::bootstrap::*;
 use mach2::clock::*;
@@ -51,7 +48,7 @@ use mach2::vm_types::*;
 use libc::{c_int, c_uchar, c_uint, c_ulonglong, clock_t};
 
 // Imported by mach, but kept private:
-extern "C" {
+unsafe extern "C" {
     static mach_task_self_: mach_port_t;
 }
 

@@ -1,6 +1,6 @@
 //! This module corresponds to `mach/port.h`
 
-use vm_types::{integer_t, natural_t};
+use crate::vm_types::{integer_t, natural_t};
 
 pub type mach_port_name_t = natural_t;
 
@@ -10,7 +10,7 @@ pub struct ipc_port;
 
 pub type ipc_port_t = *mut ipc_port;
 
-pub type mach_port_t = ::libc::c_uint;
+pub type mach_port_t = libc::c_uint;
 pub type mach_port_array_t = *mut mach_port_t;
 
 pub const MACH_PORT_NULL: mach_port_t = 0;

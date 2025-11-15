@@ -7,11 +7,8 @@ repository = "https://github.com/JohnTitor/mach2"
 readme = "README.md"
 keywords = ["kernel", "macos", "darwin"]
 categories = ["api-bindings", "external-ffi-bindings", "no-std", "os"]
-edition = "2015"
+edition = "2024"
 include = ["src/**/*", "LICENSE-*", "README.md"]
-
-[badges]
-maintenance = { status = "passively-maintained" }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 libc = { version = "0.2", default-features = false }

@@ -14,6 +14,6 @@ pub struct NDR_record_t {
     reserved32: libc::c_uchar,
 }
 
-extern "C" {
+unsafe extern "C" {
     pub static NDR_record: NDR_record_t;
 }

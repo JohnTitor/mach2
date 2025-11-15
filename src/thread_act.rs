@@ -1,13 +1,13 @@
 //! This module corresponds to `mach/thread_act.defs`.
 
-use exception_types::{exception_behavior_t, exception_mask_t};
-use kern_return::kern_return_t;
-use mach_types::{thread_act_t, thread_port_t};
-use message::mach_msg_type_number_t;
-use port::mach_port_t;
-use thread_status::{thread_state_flavor_t, thread_state_t};
+use crate::exception_types::{exception_behavior_t, exception_mask_t};
+use crate::kern_return::kern_return_t;
+use crate::mach_types::{thread_act_t, thread_port_t};
+use crate::message::mach_msg_type_number_t;
+use crate::port::mach_port_t;
+use crate::thread_status::{thread_state_flavor_t, thread_state_t};
 
-extern "C" {
+unsafe extern "C" {
     pub fn thread_get_state(
         target_act: thread_act_t,
         flavor: thread_state_flavor_t,

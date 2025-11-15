@@ -1,5 +1,11 @@
 extern crate ctest;
 
+use std::env;
+use std::fs;
+#[cfg(unix)]
+use std::os::unix::fs::PermissionsExt;
+use std::path::{Path, PathBuf};
+
 #[derive(Eq, Ord, PartialEq, PartialOrd, Copy, Clone, Debug)]
 struct Xcode(pub u32, pub u32);
 
@@ -38,6 +44,8 @@ impl Xcode {
 }
 
 fn main() {
+    inject_libc_extern();
+
     let xcode = Xcode::version();
     // kept on purpose for debugging:
     // println!("cargo:warning=\"Xcode version: {:?}\"", xcode);
@@ -136,7 +144,7 @@ fn main() {
     }
 
     cfg.skip_struct(move |s| {
-        match s {
+        match s.ident() {
             // TODO: this type is a bitfield and must be verified by hand
             "mach_msg_type_descriptor_t" |
 
@@ -161,8 +169,8 @@ fn main() {
         }
     });
 
-    cfg.skip_type(move |s| {
-        match s {
+    cfg.skip_alias(move |s| {
+        match s.ident() {
             // FIXME: this type is not exposed in /usr/include/mach
             // but seems to be exposed in
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
@@ -180,10 +188,10 @@ fn main() {
 
     cfg.skip_fn(move |s| {
         // FIXME: The return type of these functions are different in Xcode 13 or higher.
-        if s.starts_with("semaphore") {
+        if s.ident().starts_with("semaphore") {
             return true;
         }
-        match s {
+        match s.ident() {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
             "mach_task_self" | "current_task" => true,
@@ -192,7 +200,7 @@ fn main() {
         }
     });
 
-    cfg.skip_const(move |s| match s {
+    cfg.skip_const(move |s| match s.ident() {
         "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" if xcode <= Xcode(11, 0) => true,
 
         // FIXME: Somehow it fails, like:
@@ -203,10 +211,6 @@ fn main() {
         // FIXME: Unavailable since Xcode 14:
         "EXC_CORPSE_VARIANT_BIT" if xcode >= Xcode(14, 0) => true,
         _ => false,
-    });
-
-    cfg.fn_cname(|rust, _link_name| match rust {
-        v => v.to_string(),
     });
 
     cfg.skip_signededness(|c| {
@@ -287,12 +291,10 @@ fn main() {
         }
     });
 
-    cfg.type_name(move |ty, is_struct, is_union| match ty {
-        t if is_union => format!("union {}", t),
-        t if t.ends_with("_t") => t.to_string(),
-        t @ "gpu_energy_data" => t.to_string(),
-        t if is_struct => format!("struct {}", t),
-        t => t.to_string(),
+    cfg.rename_struct_ty(move |ty| match ty {
+        t if t.ends_with("_t") => Some(t.to_string()),
+        t @ "gpu_energy_data" => Some(t.to_string()),
+        t => Some(format!("struct {}", t)),
     });
 
     cfg.skip_roundtrip(move |s| match s {
@@ -306,5 +308,80 @@ fn main() {
 
     // Generate the tests, passing the path to the `*-sys` library as well as
     // the module to generate.
-    cfg.generate("../src/lib.rs", "all.rs");
+    ctest::generate_test(&mut cfg, "../src/lib.rs", "all.rs").unwrap();
+}
+
+fn inject_libc_extern() {
+    if env::var_os("CTEST_LIBC_WRAPPER_INSTALLED").is_some() {
+        return;
+    }
+
+    let rustc = env::var("RUSTC").unwrap_or_else(|_| String::from("rustc"));
+
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR must be set"));
+    let profile_dir = out_dir
+        .ancestors()
+        .nth(3)
+        .expect("failed to locate Cargo profile directory");
+    let deps_dir = profile_dir.join("deps");
+
+    let libc_artifact = find_libc_artifact(&deps_dir)
+        .unwrap_or_else(|| panic!("failed to locate libc artifact in {}", deps_dir.display()));
+
+    let wrapper_path = create_rustc_wrapper(&out_dir);
+
+    unsafe {
+        env::set_var("CTEST_REAL_RUSTC", &rustc);
+        env::set_var("CTEST_LIBC_ARTIFACT", &libc_artifact);
+        env::set_var("RUSTC", &wrapper_path);
+        env::set_var("CTEST_LIBC_WRAPPER_INSTALLED", "1");
+    }
+}
+
+fn find_libc_artifact(dir: &Path) -> Option<PathBuf> {
+    let mut fallback = None;
+    let entries = fs::read_dir(dir).ok()?;
+    for entry in entries.flatten() {
+        let path = entry.path();
+        let file_name = path.file_name()?.to_string_lossy();
+        if !file_name.starts_with("liblibc-") {
+            continue;
+        }
+        match path.extension().and_then(|ext| ext.to_str()) {
+            Some("rlib") => return Some(path),
+            Some("rmeta") | Some("a") | Some("lib") if fallback.is_none() => {
+                fallback = Some(path);
+            }
+            _ => {}
+        }
+    }
+    fallback
+}
+
+fn create_rustc_wrapper(out_dir: &Path) -> PathBuf {
+    #[cfg(unix)]
+    {
+        let wrapper_path = out_dir.join("rustc-with-libc.sh");
+        let script = r#"#!/bin/sh
+exec "$CTEST_REAL_RUSTC" --extern "libc=$CTEST_LIBC_ARTIFACT" "$@"
+"#;
+        fs::write(&wrapper_path, script).expect("failed to write rustc wrapper script");
+        let mut perms = fs::metadata(&wrapper_path)
+            .and_then(|meta| Ok(meta.permissions()))
+            .expect("failed to read wrapper permissions");
+        perms.set_mode(0o755);
+        fs::set_permissions(&wrapper_path, perms)
+            .expect("failed to set executable bit on rustc wrapper script");
+        wrapper_path
+    }
+    #[cfg(not(unix))]
+    {
+        let wrapper_path = out_dir.join("rustc-with-libc.cmd");
+        let script = r#"@echo off
+setlocal
+"%CTEST_REAL_RUSTC%" --extern libc="%CTEST_LIBC_ARTIFACT%" %*
+"#;
+        fs::write(&wrapper_path, script).expect("failed to write rustc wrapper script");
+        wrapper_path
+    }
 }
