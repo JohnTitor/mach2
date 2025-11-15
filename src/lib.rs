@@ -10,8 +10,8 @@
 )]
 #![no_std]
 
-#[cfg(not(any(target_os = "macos", target_os = "ios")))]
-compile_error!("mach requires macOS or iOS");
+#[cfg(not(target_vendor = "apple"))]
+compile_error!("mach requires macOS, iOS, tvOS, watchOS or visionOS");
 
 extern crate libc;
 

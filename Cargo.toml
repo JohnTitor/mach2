@@ -13,7 +13,7 @@ include = ["src/**/*", "LICENSE-*", "README.md"]
 [badges]
 maintenance = { status = "passively-maintained" }
 
-[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
+[target.'cfg(target_vendor = "apple")'.dependencies]
 libc = { version = "0.2", default-features = false }
 
 [features]
