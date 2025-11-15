@@ -136,7 +136,7 @@ fn main() {
     }
 
     cfg.skip_struct(move |s| {
-        match s {
+        match s.ident() {
             // TODO: this type is a bitfield and must be verified by hand
             "mach_msg_type_descriptor_t" |
 
@@ -161,8 +161,8 @@ fn main() {
         }
     });
 
-    cfg.skip_type(move |s| {
-        match s {
+    cfg.skip_alias(move |s| {
+        match s.ident() {
             // FIXME: this type is not exposed in /usr/include/mach
             // but seems to be exposed in
             // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
@@ -180,10 +180,10 @@ fn main() {
 
     cfg.skip_fn(move |s| {
         // FIXME: The return type of these functions are different in Xcode 13 or higher.
-        if s.starts_with("semaphore") {
+        if s.ident().starts_with("semaphore") {
             return true;
         }
-        match s {
+        match s.ident() {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
             "mach_task_self" | "current_task" => true,
@@ -192,7 +192,7 @@ fn main() {
         }
     });
 
-    cfg.skip_const(move |s| match s {
+    cfg.skip_const(move |s| match s.ident() {
         "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" if xcode <= Xcode(11, 0) => true,
 
         // FIXME: Somehow it fails, like:
@@ -203,10 +203,6 @@ fn main() {
         // FIXME: Unavailable since Xcode 14:
         "EXC_CORPSE_VARIANT_BIT" if xcode >= Xcode(14, 0) => true,
         _ => false,
-    });
-
-    cfg.fn_cname(|rust, _link_name| match rust {
-        v => v.to_string(),
     });
 
     cfg.skip_signededness(|c| {
@@ -287,12 +283,12 @@ fn main() {
         }
     });
 
-    cfg.type_name(move |ty, is_struct, is_union| match ty {
-        t if is_union => format!("union {}", t),
-        t if t.ends_with("_t") => t.to_string(),
-        t @ "gpu_energy_data" => t.to_string(),
-        t if is_struct => format!("struct {}", t),
-        t => t.to_string(),
+    cfg.rename_struct_ty(move |ty| {
+        match ty {
+            t if t.ends_with("_t") => Some(t.to_string()),
+            t @ "gpu_energy_data" => Some(t.to_string()),
+            t => Some(format!("struct {}", t)),
+        }
     });
 
     cfg.skip_roundtrip(move |s| match s {
@@ -306,5 +302,5 @@ fn main() {
 
     // Generate the tests, passing the path to the `*-sys` library as well as
     // the module to generate.
-    cfg.generate("../src/lib.rs", "all.rs");
+    ctest::generate_test(&mut cfg, "../src/lib.rs", "all.rs").unwrap();
 }
