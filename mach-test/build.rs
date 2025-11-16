@@ -129,44 +129,19 @@ fn main() {
         .header("mach/vm_task.h")
         .header("mach/vm_types.h");
 
-    // The below doesn't exist in Xcode 14:
-    if xcode < Xcode(14, 0) {
-        cfg.header("mach/lock_set.h");
-    }
-
     cfg.skip_struct(move |s| {
         match s.ident() {
-            // TODO: this type is a bitfield and must be verified by hand
-            "mach_msg_type_descriptor_t" |
-
-            // TODO: this type is a bitfield and must be verified by hand
-            "mach_msg_port_descriptor_t" |
-
-            // TODO: this type is a bitfield and must be verified by hand
-            "mach_msg_ool_descriptor_t" |
-
-            // TODO: this type is a bitfield and must be verified by hand
-            "mach_msg_ool_ports_descriptor_t" |
-
-            // FIXME: this type is not exposed in /usr/include/mach
-            // but seems to be exposed in
-            // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
-            "ipc_port" => true,
-
-            // FIXME: Changed in XCode 11, figure out what's changed.
-            "vm_region_submap_info_64" if xcode >= Xcode(11, 0) => true,
-
+            // TODO: these types are bitfields and must be verified by hand
+            "mach_msg_type_descriptor_t"
+            | "mach_msg_port_descriptor_t"
+            | "mach_msg_ool_descriptor_t"
+            | "mach_msg_ool_ports_descriptor_t" => true,
             _ => false,
         }
     });
 
     cfg.skip_alias(move |s| {
         match s.ident() {
-            // FIXME: this type is not exposed in /usr/include/mach
-            // but seems to be exposed in
-            // SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach
-            "ipc_port_t" => true,
-
             // FIXME: Changed in XCode 11, see `vm_region_submap_info_data_64`'s comment.
             "vm_region_submap_info_data_64_t" if xcode >= Xcode(11, 0) => true,
 
@@ -178,10 +153,6 @@ fn main() {
     });
 
     cfg.skip_fn(move |s| {
-        // FIXME: The return type of these functions are different in Xcode 13 or higher.
-        if s.ident().starts_with("semaphore") {
-            return true;
-        }
         match s.ident() {
             // mac_task_self and current_tasl are not functions, but macro that map to the
             // mask_task_self_ static variable:
@@ -192,16 +163,6 @@ fn main() {
     });
 
     cfg.skip_const(move |s| match s.ident() {
-        "MACH_RCV_NOTIFY" | "MACH_RCV_OVERWRITE" if xcode <= Xcode(11, 0) => true,
-
-        // FIXME: Somehow it fails, like:
-        // bad VM_PROT_NO_CHANGE value at byte 0: rust: 8 (0x8) != c 0 (0x0)
-        // bad VM_PROT_NO_CHANGE value at byte 3: rust: 0 (0x0) != c 1 (0x1)
-        "VM_PROT_NO_CHANGE" if xcode >= Xcode(13, 0) => true,
-
-        // FIXME: Unavailable since Xcode 14:
-        "EXC_CORPSE_VARIANT_BIT" if xcode >= Xcode(14, 0) => true,
-
         _ => false,
     });
 
@@ -210,7 +171,6 @@ fn main() {
         match c {
             // struct types:
             "mach_timespec_t" |
-            "ipc_port_t"  |
             "vm_statistics_data_t" |
             "fsid_t" |
             "fsobj_id_t" |

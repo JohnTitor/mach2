@@ -18,7 +18,6 @@ pub const EXC_CRASH: c_uint = 10;
 pub const EXC_RESOURCE: c_uint = 11;
 pub const EXC_GUARD: c_uint = 12;
 pub const EXC_CORPSE_NOTIFY: c_uint = 13;
-pub const EXC_CORPSE_VARIANT_BIT: c_uint = 256;
 pub const EXCEPTION_DEFAULT: c_uint = 1;
 pub const EXCEPTION_STATE: c_uint = 2;
 pub const EXCEPTION_STATE_IDENTITY: c_uint = 3;
