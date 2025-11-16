@@ -5,12 +5,6 @@ use core::ffi::c_uint;
 
 pub type mach_port_name_t = natural_t;
 
-#[repr(C)]
-#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
-pub struct ipc_port;
-
-pub type ipc_port_t = *mut ipc_port;
-
 pub type mach_port_t = c_uint;
 pub type mach_port_array_t = *mut mach_port_t;
 
