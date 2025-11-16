@@ -1,9 +1,10 @@
 //! This module corresponds to `mach/thread_status.h`.
 
 use crate::vm_types::natural_t;
+use core::ffi::c_int;
 
 pub type thread_state_t = *mut natural_t;
-pub type thread_state_flavor_t = libc::c_int;
+pub type thread_state_flavor_t = c_int;
 
 #[cfg(target_arch = "aarch64")]
 mod aarch64 {

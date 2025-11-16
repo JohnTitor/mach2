@@ -21,13 +21,14 @@ use crate::vm_types::{
     integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_map_t,
     vm_offset_t, vm_size_t,
 };
+use core::ffi::c_int;
 
 unsafe extern "C" {
     pub fn mach_vm_allocate(
         target: vm_task_entry_t,
         address: *mut mach_vm_address_t,
         size: mach_vm_size_t,
-        flags: libc::c_int,
+        flags: c_int,
     ) -> kern_return_t;
 
     pub fn mach_vm_deallocate(
@@ -107,7 +108,7 @@ unsafe extern "C" {
         inout: *mut mach_vm_address_t,
         size: mach_vm_size_t,
         mask: mach_vm_offset_t,
-        flags: libc::c_int,
+        flags: c_int,
         object: mem_entry_name_port_t,
         offset: memory_object_offset_t,
         copy: boolean_t,
@@ -129,7 +130,7 @@ unsafe extern "C" {
         target_address: *mut mach_vm_address_t,
         size: mach_vm_size_t,
         mask: mach_vm_offset_t,
-        flags: libc::c_int,
+        flags: c_int,
         src_task: vm_task_entry_t,
         src_address: mach_vm_address_t,
         copy: boolean_t,
@@ -186,7 +187,7 @@ unsafe extern "C" {
         target_task: vm_task_entry_t,
         address: mach_vm_address_t,
         control: vm_purgable_t,
-        state: *mut libc::c_int,
+        state: *mut c_int,
     ) -> kern_return_t;
 
     pub fn mach_vm_page_info(

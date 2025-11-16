@@ -10,9 +10,6 @@ categories = ["api-bindings", "external-ffi-bindings", "no-std", "os"]
 edition = "2024"
 include = ["src/**/*", "LICENSE-*", "README.md"]
 
-[target.'cfg(target_vendor = "apple")'.dependencies]
-libc = { version = "0.2", default-features = false }
-
 [features]
 default = []
 # Uses newer APIs

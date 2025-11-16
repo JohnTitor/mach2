@@ -3,9 +3,10 @@
 use crate::boolean::boolean_t;
 use crate::message::mach_msg_type_number_t;
 use crate::vm_types::integer_t;
+use core::ffi::c_int;
 use core::mem;
 
-pub type policy_t = libc::c_int;
+pub type policy_t = c_int;
 pub type policy_info_t = *mut integer_t;
 pub type policy_base_t = *mut integer_t;
 pub type policy_limit_t = *mut integer_t;

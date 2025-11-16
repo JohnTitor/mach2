@@ -1,17 +1,19 @@
 //! This module roughly corresponds to `mach/ndr.h`.
 
+use core::ffi::c_uchar;
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 #[allow(dead_code)]
 pub struct NDR_record_t {
-    mig_vers: libc::c_uchar,
-    if_vers: libc::c_uchar,
-    reserved1: libc::c_uchar,
-    mig_encoding: libc::c_uchar,
-    int_rep: libc::c_uchar,
-    char_rep: libc::c_uchar,
-    float_rep: libc::c_uchar,
-    reserved32: libc::c_uchar,
+    mig_vers: c_uchar,
+    if_vers: c_uchar,
+    reserved1: c_uchar,
+    mig_encoding: c_uchar,
+    int_rep: c_uchar,
+    char_rep: c_uchar,
+    float_rep: c_uchar,
+    reserved32: c_uchar,
 }
 
 unsafe extern "C" {

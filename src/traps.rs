@@ -1,12 +1,13 @@
 //! This module corresponds to `mach/mach_traps.h`.
 use crate::kern_return::kern_return_t;
 use crate::port::{mach_port_name_t, mach_port_t};
+use core::ffi::c_int;
 
 unsafe extern "C" {
     static mach_task_self_: mach_port_t;
     pub fn task_for_pid(
         target_tport: mach_port_name_t,
-        pid: libc::c_int,
+        pid: c_int,
         tn: *mut mach_port_name_t,
     ) -> kern_return_t;
 }

@@ -1,14 +1,14 @@
 //! This module roughly corresponds to `mach/vm_page_size.h`
-
 use crate::vm_types::{mach_vm_offset_t, mach_vm_size_t, vm_size_t};
+use core::ffi::c_int;
 
 unsafe extern "C" {
     pub static vm_page_size: vm_size_t;
     pub static vm_page_mask: vm_size_t;
-    pub static vm_page_shift: libc::c_int;
+    pub static vm_page_shift: c_int;
     pub static vm_kernel_page_size: vm_size_t;
     pub static vm_kernel_page_mask: vm_size_t;
-    pub static vm_kernel_page_shift: libc::c_int;
+    pub static vm_kernel_page_shift: c_int;
 }
 
 #[allow(clippy::missing_safety_doc)] // FIXME

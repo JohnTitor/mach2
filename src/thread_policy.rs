@@ -5,7 +5,8 @@ use crate::kern_return::kern_return_t;
 use crate::mach_types::thread_t;
 use crate::message::mach_msg_type_number_t;
 use crate::vm_types::{integer_t, natural_t};
-use libc::thread_policy_t;
+
+pub type thread_policy_t = *mut integer_t;
 
 pub type thread_policy_flavor_t = natural_t;
 

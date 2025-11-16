@@ -1,7 +1,7 @@
 //! This module corresponds to `mach_debug/zone_info.h`.
 
 use crate::vm_types::{integer_t, vm_size_t};
-use libc::c_char;
+use core::ffi::c_char;
 
 pub const ZONE_NAME_MAX_LEN: usize = 80;
 pub const MACH_ZONE_NAME_MAX_LEN: usize = 80;

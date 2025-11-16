@@ -1,5 +1,7 @@
 #![allow(bad_style)]
 
+#[allow(unused_imports)]
+use core::ffi::{c_char, c_int, c_uchar, c_uint, c_ulong, c_ulonglong, c_ushort};
 use mach2::boolean::*;
 use mach2::bootstrap::*;
 use mach2::clock::*;
