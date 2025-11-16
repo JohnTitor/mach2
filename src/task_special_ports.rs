@@ -3,8 +3,9 @@
 use crate::kern_return::kern_return_t;
 use crate::mach_types::task_t;
 use crate::port::mach_port_t;
+use core::ffi::c_int;
 
-pub type task_special_port_t = libc::c_int;
+pub type task_special_port_t = c_int;
 
 pub const TASK_KERNEL_PORT: task_special_port_t = 1;
 pub const TASK_HOST_PORT: task_special_port_t = 2;

@@ -1,6 +1,7 @@
 //! This module corresponds to `mach/mach_types.h`
 
 use crate::port::mach_port_t;
+use core::ffi::{c_long, c_uchar};
 
 pub type task_t = mach_port_t;
 pub type task_name_t = mach_port_t;
@@ -103,7 +104,9 @@ pub const SEMAPHORE_NULL: semaphore_t = 0;
 pub const LOCK_SET_NULL: lock_set_t = 0;
 pub const LEDGER_NULL: ledger_t = 0;
 pub const ALARM_NULL: alarm_t = 0;
-pub const CLOCK_NULL: libc::clock_t = 0;
+pub type clock_t = c_long;
+
+pub const CLOCK_NULL: clock_t = 0;
 pub const UND_SERVER_NULL: UNDServerRef = 0;
 pub const ARCADE_REG_NULL: arcade_register_t = 0;
 pub const MACH_EVENTLINK_NULL: mach_eventlink_t = 0;
@@ -112,7 +115,7 @@ pub const TASK_ID_TOKEN_NULL: task_id_token_t = 0;
 pub const KCDATA_OBJECT_NULL: kcdata_object_t = 0;
 
 // <sys/_types.h>: typedef	unsigned char	__darwin_uuid_t[16];
-pub type uuid_t = [libc::c_uchar; 16];
+pub type uuid_t = [c_uchar; 16];
 
 // <sys/_types/_fsid_t.h>
 #[repr(C)]

@@ -1,6 +1,7 @@
 //! This module corresponds to `mach/vm_prot.h`.
+use core::ffi::c_int;
 
-pub type vm_prot_t = libc::c_int;
+pub type vm_prot_t = c_int;
 
 pub const VM_PROT_NONE: vm_prot_t = 0;
 pub const VM_PROT_READ: vm_prot_t = 1;

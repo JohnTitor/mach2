@@ -1,6 +1,7 @@
 //! This module corresponds to `mach/i386/_structs.h` and `mach/arm/_structs.h`.
 
 use crate::message::mach_msg_type_number_t;
+use core::ffi::c_int;
 
 #[cfg(target_arch = "aarch64")]
 #[repr(C)]
@@ -22,8 +23,7 @@ impl arm_thread_state64_t {
     }
 
     pub fn count() -> mach_msg_type_number_t {
-        (core::mem::size_of::<Self>() / core::mem::size_of::<libc::c_int>())
-            as mach_msg_type_number_t
+        (core::mem::size_of::<Self>() / core::mem::size_of::<c_int>()) as mach_msg_type_number_t
     }
 }
 
@@ -61,7 +61,6 @@ impl x86_thread_state64_t {
     }
 
     pub fn count() -> mach_msg_type_number_t {
-        (core::mem::size_of::<Self>() / core::mem::size_of::<libc::c_int>())
-            as mach_msg_type_number_t
+        (core::mem::size_of::<Self>() / core::mem::size_of::<c_int>()) as mach_msg_type_number_t
     }
 }

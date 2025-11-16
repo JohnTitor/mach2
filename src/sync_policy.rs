@@ -1,6 +1,7 @@
 //! This module corresponds to `mach/sync_policy.h`
+use core::ffi::c_int;
 
-pub type sync_policy_t = libc::c_int;
+pub type sync_policy_t = c_int;
 
 pub const SYNC_POLICY_FIFO: sync_policy_t = 0x0;
 pub const SYNC_POLICY_FIXED_PRIORITY: sync_policy_t = 0x1;

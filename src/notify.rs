@@ -7,15 +7,16 @@ use crate::message::{
 use crate::ndr::NDR_record_t;
 use crate::port::mach_port_name_t;
 use crate::port::mach_port_t;
+use core::ffi::c_int;
 
-pub const MACH_NOTIFY_FIRST: libc::c_int = 0o100;
-pub const MACH_NOTIFY_PORT_DELETED: libc::c_int = MACH_NOTIFY_FIRST + 0o01;
-pub const MACH_NOTIFY_SEND_POSSIBLE: libc::c_int = MACH_NOTIFY_FIRST + 0o02;
-pub const MACH_NOTIFY_PORT_DESTROYED: libc::c_int = MACH_NOTIFY_FIRST + 0o05;
-pub const MACH_NOTIFY_NO_SENDERS: libc::c_int = MACH_NOTIFY_FIRST + 0o06;
-pub const MACH_NOTIFY_SEND_ONCE: libc::c_int = MACH_NOTIFY_FIRST + 0o07;
-pub const MACH_NOTIFY_DEAD_NAME: libc::c_int = MACH_NOTIFY_FIRST + 0o10;
-pub const MACH_NOTIFY_LAST: libc::c_int = MACH_NOTIFY_FIRST + 0o15;
+pub const MACH_NOTIFY_FIRST: c_int = 0o100;
+pub const MACH_NOTIFY_PORT_DELETED: c_int = MACH_NOTIFY_FIRST + 0o01;
+pub const MACH_NOTIFY_SEND_POSSIBLE: c_int = MACH_NOTIFY_FIRST + 0o02;
+pub const MACH_NOTIFY_PORT_DESTROYED: c_int = MACH_NOTIFY_FIRST + 0o05;
+pub const MACH_NOTIFY_NO_SENDERS: c_int = MACH_NOTIFY_FIRST + 0o06;
+pub const MACH_NOTIFY_SEND_ONCE: c_int = MACH_NOTIFY_FIRST + 0o07;
+pub const MACH_NOTIFY_DEAD_NAME: c_int = MACH_NOTIFY_FIRST + 0o10;
+pub const MACH_NOTIFY_LAST: c_int = MACH_NOTIFY_FIRST + 0o15;
 
 pub type notify_port_t = mach_port_t;
 

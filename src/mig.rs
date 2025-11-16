@@ -6,6 +6,7 @@ use crate::message::{
 };
 use crate::port::mach_port_t;
 use crate::vm_types::{vm_address_t, vm_size_t};
+use core::ffi::{c_char, c_int, c_uint};
 use core::ptr;
 
 pub type mig_stub_routine_t =
@@ -25,10 +26,10 @@ pub const MIG_ROUTINE_ARG_DESCRIPTOR_NULL: mig_routine_arg_descriptor_t = ptr::n
 pub struct routine_descriptor {
     pub impl_routine: mig_impl_routine_t,
     pub stub_routine: mig_stub_routine_t,
-    pub argc: libc::c_uint,
-    pub descr_count: libc::c_uint,
+    pub argc: c_uint,
+    pub descr_count: c_uint,
     pub arg_descr: routine_arg_descriptor_t,
-    pub max_reply_msg: libc::c_uint,
+    pub max_reply_msg: c_uint,
 }
 
 pub type routine_descriptor_t = *mut routine_descriptor;
@@ -55,8 +56,8 @@ pub const MIG_SUBSYSTEM_NULL: mig_subsystem_t = ptr::null_mut();
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct mig_symtab {
-    pub ms_routine_name: *mut libc::c_char,
-    pub ms_routine_number: libc::c_int,
+    pub ms_routine_name: *mut c_char,
+    pub ms_routine_number: c_int,
     pub ms_routine: Option<unsafe extern "C" fn()>,
 }
 
@@ -66,16 +67,8 @@ unsafe extern "C" {
     pub fn mig_get_reply_port() -> mach_port_t;
     pub fn mig_dealloc_reply_port(reply_port: mach_port_t);
     pub fn mig_put_reply_port(reply_port: mach_port_t);
-    pub fn mig_strncpy(
-        dest: *mut libc::c_char,
-        src: *const libc::c_char,
-        len: libc::c_int,
-    ) -> libc::c_int;
-    pub fn mig_strncpy_zerofill(
-        dest: *mut libc::c_char,
-        src: *const libc::c_char,
-        len: libc::c_int,
-    ) -> libc::c_int;
+    pub fn mig_strncpy(dest: *mut c_char, src: *const c_char, len: c_int) -> c_int;
+    pub fn mig_strncpy_zerofill(dest: *mut c_char, src: *const c_char, len: c_int) -> c_int;
     pub fn mig_allocate(address: *mut vm_address_t, size: vm_size_t);
     pub fn mig_deallocate(address: vm_address_t, size: vm_size_t);
 }

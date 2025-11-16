@@ -1,7 +1,7 @@
 //! This module corresponds to `mach/error.h`.
 
 use crate::kern_return::kern_return_t;
-use libc::c_int;
+use core::ffi::c_int;
 
 pub type mach_error_t = kern_return_t;
 pub type mach_error_fn_t = Option<unsafe extern "C" fn() -> mach_error_t>;
