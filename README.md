@@ -23,7 +23,7 @@ platforms that support it.
 
 ```toml
 [target.'cfg(target_vendor = "apple")'.dependencies.mach]
-version = "0.4"
+version = "0.6"
 ```
 
 Available crate feature:
