@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  XCODE_VERSION: '26.2.0'
+
 jobs:
   xcode_test:
     strategy:
@@ -18,7 +21,7 @@ jobs:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
-          xcode-version: '26.1.0'
+          xcode-version: ${{ env.XCODE_VERSION }}
       - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly ci/run.sh
 
   target_test:
@@ -34,7 +37,7 @@ jobs:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
-          xcode-version: '26.1.0'
+          xcode-version: ${{ env.XCODE_VERSION }}
       - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly NOCTEST=1 NORUN=1 ci/run.sh
 
   style_check:
@@ -43,7 +46,7 @@ jobs:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
-          xcode-version: '26.1.0'
+          xcode-version: ${{ env.XCODE_VERSION }}
       - run: rustup component add rustfmt clippy
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace -- -D warnings
