@@ -65,9 +65,9 @@ dependencies = [
 
 [[package]]
 name = "ctest"
-version = "0.5.0-beta.3"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a41986fe714de2b29e44b072f0f6676a247e5469d9262811dfd1bf733482a3b6"
+checksum = "7dd36db8091f50991402feeb406738b3369ef3b78f0377cd9be8bdb6780424dd"
 dependencies = [
  "askama",
  "cc",
