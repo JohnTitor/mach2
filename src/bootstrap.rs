@@ -10,18 +10,18 @@ pub const BOOTSTRAP_MAX_CMD_LEN: c_uint = 512;
 
 pub const BOOTSTRAP_MAX_LOOKUP_COUNT: c_uint = 20;
 
-pub const BOOTSTRAP_SUCCESS: c_uint = 0;
-pub const BOOTSTRAP_NOT_PRIVILEGED: c_uint = 1100;
-pub const BOOTSTRAP_NAME_IN_USE: c_uint = 1101;
-pub const BOOTSTRAP_UNKNOWN_SERVICE: c_uint = 1102;
-pub const BOOTSTRAP_SERVICE_ACTIVE: c_uint = 1103;
-pub const BOOTSTRAP_BAD_COUNT: c_uint = 1104;
-pub const BOOTSTRAP_NO_MEMORY: c_uint = 1105;
-pub const BOOTSTRAP_NO_CHILDREN: c_uint = 1106;
+pub const BOOTSTRAP_SUCCESS: kern_return_t = 0;
+pub const BOOTSTRAP_NOT_PRIVILEGED: kern_return_t = 1100;
+pub const BOOTSTRAP_NAME_IN_USE: kern_return_t = 1101;
+pub const BOOTSTRAP_UNKNOWN_SERVICE: kern_return_t = 1102;
+pub const BOOTSTRAP_SERVICE_ACTIVE: kern_return_t = 1103;
+pub const BOOTSTRAP_BAD_COUNT: kern_return_t = 1104;
+pub const BOOTSTRAP_NO_MEMORY: kern_return_t = 1105;
+pub const BOOTSTRAP_NO_CHILDREN: kern_return_t = 1106;
 
-pub const BOOTSTRAP_STATUS_INACTIVE: c_uint = 0;
-pub const BOOTSTRAP_STATUS_ACTIVE: c_uint = 1;
-pub const BOOTSTRAP_STATUS_ON_DEMAND: c_uint = 2;
+pub const BOOTSTRAP_STATUS_INACTIVE: bootstrap_status_t = 0;
+pub const BOOTSTRAP_STATUS_ACTIVE: bootstrap_status_t = 1;
+pub const BOOTSTRAP_STATUS_ON_DEMAND: bootstrap_status_t = 2;
 
 pub type name_t = [c_char; 128];
 pub type cmd_t = [c_char; 512];
