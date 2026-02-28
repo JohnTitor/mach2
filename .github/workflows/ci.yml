@@ -19,7 +19,7 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      - uses: JohnTitor/setup-xcode@ef67ebb2baeb2fad4dc86caa3dc720b902011e9b # v0.1.0
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
       - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly ci/run.sh
@@ -35,7 +35,7 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      - uses: JohnTitor/setup-xcode@ef67ebb2baeb2fad4dc86caa3dc720b902011e9b # v0.1.0
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
       - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly NOCTEST=1 NORUN=1 ci/run.sh
@@ -44,7 +44,7 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      - uses: JohnTitor/setup-xcode@ef67ebb2baeb2fad4dc86caa3dc720b902011e9b # v0.1.0
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
       - run: rustup component add rustfmt clippy
