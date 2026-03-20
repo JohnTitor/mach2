@@ -9,7 +9,7 @@ unsafe extern "C" {
     pub fn task_for_pid(
         target_tport: mach_port_name_t,
         pid: c_int,
-        tn: *mut mach_port_name_t,
+        t: *mut mach_port_name_t,
     ) -> kern_return_t;
 
     pub fn task_name_for_pid(
