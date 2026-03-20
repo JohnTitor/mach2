@@ -5,7 +5,14 @@ use core::ffi::c_int;
 
 unsafe extern "C" {
     static mach_task_self_: mach_port_t;
+
     pub fn task_for_pid(
+        target_tport: mach_port_name_t,
+        pid: c_int,
+        tn: *mut mach_port_name_t,
+    ) -> kern_return_t;
+
+    pub fn task_name_for_pid(
         target_tport: mach_port_name_t,
         pid: c_int,
         tn: *mut mach_port_name_t,
