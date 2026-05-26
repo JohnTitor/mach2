@@ -5,11 +5,19 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   XCODE_VERSION: '26.2.0'
 
 jobs:
   xcode_test:
+    name: Xcode test (${{ matrix.target }})
     strategy:
       fail-fast: false
       matrix:
@@ -19,12 +27,18 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - uses: JohnTitor/setup-xcode@ed4e651374114d0a5cc19af4c736aca9a8a9e4f9 # v0.1.1
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-      - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly ci/run.sh
+      - run: ci/run.sh
+        env:
+          RUST_VERSION: nightly
+          TARGET: ${{ matrix.target }}
 
   target_test:
+    name: Target test (${{ matrix.target }})
     strategy:
       fail-fast: false
       matrix:
@@ -35,15 +49,25 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - uses: JohnTitor/setup-xcode@ed4e651374114d0a5cc19af4c736aca9a8a9e4f9 # v0.1.1
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-      - run: TARGET=${{ matrix.target }} RUST_VERSION=nightly NOCTEST=1 NORUN=1 ci/run.sh
+      - run: ci/run.sh
+        env:
+          NOCTEST: '1'
+          NORUN: '1'
+          RUST_VERSION: nightly
+          TARGET: ${{ matrix.target }}
 
   style_check:
+    name: Style check
     runs-on: macos-26
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - uses: JohnTitor/setup-xcode@ed4e651374114d0a5cc19af4c736aca9a8a9e4f9 # v0.1.1
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
