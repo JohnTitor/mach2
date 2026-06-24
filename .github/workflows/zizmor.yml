@@ -24,4 +24,4 @@ jobs:
         with:
           advanced-security: false
           persona: pedantic
-          version: v1.25.2
+          version: 1.26.1
