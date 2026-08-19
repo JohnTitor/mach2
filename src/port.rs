@@ -1,7 +1,8 @@
 //! This module corresponds to `mach/port.h`
 
 use crate::vm_types::{integer_t, natural_t};
-use core::ffi::c_uint;
+use core::ffi::{c_int, c_uint};
+use core::mem;
 
 pub type mach_port_name_t = natural_t;
 
@@ -45,6 +46,26 @@ pub const MACH_PORT_QLIMIT_MAX: mach_port_msgcount_t = MACH_PORT_QLIMIT_LARGE;
 pub struct mach_port_limits_t {
     pub mpl_qlimit: mach_port_msgcount_t,
 }
+
+pub type mach_port_info_t = *mut integer_t;
+
+/* Flavors for mach_port_get/set/assert_attributes() */
+pub type mach_port_flavor_t = c_int;
+
+pub const MACH_PORT_LIMITS_INFO: mach_port_flavor_t = 1;
+pub const MACH_PORT_RECEIVE_STATUS: mach_port_flavor_t = 2;
+pub const MACH_PORT_DNREQUESTS_SIZE: mach_port_flavor_t = 3;
+pub const MACH_PORT_TEMPOWNER: mach_port_flavor_t = 4;
+pub const MACH_PORT_IMPORTANCE_RECEIVER: mach_port_flavor_t = 5;
+pub const MACH_PORT_DENAP_RECEIVER: mach_port_flavor_t = 6;
+pub const MACH_PORT_INFO_EXT: mach_port_flavor_t = 7;
+pub const MACH_PORT_GUARD_INFO: mach_port_flavor_t = 8;
+pub const MACH_PORT_SERVICE_THROTTLED: mach_port_flavor_t = 9;
+
+pub const MACH_PORT_LIMITS_INFO_COUNT: natural_t =
+    (mem::size_of::<mach_port_limits_t>() / mem::size_of::<natural_t>()) as natural_t;
+pub const MACH_PORT_DNREQUESTS_SIZE_COUNT: natural_t = 1;
+pub const MACH_PORT_SERVICE_THROTTLED_COUNT: natural_t = 1;
 
 pub const MPO_CONTEXT_AS_GUARD: u32 = 1;
 pub const MPO_QLIMIT: u32 = 2;
