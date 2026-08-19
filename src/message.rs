@@ -58,6 +58,16 @@ pub const MACH_MSG_TYPE_DISPOSE_RECEIVE: mach_msg_type_name_t = 24;
 pub const MACH_MSG_TYPE_DISPOSE_SEND: mach_msg_type_name_t = 25;
 pub const MACH_MSG_TYPE_DISPOSE_SEND_ONCE: mach_msg_type_name_t = 26;
 
+// A descriptor's disposition once the message has been received, rather than
+// what the sender asked for. The receive side names are aliases of the move
+// side ones.
+pub const MACH_MSG_TYPE_PORT_NONE: mach_msg_type_name_t = 0;
+pub const MACH_MSG_TYPE_PORT_NAME: mach_msg_type_name_t = 15;
+pub const MACH_MSG_TYPE_PORT_RECEIVE: mach_msg_type_name_t = MACH_MSG_TYPE_MOVE_RECEIVE;
+pub const MACH_MSG_TYPE_PORT_SEND: mach_msg_type_name_t = MACH_MSG_TYPE_MOVE_SEND;
+pub const MACH_MSG_TYPE_PORT_SEND_ONCE: mach_msg_type_name_t = MACH_MSG_TYPE_MOVE_SEND_ONCE;
+pub const MACH_MSG_TYPE_LAST: mach_msg_type_name_t = 22;
+
 pub const MACH_MSG_PHYSICAL_COPY: mach_msg_copy_options_t = 0;
 pub const MACH_MSG_VIRTUAL_COPY: mach_msg_copy_options_t = 1;
 pub const MACH_MSG_ALLOCATE: mach_msg_copy_options_t = 2;
