@@ -18,12 +18,12 @@ would have **undefined behavior**.
 
 ## Usage
 
-Add the following to your `Cargo.toml` to conditionally include mach on those
+Add the following to your `Cargo.toml` to conditionally include mach2 on those
 platforms that support it.
 
 ```toml
-[target.'cfg(target_vendor = "apple")'.dependencies.mach]
-version = "0.6"
+[target.'cfg(target_vendor = "apple")'.dependencies]
+mach2 = "0.7"
 ```
 
 Available crate feature:
@@ -72,15 +72,16 @@ sudo ./target/debug/examples/dump_process_registers
 
 ## Platform support
 
-The following table describes the current CI set-up:
+The workflows use Xcode 26.6.0 and its 26.5 SDKs. The following table describes
+the current CI set-up:
 
-| Target                  | XCode  | build | ctest | run |
+| Target                  | Xcode  | build | ctest | run |
 |-------------------------|--------|-------|-------|-----|
-| `x86_64-apple-darwin`   | 26.1.0 | ✓     | ✓     | ✓   |
-| `aarch64-apple-darwin`  | 26.1.0 | ✓     | ✓     | ✓   |
-| `aarch64-apple-ios`     | 26.1.0 | ✓     | -     | -   |
-| `aarch64-apple-ios-sim` | 26.1.0 | ✓     | -     | -   |
-| `x86_64-apple-ios`      | 26.1.0 | ✓     | -     | -   |
+| `x86_64-apple-darwin`   | 26.6.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-darwin`  | 26.6.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-ios`     | 26.6.0 | ✓     | -     | -   |
+| `aarch64-apple-ios-sim` | 26.6.0 | ✓     | -     | -   |
+| `x86_64-apple-ios`      | 26.6.0 | ✓     | -     | -   |
 
 ## License
 

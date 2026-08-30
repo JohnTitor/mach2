@@ -1,7 +1,7 @@
 //! This module corresponds to `mach/port.h`
 
 use crate::vm_types::{integer_t, natural_t};
-use core::ffi::{c_int, c_uint};
+use core::ffi::{c_char, c_int, c_uint};
 use core::mem;
 
 pub type mach_port_name_t = natural_t;
@@ -75,6 +75,19 @@ pub const MPO_INSERT_SEND_RIGHT: u32 = 0x10;
 pub const MPO_STRICT: u32 = 0x20;
 pub const MPO_DENAP_RECEIVER: u32 = 0x40;
 pub const MPO_IMMOVABLE_RECEIVE: u32 = 0x80;
+
+pub const MACH_PORT_WEAK_REPLY_ENTITLEMENT: *const c_char =
+    c"com.apple.private.allow-weak-reply-port".as_ptr();
+
+pub type mpo_flags_t = u32;
+pub const MPO_WEAK_REPLY_PORT: mpo_flags_t = 0x4000;
+pub const MPO_NOTIFICATION_PORT: mpo_flags_t = 0x4400;
+
+pub const kGUARD_EXC_WEAK_REPLY_PORT: u32 = 0x0010_0002;
+pub const kGUARD_EXC_MOVE_WEAK_REPLY_PORT: u32 = 0x0010_0004;
+pub const kGUARD_EXC_INVALID_NOTIFICATION_PORT: u32 = 0x0010_0006;
+pub const kGUARD_EXC_MACH_EXC_THREAD_SET_STATE: u32 = 0x0010_0007;
+pub const kGUARD_EXC_CV_NOTIFICATION_PORT_REQ: u32 = 0x0010_0008;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]

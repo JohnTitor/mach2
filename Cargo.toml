@@ -1,6 +1,6 @@
 [package]
 name = "mach2"
-version = "0.6.0"
+version = "0.7.0"
 license = "BSD-2-Clause OR MIT OR Apache-2.0"
 description = "A Rust interface to the user-space API of the Mach 3.0 kernel that underlies OSX."
 repository = "https://github.com/JohnTitor/mach2"
@@ -8,7 +8,7 @@ readme = "README.md"
 keywords = ["kernel", "macos", "darwin"]
 categories = ["api-bindings", "external-ffi-bindings", "no-std", "os"]
 edition = "2024"
-include = ["src/**/*", "LICENSE-*", "README.md"]
+include = ["src/**/*", "examples/**/*", "LICENSE-*", "README.md"]
 
 [features]
 default = []

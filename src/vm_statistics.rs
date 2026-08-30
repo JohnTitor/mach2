@@ -11,6 +11,7 @@ pub type vm_extmod_statistics_t = *mut vm_extmod_statistics;
 pub type vm_extmod_statistics_data_t = vm_extmod_statistics;
 pub type vm_purgeable_stat_t = vm_purgeable_stat;
 pub type vm_purgeable_info_t = *mut vm_purgeable_info;
+pub type vm_page_disposition_t = i32;
 
 pub const VM_PAGE_QUERY_PAGE_PRESENT: integer_t = 1;
 pub const VM_PAGE_QUERY_PAGE_FICTITIOUS: integer_t = 1 << 1;
@@ -40,6 +41,7 @@ pub const VM_MEMORY_MALLOC_MEDIUM: c_uint = 12;
 pub const VM_MEMORY_MALLOC_PROB_GUARD: c_uint = 13;
 pub const VM_MEMORY_MACH_MSG: c_uint = 20;
 pub const VM_MEMORY_IOKIT: c_uint = 21;
+pub const VM_MEMORY_VM_RECLAIM: c_uint = 22;
 pub const VM_MEMORY_STACK: c_uint = 30;
 pub const VM_MEMORY_GUARD: c_uint = 31;
 pub const VM_MEMORY_SHARED_PMAP: c_uint = 32;
@@ -159,6 +161,7 @@ pub const VM_FLAGS_MTE: c_int = 0x2000;
 pub const VM_FLAGS_OVERWRITE: c_int = 0x4000;
 pub const VM_FLAGS_SUPERPAGE_MASK: c_int = 0x0007_0000;
 pub const VM_FLAGS_RETURN_DATA_ADDR: c_int = 0x0010_0000;
+pub const VM_FLAGS_GUARD_OBJECT_OPTOUT: c_int = 0x0040_0000;
 pub const VM_FLAGS_RETURN_4K_DATA_ADDR: c_int = 0x0080_0000;
 pub const VM_FLAGS_ALIAS_MASK: c_int = -16_777_216; // 0xFF000000
 
@@ -172,6 +175,7 @@ pub const VM_FLAGS_USER_ALLOCATE: c_int = VM_FLAGS_FIXED
     | VM_FLAGS_NO_CACHE
     | VM_FLAGS_PERMANENT
     | VM_FLAGS_OVERWRITE
+    | VM_FLAGS_GUARD_OBJECT_OPTOUT
     | VM_FLAGS_SUPERPAGE_MASK
     | VM_FLAGS_HW
     | VM_FLAGS_ALIAS_MASK;
@@ -195,6 +199,9 @@ pub const SUPERPAGE_SIZE_2MB: c_int = 2;
 #[cfg(target_arch = "x86_64")]
 pub const VM_FLAGS_SUPERPAGE_SIZE_2MB: c_int = SUPERPAGE_SIZE_2MB << VM_FLAGS_SUPERPAGE_SHIFT;
 
+pub const VM_REALLOCATE_DEALLOCATE_SOURCE: c_int = 0;
+pub const VM_REALLOCATE_ZERO_FILL_SOURCE: c_int = 1;
+
 pub const GUARD_TYPE_VIRT_MEMORY: u32 = 5;
 
 pub type virtual_memory_guard_exception_code_t = u32;
@@ -206,6 +213,7 @@ pub const kGUARD_EXC_RECLAIM_ACCOUNTING_FAILURE: u32 = 9;
 pub const kGUARD_EXC_SEC_IOPL_ON_EXEC_PAGE: u32 = 10;
 pub const kGUARD_EXC_SEC_EXEC_ON_IOPL_PAGE: u32 = 11;
 pub const kGUARD_EXC_SEC_UPL_WRITE_ON_EXEC_REGION: u32 = 12;
+pub const kGUARD_EXC_LARGE_ALLOCATION_TELEMETRY: u32 = 13;
 
 pub const kGUARD_EXC_SEC_ACCESS_FAULT: u32 = 98;
 pub const kGUARD_EXC_SEC_ASYNC_ACCESS_FAULT: u32 = 99;
@@ -214,6 +222,8 @@ pub const kGUARD_EXC_SEC_SHARING_DENIED: u32 = 101;
 pub const kGUARD_EXC_MTE_SYNC_FAULT: u32 = 200;
 pub const kGUARD_EXC_MTE_ASYNC_USER_FAULT: u32 = 201;
 pub const kGUARD_EXC_MTE_ASYNC_KERN_FAULT: u32 = 202;
+pub const kGUARD_EXC_GUARD_OBJECT_ASYNC_USER_FAULT: u32 = 203;
+pub const kGUARD_EXC_GUARD_OBJECT_ASYNC_KERN_FAULT: u32 = 204;
 
 pub const kGUARD_EXC_MTE_SOFT_MODE: u32 = 0x100000;
 
@@ -300,6 +310,17 @@ pub struct vm_statistics64 {
     pub internal_page_count: natural_t,
     pub total_uncompressed_pages_in_compressor: u64,
     pub swapped_count: u64,
+    pub total_tag_storage_pages: u64,
+    pub nontag_pageable_tag_storage_pages: u64,
+    pub nontag_wired_tag_storage_pages: u64,
+    pub free_tag_storage_pages: u64,
+    pub tag_storing_tag_storage_pages: u64,
+    pub total_tagged_pages: u64,
+    pub resident_tagged_pages: u64,
+    pub compressed_tagged_pages: u64,
+    pub tagged_compressions: u64,
+    pub tagged_decompressions: u64,
+    pub compressed_tag_storage_bytes: u64,
 }
 
 #[repr(C, packed(8))]
