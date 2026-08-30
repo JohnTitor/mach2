@@ -23,6 +23,7 @@ mod aarch64 {
     pub static ARM_NEON_STATE: thread_state_flavor_t = 16;
     pub static ARM_NEON_STATE64: thread_state_flavor_t = 17;
     pub static ARM_CPMU_STATE64: thread_state_flavor_t = 18;
+    pub static ARM_SME_ZA_STATE12: thread_state_flavor_t = 43;
 }
 
 #[cfg(target_arch = "aarch64")]

@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  XCODE_VERSION: '26.2.0'
+  XCODE_VERSION: '26.6.0'
 
 jobs:
   xcode_test:

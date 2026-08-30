@@ -15,6 +15,7 @@ pub type thread_t = mach_port_t;
 pub type thread_act_t = mach_port_t;
 pub type thread_inspect_t = mach_port_t;
 pub type thread_read_t = mach_port_t;
+pub type thread_suspension_token_t = mach_port_t;
 pub type ipc_space_t = mach_port_t;
 pub type ipc_space_read_t = mach_port_t;
 pub type ipc_space_inspect_t = mach_port_t;
@@ -56,6 +57,9 @@ pub type processor_set_name_array_t = *mut processor_set_t;
 pub type processor_array_t = *mut processor_t;
 pub type thread_act_array_t = *mut thread_act_t;
 pub type ledger_array_t = *mut ledger_t;
+
+pub type ledger_entry_id_t = u32;
+pub const LEDGER_ENTRY_ID_INVALID: ledger_entry_id_t = 0;
 
 pub type task_port_t = task_t;
 pub type task_port_array_t = task_array_t;

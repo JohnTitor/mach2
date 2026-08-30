@@ -4,6 +4,8 @@ use core::ffi::c_int;
 pub type cpu_type_t = c_int;
 pub type cpu_subtype_t = c_int;
 
+pub const LC_LAZY_LOAD_DYLIB_INFO: u32 = 0x3a;
+
 #[repr(C)]
 #[allow(dead_code, non_snake_case)]
 #[derive(Copy, Clone, Debug)]

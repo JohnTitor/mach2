@@ -11,15 +11,14 @@ use crate::vm_behavior::vm_behavior_t;
 use crate::vm_inherit::vm_inherit_t;
 use crate::vm_prot::vm_prot_t;
 use crate::vm_purgable::vm_purgable_t;
-use crate::vm_region::mach_vm_read_entry_t;
 use crate::vm_region::{
-    vm_page_info_flavor_t, vm_page_info_t, vm_region_flavor_t, vm_region_info_t,
-    vm_region_recurse_info_t,
+    mach_vm_read_entry, vm_page_info_flavor_t, vm_page_info_t, vm_region_flavor_t,
+    vm_region_info_t, vm_region_recurse_info_t,
 };
 use crate::vm_sync::vm_sync_t;
 use crate::vm_types::{
-    integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_map_t,
-    vm_offset_t, vm_size_t,
+    integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_address_t,
+    vm_map_t, vm_offset_t, vm_size_t,
 };
 use core::ffi::c_int;
 
@@ -60,10 +59,9 @@ unsafe extern "C" {
         dataCnt: *mut mach_msg_type_number_t,
     ) -> kern_return_t;
 
-    #[allow(improper_ctypes)]
     pub fn mach_vm_read_list(
         target_task: vm_task_entry_t,
-        data_list: mach_vm_read_entry_t,
+        data_list: *mut mach_vm_read_entry,
         count: natural_t,
     ) -> kern_return_t;
 
@@ -197,6 +195,28 @@ unsafe extern "C" {
         info: vm_page_info_t,
         infoCnt: *mut mach_msg_type_number_t,
     ) -> kern_return_t;
+
+    pub fn mach_vm_reallocate(
+        target_task: vm_map_t,
+        src: mach_vm_address_t,
+        src_size: mach_vm_size_t,
+        dst: *mut mach_vm_address_t,
+        dst_size: mach_vm_size_t,
+        align_mask: mach_vm_offset_t,
+        options: c_int,
+        flags: c_int,
+    ) -> kern_return_t;
+
+    pub fn vm_reallocate(
+        target_task: vm_map_t,
+        src: vm_address_t,
+        src_size: vm_size_t,
+        dst: *mut vm_address_t,
+        dst_size: vm_size_t,
+        align_mask: vm_offset_t,
+        options: c_int,
+        flags: c_int,
+    ) -> kern_return_t;
 }
 
 #[cfg(test)]
@@ -205,6 +225,15 @@ mod tests {
     use crate::kern_return::KERN_SUCCESS;
     use crate::traps::mach_task_self;
     use crate::vm_statistics::VM_FLAGS_ANYWHERE;
+
+    #[test]
+    fn mach_vm_read_list_signature() {
+        let _: unsafe extern "C" fn(
+            vm_task_entry_t,
+            *mut mach_vm_read_entry,
+            natural_t,
+        ) -> kern_return_t = mach_vm_read_list;
+    }
 
     #[test]
     fn mach_vm_allocate_sanity() {
