@@ -31,6 +31,7 @@ pub mod host_info;
 pub mod kern_return;
 pub mod loader;
 pub mod mach_debug;
+pub mod mach_error;
 pub mod mach_host;
 pub mod mach_init;
 pub mod mach_port;

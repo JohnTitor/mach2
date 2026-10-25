@@ -18,6 +18,7 @@ use mach2::kern_return::*;
 use mach2::loader::*;
 use mach2::mach_debug::ipc_info::*;
 use mach2::mach_debug::zone_info::*;
+use mach2::mach_error::*;
 use mach2::mach_host::*;
 use mach2::mach_init::*;
 use mach2::mach_port::*;
