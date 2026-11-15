@@ -47,7 +47,6 @@ pub type exception_handler_t = mach_port_t;
 pub type exception_handler_array_t = *mut exception_handler_t;
 pub type vm_task_entry_t = mach_port_t;
 pub type io_main_t = mach_port_t;
-pub type io_master_t = mach_port_t;
 pub type UNDServerRef = mach_port_t;
 
 pub type task_array_t = *mut task_t;

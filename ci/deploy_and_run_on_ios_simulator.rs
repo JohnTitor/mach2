@@ -86,8 +86,8 @@ fn start_simulator() {
                 .arg("simctl")
                 .arg("create")
                 .arg("rust_ios")
-                .arg("com.apple.CoreSimulator.SimDeviceType.iPhone-SE")
-                .arg("com.apple.CoreSimulator.SimRuntime.iOS-10-2")
+                .arg("com.apple.CoreSimulator.SimDeviceType.iPhone-17")
+                .arg("com.apple.CoreSimulator.SimRuntime.iOS-27-2")
                 .check_status();
     } else if simulator_booted == true {
         println!("Shutting down already-booted simulator");

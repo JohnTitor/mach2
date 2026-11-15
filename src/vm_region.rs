@@ -6,6 +6,7 @@ use crate::message::mach_msg_type_number_t;
 use crate::vm_behavior::vm_behavior_t;
 use crate::vm_inherit::vm_inherit_t;
 use crate::vm_prot::vm_prot_t;
+use crate::vm_statistics::vm_page_disposition_t;
 use crate::vm_types::{mach_vm_address_t, mach_vm_size_t, natural_t};
 use core::ffi::{c_int, c_uchar, c_uint, c_ushort};
 use core::mem;
@@ -49,6 +50,8 @@ pub type vm_page_info_t = *mut c_int;
 pub type vm_page_info_flavor_t = c_int;
 pub type vm_page_info_basic_t = *mut vm_page_info_basic;
 pub type vm_page_info_basic_data_t = vm_page_info_basic;
+pub type vm_page_info_extended_t = *mut vm_page_info_extended;
+pub type vm_page_info_extended_data_t = vm_page_info_extended;
 pub type mach_vm_read_entry_t = [mach_vm_read_entry; VM_MAP_ENTRY_MAX as usize];
 pub const VM_REGION_SUBMAP_INFO_COUNT: mach_msg_type_number_t =
     (mem::size_of::<vm_region_submap_info_data_t>() / mem::size_of::<natural_t>())
@@ -56,16 +59,39 @@ pub const VM_REGION_SUBMAP_INFO_COUNT: mach_msg_type_number_t =
 pub const VM_REGION_SUBMAP_SHORT_INFO_COUNT_64: mach_msg_type_number_t =
     (mem::size_of::<vm_region_submap_short_info_data_64_t>() / mem::size_of::<natural_t>())
         as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_INFO_V3_SIZE: usize = mem::size_of::<vm_region_submap_info_data_64_t>();
+pub const VM_REGION_SUBMAP_INFO_V2_SIZE: usize =
+    mem::offset_of!(vm_region_submap_info_data_64_t, pages_wired);
+pub const VM_REGION_SUBMAP_INFO_V1_SIZE: usize =
+    VM_REGION_SUBMAP_INFO_V2_SIZE - mem::size_of::<vm_object_id_t>();
+pub const VM_REGION_SUBMAP_INFO_V0_SIZE: usize =
+    VM_REGION_SUBMAP_INFO_V1_SIZE - mem::size_of::<c_uint>();
+pub const VM_REGION_SUBMAP_INFO_V3_COUNT_64: mach_msg_type_number_t =
+    (VM_REGION_SUBMAP_INFO_V3_SIZE / mem::size_of::<natural_t>()) as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_INFO_V2_COUNT_64: mach_msg_type_number_t =
+    (VM_REGION_SUBMAP_INFO_V2_SIZE / mem::size_of::<natural_t>()) as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_INFO_V1_COUNT_64: mach_msg_type_number_t =
+    (VM_REGION_SUBMAP_INFO_V1_SIZE / mem::size_of::<natural_t>()) as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_INFO_V0_COUNT_64: mach_msg_type_number_t =
+    (VM_REGION_SUBMAP_INFO_V0_SIZE / mem::size_of::<natural_t>()) as mach_msg_type_number_t;
+pub const VM_REGION_SUBMAP_INFO_COUNT_64: mach_msg_type_number_t =
+    VM_REGION_SUBMAP_INFO_V3_COUNT_64;
 pub const VM_PAGE_INFO_BASIC_COUNT: mach_msg_type_number_t =
     (mem::size_of::<vm_page_info_basic_data_t>() / mem::size_of::<c_int>())
         as mach_msg_type_number_t;
+pub const VM_PAGE_INFO_EXTENDED_COUNT: mach_msg_type_number_t =
+    (mem::size_of::<vm_page_info_extended_data_t>() / mem::size_of::<natural_t>())
+        as mach_msg_type_number_t;
 pub const VM_REGION_FLAG_JIT_ENABLED: c_ushort = 0x1;
 pub const VM_REGION_FLAG_TPRO_ENABLED: c_ushort = 0x2;
+pub const VM_REGION_FLAG_RESERVED_BIT_3: c_ushort = 0x4;
+pub const VM_REGION_FLAG_RESERVED_BIT_4: c_ushort = 0x8;
 
 pub const VM_REGION_INFO_MAX: c_int = 1 << 10;
 pub const VM_MAP_ENTRY_MAX: c_int = 1 << 8;
 
 pub const VM_PAGE_INFO_BASIC: vm_page_info_flavor_t = 1;
+pub const VM_PAGE_INFO_EXTENDED: vm_page_info_flavor_t = 2;
 
 pub const VM_REGION_BASIC_INFO_64: vm_region_flavor_t = 9;
 pub const VM_REGION_BASIC_INFO: vm_region_flavor_t = 10;
@@ -208,6 +234,9 @@ pub struct vm_region_submap_info_64 {
     pub flags: c_ushort,
     pub pages_reusable: c_uint,
     pub object_id_full: vm_object_id_t,
+    pub pages_wired: u32,
+    pub wire_tag: u16,
+    pub __padding0: u16,
 }
 
 impl vm_region_submap_info_64 {
@@ -256,6 +285,19 @@ impl vm_page_info_basic {
     pub fn count() -> mach_msg_type_number_t {
         (mem::size_of::<Self>() / mem::size_of::<c_int>()) as mach_msg_type_number_t
     }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct vm_page_info_extended {
+    pub disposition: vm_page_disposition_t,
+    pub ref_count: u32,
+    pub object_id: vm_object_id_t,
+    pub offset: memory_object_offset_t,
+    pub depth: c_int,
+    pub __pad1: u32,
+    pub disposition_ts: u64,
+    pub __reserved: [u64; 4],
 }
 
 #[repr(C, packed(4))]

@@ -76,8 +76,12 @@ unsafe extern "C" {
         task_info_in: task_info_t,
         task_info_inCnt: mach_msg_type_number_t,
     ) -> kern_return_t;
-    pub fn task_suspend(target_task: task_t) -> kern_return_t;
-    pub fn task_resume(target_task: task_t) -> kern_return_t;
+    #[deprecated(note = "use task_suspend2 instead")]
+    #[cfg(not(any(target_os = "tvos", target_os = "watchos")))]
+    pub fn task_suspend(target_task: task_read_t) -> kern_return_t;
+    #[deprecated(note = "use task_resume2 instead")]
+    #[cfg(not(any(target_os = "tvos", target_os = "watchos")))]
+    pub fn task_resume(target_task: task_read_t) -> kern_return_t;
     pub fn task_get_special_port(
         task: task_t,
         which_port: task_special_port_t,
@@ -219,10 +223,12 @@ unsafe extern "C" {
         new_limit: c_int,
         old_limit: *mut c_int,
     ) -> kern_return_t;
+    #[cfg(not(any(target_os = "tvos", target_os = "watchos")))]
     pub fn task_suspend2(
         target_task: task_read_t,
         suspend_token: *mut task_suspension_token_t,
     ) -> kern_return_t;
+    #[cfg(not(any(target_os = "tvos", target_os = "watchos")))]
     pub fn task_resume2(suspend_token: task_suspension_token_t) -> kern_return_t;
     pub fn task_purgable_info(
         task: task_inspect_t,

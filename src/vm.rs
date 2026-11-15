@@ -258,7 +258,7 @@ mod tests {
         unsafe {
             let mut size = 0x10;
             let mut object_name = 0;
-            let mut address = mach_vm_region_sanity as mach_vm_address_t;
+            let mut address = mach_vm_region_sanity as *const () as mach_vm_address_t;
             let mut info: vm_region_basic_info_64 = mem::zeroed();
             let mut info_size = vm_region_basic_info_64::count();
 
