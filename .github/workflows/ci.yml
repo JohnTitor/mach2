@@ -13,7 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  XCODE_VERSION: '26.6.0'
+  XCODE_VERSION: '27.2.0'
+  SDK_VERSION: '27.2'
 
 jobs:
   xcode_test:
@@ -24,7 +25,7 @@ jobs:
         include:
           - target: x86_64-apple-darwin
           - target: aarch64-apple-darwin
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -46,7 +47,7 @@ jobs:
           - aarch64-apple-ios
           - aarch64-apple-ios-sim
           - x86_64-apple-ios
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -63,7 +64,7 @@ jobs:
 
   style_check:
     name: Style check
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

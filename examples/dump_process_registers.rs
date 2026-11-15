@@ -6,10 +6,10 @@ use std::mem;
 use std::ptr;
 
 use mach2::kern_return::KERN_SUCCESS;
-use mach2::mach_types::{task_t, thread_act_array_t};
+use mach2::mach_types::{task_suspension_token_t, task_t, thread_act_array_t};
 use mach2::message::mach_msg_type_number_t;
 use mach2::port::mach_port_name_t;
-use mach2::task::{task_resume, task_suspend, task_threads};
+use mach2::task::{task_resume2, task_suspend2, task_threads};
 use mach2::thread_act::thread_get_state;
 use mach2::traps::{mach_task_self, task_for_pid};
 use mach2::vm::mach_vm_deallocate;
@@ -43,9 +43,9 @@ fn read_int() -> Result<core::ffi::c_int, ()> {
     return Ok(value);
 }
 
-fn resume(task: task_t) {
+fn resume(token: task_suspension_token_t) {
     unsafe {
-        let kret = task_resume(task);
+        let kret = task_resume2(token);
         if kret != KERN_SUCCESS {
             println!("Did not succeed in resuming task.");
             println!("kern_return_t error {}", kret);
@@ -87,8 +87,9 @@ fn main() {
 
     println!("task = 0x{:x}", &task);
 
+    let mut suspend_token: task_suspension_token_t = 0;
     unsafe {
-        let kret = task_suspend(task as task_t);
+        let kret = task_suspend2(task as task_t, &mut suspend_token);
         if kret != KERN_SUCCESS {
             println!("Did not succeed in suspending task.");
             println!("kern_return_t error {}", kret);
@@ -107,7 +108,7 @@ fn main() {
         if kret != KERN_SUCCESS {
             println!("Did not succeed in getting task's threads");
             println!("kern_return_t error {}", kret);
-            resume(task as task_t);
+            resume(suspend_token);
             return;
         }
     }
@@ -146,6 +147,6 @@ fn main() {
         println!("mach_host={:?}", mach2::mach_init::mach_host_self());
     }
 
-    resume(task as task_t);
+    resume(suspend_token);
     println!("Success!");
 }

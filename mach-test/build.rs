@@ -1,44 +1,8 @@
-#[derive(Eq, Ord, PartialEq, PartialOrd, Copy, Clone, Debug)]
-struct Xcode(pub u32, pub u32);
-
-impl Xcode {
-    fn version() -> Xcode {
-        use std::process::Command;
-        let out = Command::new("/usr/bin/xcodebuild")
-            .arg("-version")
-            .output()
-            .expect("failed to execute xcodebuild");
-        let stdout = ::std::str::from_utf8(&out.stdout).expect("couldn't parse stdout as UTF8");
-        let stderr = ::std::str::from_utf8(&out.stderr).expect("couldn't parse stderr as UTF8");
-
-        if !out.status.success() {
-            eprintln!("stdout: {}", stdout);
-            eprintln!("stderr: {}", stderr);
-            panic!("xcodebuild -version failed");
-        }
-
-        // xcodebuild -version output looks like:
-        //
-        // Xcode 9.2
-        // Build version 9C40b
-        let mut iter = stdout
-            .split(|c: char| c.is_whitespace() || c == '.')
-            .skip(1)
-            .map(|c| {
-                c.parse()
-                    .expect("failed to parse Xcode version into number")
-            });
-        let major: u32 = iter.next().expect("failed to parse Xcode major version");
-        let minor: u32 = iter.next().expect("failed to parse Xcode minor version");
-
-        Xcode(major, minor)
-    }
-}
-
 fn main() {
-    let xcode = Xcode::version();
-    // kept on purpose for debugging:
-    // println!("cargo:warning=\"Xcode version: {:?}\"", xcode);
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=../src");
+    println!("cargo:rerun-if-env-changed=SDKROOT");
+    println!("cargo:rerun-if-env-changed=DEVELOPER_DIR");
 
     let mut cfg = ctest::TestGenerator::new();
 
@@ -83,6 +47,7 @@ fn main() {
         .header("mach/mach_voucher.h")
         .header("mach/mach_voucher_types.h")
         .header("mach/machine.h")
+        .header("mach/memory_entry.h")
         .header("mach/memory_object_types.h")
         .header("mach/message.h")
         .header("mach/mig.h");
@@ -140,30 +105,13 @@ fn main() {
         }
     });
 
-    cfg.skip_alias(move |s| {
-        match s.ident() {
-            // FIXME: Changed in XCode 11, see `vm_region_submap_info_data_64`'s comment.
-            "vm_region_submap_info_data_64_t" if xcode >= Xcode(11, 0) => true,
-
-            // FIXME: Unavailable since Xcode 14:
-            "io_master_t" if xcode >= Xcode(14, 0) => true,
-
-            _ => false,
-        }
-    });
-
     cfg.skip_fn(move |s| {
         match s.ident() {
-            // mac_task_self and current_tasl are not functions, but macro that map to the
-            // mask_task_self_ static variable:
+            // These macros map to the mach_task_self_ static variable.
             "mach_task_self" | "current_task" => true,
 
             _ => false,
         }
-    });
-
-    cfg.skip_const(move |s| match s.ident() {
-        _ => false,
     });
 
     cfg.skip_signededness(|c| {
@@ -176,6 +124,11 @@ fn main() {
             "fsobj_id_t" |
             "dyld_kernel_image_info_t" |
             "dyld_kernel_process_info_t" |
+            "host_cpu_counters_info_data_t" |
+            "processor_cpu_counters_info_data_t" |
+            "task_vm_shared_cache_info_data_t" |
+            "task_shared_region_info_data_t" |
+            "vm_page_info_extended_data_t" |
 
             // array types:
             "vm_region_info_data_t" |
@@ -190,6 +143,13 @@ fn main() {
 
             // pointer types:
             "clock_attr_t" |
+            "host_info64_t" |
+            "host_cpu_counters_info_t" |
+            "processor_info_array_t" |
+            "processor_cpu_counters_info_t" |
+            "task_vm_shared_cache_info_t" |
+            "task_shared_region_info_t" |
+            "vm_page_info_extended_t" |
             "dyld_kernel_image_info_array_t" |
             "memory_object_fault_info_t" |
             "exception_data_t" |
@@ -254,9 +214,6 @@ fn main() {
         "name_t" | "uuid_t" | "vm_region_info_data_t" | "cmd_t" | "mach_vm_read_entry_t" => true,
         _ => false,
     });
-
-    // Include the directory where the header files are defined
-    cfg.include("/usr/include");
 
     // Generate the tests, passing the path to the `*-sys` library as well as
     // the module to generate.
