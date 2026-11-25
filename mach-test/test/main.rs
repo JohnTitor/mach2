@@ -1,4 +1,5 @@
 #![allow(bad_style)]
+#![allow(deprecated)] // Verify symbols retained by the SDK despite their deprecation.
 
 #[allow(unused_imports)]
 use core::ffi::{c_char, c_int, c_uchar, c_uint, c_ulong, c_ulonglong, c_ushort};
@@ -14,6 +15,7 @@ use mach2::error::*;
 use mach2::exc::*;
 use mach2::exception_types::*;
 use mach2::host_info::*;
+use mach2::host_special_ports::*;
 use mach2::kern_return::*;
 use mach2::loader::*;
 use mach2::mach_debug::ipc_info::*;
@@ -26,6 +28,7 @@ use mach2::mach_time::*;
 use mach2::mach_types::*;
 use mach2::mach_voucher_types::*;
 use mach2::machine::*;
+use mach2::memory_entry::*;
 use mach2::memory_object_types::*;
 use mach2::message::*;
 use mach2::mig::*;
@@ -33,9 +36,11 @@ use mach2::ndr::*;
 use mach2::notify::*;
 use mach2::policy::*;
 use mach2::port::*;
+use mach2::processor_info::*;
 // FIXME: semaphore is not used => not tested?
 #[allow(unused_imports)]
 use mach2::semaphore::*;
+use mach2::shared_region::*;
 use mach2::structs::*;
 use mach2::sync_policy::*;
 use mach2::task::*;
@@ -57,6 +62,8 @@ use mach2::vm_inherit::*;
 // FIXME: vm_page_size is not used => not tested?
 #[allow(unused_imports)]
 use mach2::vm_page_size::*;
+#[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
+use mach2::vm_param::*;
 use mach2::vm_prot::*;
 use mach2::vm_purgable::*;
 use mach2::vm_region::*;

@@ -26,11 +26,6 @@ platforms that support it.
 mach2 = "0.7"
 ```
 
-Available crate feature:
-
-* **unstable** (disabled by default): Exposes newly changed APIs. Enabling this may
-  bring breaking changes (see the breaking change policy).
-
 ### Breaking change policy
 
 We do the following steps when an item is changed/removed on latest toolchain:
@@ -72,16 +67,17 @@ sudo ./target/debug/examples/dump_process_registers
 
 ## Platform support
 
-The workflows use Xcode 26.6.0 and its 26.5 SDKs. The following table describes
-the current CI set-up:
+The bindings track the user-space headers in the 27.2 SDKs. The workflows use
+Xcode 27.2.0 on the `xcode-27` runner and verify the selected SDK version before
+building. The following table describes the current CI set-up:
 
 | Target                  | Xcode  | build | ctest | run |
 |-------------------------|--------|-------|-------|-----|
-| `x86_64-apple-darwin`   | 26.6.0 | ✓     | ✓     | ✓   |
-| `aarch64-apple-darwin`  | 26.6.0 | ✓     | ✓     | ✓   |
-| `aarch64-apple-ios`     | 26.6.0 | ✓     | -     | -   |
-| `aarch64-apple-ios-sim` | 26.6.0 | ✓     | -     | -   |
-| `x86_64-apple-ios`      | 26.6.0 | ✓     | -     | -   |
+| `x86_64-apple-darwin`   | 27.2.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-darwin`  | 27.2.0 | ✓     | ✓     | ✓   |
+| `aarch64-apple-ios`     | 27.2.0 | ✓     | -     | -   |
+| `aarch64-apple-ios-sim` | 27.2.0 | ✓     | -     | -   |
+| `x86_64-apple-ios`      | 27.2.0 | ✓     | -     | -   |
 
 ## License
 
@@ -109,7 +105,7 @@ TARGET=x86_64-apple-darwin RUST_VERSION=nightly ./ci/run.sh
 
 where you can replace the `TARGET` and `RUST_VERSION` with the target you
 want to test (e.g. `aarch64-apple-darwin`) and the Rust version you want to use for
-the tests (e.g. `stable`, `1.33.0`, etc.).
+the tests (e.g. `stable` or `nightly`).
 
 [crates.io]: https://crates.io/crates/mach2
 [Latest Version]: https://img.shields.io/crates/v/mach2.svg

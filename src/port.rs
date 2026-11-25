@@ -36,6 +36,7 @@ pub const MACH_PORT_QLIMIT_ZERO: mach_port_msgcount_t = 0;
 pub const MACH_PORT_QLIMIT_BASIC: mach_port_msgcount_t = 5;
 pub const MACH_PORT_QLIMIT_SMALL: mach_port_msgcount_t = 16;
 pub const MACH_PORT_QLIMIT_LARGE: mach_port_msgcount_t = 1024;
+pub const MACH_PORT_QLIMIT_KERNEL_SOFT: mach_port_msgcount_t = 4 * MACH_PORT_QLIMIT_LARGE;
 pub const MACH_PORT_QLIMIT_KERNEL: mach_port_msgcount_t = 65534;
 pub const MACH_PORT_QLIMIT_MIN: mach_port_msgcount_t = MACH_PORT_QLIMIT_ZERO;
 pub const MACH_PORT_QLIMIT_DEFAULT: mach_port_msgcount_t = MACH_PORT_QLIMIT_BASIC;
@@ -78,16 +79,25 @@ pub const MPO_IMMOVABLE_RECEIVE: u32 = 0x80;
 
 pub const MACH_PORT_WEAK_REPLY_ENTITLEMENT: *const c_char =
     c"com.apple.private.allow-weak-reply-port".as_ptr();
+pub const MACH_PORT_KERNEL_READ_ENTITLEMENT: *const c_char =
+    c"com.apple.private.system-task-ports.kernel.read".as_ptr();
 
 pub type mpo_flags_t = u32;
 pub const MPO_WEAK_REPLY_PORT: mpo_flags_t = 0x4000;
 pub const MPO_NOTIFICATION_PORT: mpo_flags_t = 0x4400;
 
+pub const kGUARD_EXC_RESTRICT_VOUCHER_OPERATIONS: u32 = 11;
+pub const kGUARD_EXC_MACH_EXC_THREAD_SET_STATE: u32 = 12;
+pub const kGUARD_EXC_MOVE_WEAK_REPLY_PORT_FATAL: u32 = 13;
+pub const kGUARD_EXC_BOOTSTRAP_PORT_NOTIFICATION: u32 = 17;
+pub const kGUARD_EXC_CV_INVALID_EXCEPTION_PORT: u32 = 18;
+pub const kGUARD_EXC_RESTRICT_VOUCHER_RECIPE_SIZE: u32 = 33;
+pub const kGUARD_EXC_RESTRICT_INLINE_PORT_DESCRIPTORS: u32 = 34;
 pub const kGUARD_EXC_WEAK_REPLY_PORT: u32 = 0x0010_0002;
 pub const kGUARD_EXC_MOVE_WEAK_REPLY_PORT: u32 = 0x0010_0004;
 pub const kGUARD_EXC_INVALID_NOTIFICATION_PORT: u32 = 0x0010_0006;
-pub const kGUARD_EXC_MACH_EXC_THREAD_SET_STATE: u32 = 0x0010_0007;
 pub const kGUARD_EXC_CV_NOTIFICATION_PORT_REQ: u32 = 0x0010_0008;
+pub const kGUARD_EXC_IMMOVABLE_NON_FATAL: u32 = 1 << 22;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]

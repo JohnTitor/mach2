@@ -61,9 +61,13 @@ unsafe extern "C" {
         old_flavors: exception_flavor_array_t,
     ) -> kern_return_t;
 
-    pub fn thread_suspend(target_act: thread_act_t) -> kern_return_t;
+    #[deprecated(note = "use thread_suspend2 instead")]
+    #[cfg(not(target_os = "watchos"))]
+    pub fn thread_suspend(target_act: thread_read_t) -> kern_return_t;
 
-    pub fn thread_resume(target_act: thread_act_t) -> kern_return_t;
+    #[deprecated(note = "use thread_resume2 instead")]
+    #[cfg(not(target_os = "watchos"))]
+    pub fn thread_resume(target_act: thread_read_t) -> kern_return_t;
 
     pub fn thread_abort(target_act: thread_act_t) -> kern_return_t;
 
@@ -81,10 +85,12 @@ unsafe extern "C" {
         special_port: mach_port_t,
     ) -> kern_return_t;
 
+    #[cfg(not(target_os = "watchos"))]
     pub fn thread_suspend2(
         target_act: thread_read_t,
         suspend_token: *mut mach_port_t,
     ) -> kern_return_t;
 
+    #[cfg(not(target_os = "watchos"))]
     pub fn thread_resume2(suspend_token: mach_port_t) -> kern_return_t;
 }

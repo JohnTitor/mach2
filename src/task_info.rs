@@ -1,10 +1,14 @@
 //! This module roughly corresponds to `mach/task_info.h`.
 
+use crate::boolean::boolean_t;
+use crate::loader::{cpu_subtype_t, cpu_type_t};
 use crate::message::{audit_token_t, security_token_t};
 use crate::policy::policy_t;
 use crate::time_value::time_value_t;
 use crate::vm_statistics::{vm_extmod_statistics_data_t, vm_purgeable_info};
-use crate::vm_types::{integer_t, mach_vm_address_t, mach_vm_size_t, natural_t, vm_size_t};
+use crate::vm_types::{
+    integer_t, mach_vm_address_t, mach_vm_offset_t, mach_vm_size_t, natural_t, vm_size_t,
+};
 use core::ffi::{c_uchar, c_uint};
 use core::mem;
 
@@ -42,6 +46,8 @@ pub const TASK_POWER_INFO_V2: c_uint = 26;
 pub const TASK_VM_INFO_PURGEABLE_ACCOUNT: c_uint = 27;
 pub const TASK_FLAGS_INFO: c_uint = 28;
 pub const TASK_DEBUG_INFO_INTERNAL: c_uint = 29;
+pub const TASK_VM_SHARED_CACHE_INFO: c_uint = 34;
+pub const TASK_SHARED_REGION_INFO: c_uint = 35;
 
 pub type task_flavor_t = natural_t;
 pub type task_info_t = *mut integer_t;
@@ -309,6 +315,41 @@ pub type task_purgable_info_t = vm_purgeable_info;
 
 pub type task_exc_guard_behavior_t = u32;
 pub type task_corpse_forking_behavior_t = u32;
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_vm_shared_cache_info {
+    pub slide: u32,
+}
+
+pub type task_vm_shared_cache_info_data_t = task_vm_shared_cache_info;
+pub type task_vm_shared_cache_info_t = *mut task_vm_shared_cache_info;
+pub const TASK_VM_SHARED_CACHE_INFO_COUNT: usize =
+    mem::size_of::<task_vm_shared_cache_info>() / mem::size_of::<natural_t>();
+
+pub type task_shared_region_stubs_t = u8;
+pub const TASK_SHARED_REGION_STUBS_DEV: task_shared_region_stubs_t = 0x01;
+pub const TASK_SHARED_REGION_STUBS_PROD: task_shared_region_stubs_t = 0x02;
+
+#[repr(C, packed(4))]
+#[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]
+pub struct task_shared_region_info {
+    pub sri_base_address: mach_vm_address_t,
+    pub sri_size: mach_vm_size_t,
+    pub sri_slide: mach_vm_offset_t,
+    pub sri_id: u64,
+    pub sri_namespace_id: u64,
+    pub sri_cpu_type: cpu_type_t,
+    pub sri_cpu_subtype: cpu_subtype_t,
+    pub sri_reslid: boolean_t,
+    pub sri_driverkit: boolean_t,
+    pub sri_stubs: task_shared_region_stubs_t,
+}
+
+pub type task_shared_region_info_data_t = task_shared_region_info;
+pub type task_shared_region_info_t = *mut task_shared_region_info;
+pub const TASK_SHARED_REGION_INFO_COUNT: usize =
+    mem::size_of::<task_shared_region_info>() / mem::size_of::<natural_t>();
 
 #[repr(C, packed(4))]
 #[derive(Copy, Clone, Debug, Default, Hash, PartialOrd, PartialEq, Eq, Ord)]

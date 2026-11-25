@@ -25,6 +25,7 @@ pub const VM_PAGE_QUERY_PAGE_CS_VALIDATED: integer_t = 1 << 8;
 pub const VM_PAGE_QUERY_PAGE_CS_TAINTED: integer_t = 1 << 9;
 pub const VM_PAGE_QUERY_PAGE_CS_NX: integer_t = 1 << 10;
 pub const VM_PAGE_QUERY_PAGE_REUSABLE: integer_t = 1 << 11;
+pub const VM_PAGE_QUERY_PAGE_WIRED: integer_t = 1 << 12;
 
 pub const VM_MEMORY_MALLOC: c_uint = 1;
 pub const VM_MEMORY_MALLOC_SMALL: c_uint = 2;
@@ -116,6 +117,8 @@ pub const VM_MEMORY_COLORSYNC: c_uint = 104;
 pub const VM_MEMORY_BTINFO: c_uint = 105;
 pub const VM_MEMORY_CM_HLS: c_uint = 106;
 pub const VM_MEMORY_COMPOSITOR_SERVICES: c_uint = 107;
+pub const VM_MEMORY_DEBUG: c_uint = 108;
+pub const VM_MEMORY_NEURAL: c_uint = 109;
 pub const VM_MEMORY_ROSETTA: c_uint = 230;
 pub const VM_MEMORY_ROSETTA_THREAD_CONTEXT: c_uint = 231;
 pub const VM_MEMORY_ROSETTA_INDIRECT_BRANCH_MAP: c_uint = 232;
@@ -156,9 +159,11 @@ pub const VM_FLAGS_NO_CACHE: c_int = 0x10;
 pub const VM_FLAGS_RESILIENT_CODESIGN: c_int = 0x20;
 pub const VM_FLAGS_RESILIENT_MEDIA: c_int = 0x40;
 pub const VM_FLAGS_PERMANENT: c_int = 0x80;
+pub const VM_FLAGS_FOR_INSPECTION: c_int = 0x100;
 pub const VM_FLAGS_TPRO: c_int = 0x1000;
 pub const VM_FLAGS_MTE: c_int = 0x2000;
 pub const VM_FLAGS_OVERWRITE: c_int = 0x4000;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 pub const VM_FLAGS_SUPERPAGE_MASK: c_int = 0x0007_0000;
 pub const VM_FLAGS_RETURN_DATA_ADDR: c_int = 0x0010_0000;
 pub const VM_FLAGS_GUARD_OBJECT_OPTOUT: c_int = 0x0040_0000;
@@ -176,7 +181,6 @@ pub const VM_FLAGS_USER_ALLOCATE: c_int = VM_FLAGS_FIXED
     | VM_FLAGS_PERMANENT
     | VM_FLAGS_OVERWRITE
     | VM_FLAGS_GUARD_OBJECT_OPTOUT
-    | VM_FLAGS_SUPERPAGE_MASK
     | VM_FLAGS_HW
     | VM_FLAGS_ALIAS_MASK;
 pub const VM_FLAGS_USER_MAP: c_int =
@@ -187,15 +191,23 @@ pub const VM_FLAGS_USER_REMAP: c_int = VM_FLAGS_FIXED
     | VM_FLAGS_OVERWRITE
     | VM_FLAGS_RETURN_DATA_ADDR
     | VM_FLAGS_RESILIENT_CODESIGN
-    | VM_FLAGS_RESILIENT_MEDIA;
+    | VM_FLAGS_RESILIENT_MEDIA
+    | VM_FLAGS_FOR_INSPECTION;
 
+/// Deprecated by SDK 27.2: superpage flag bits may be reused in future releases.
 pub const VM_FLAGS_SUPERPAGE_SHIFT: c_int = 16;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 pub const SUPERPAGE_NONE: c_int = 0;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 pub const SUPERPAGE_SIZE_ANY: c_int = 1;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 pub const VM_FLAGS_SUPERPAGE_NONE: c_int = SUPERPAGE_NONE << VM_FLAGS_SUPERPAGE_SHIFT;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 pub const VM_FLAGS_SUPERPAGE_SIZE_ANY: c_int = SUPERPAGE_SIZE_ANY << VM_FLAGS_SUPERPAGE_SHIFT;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 #[cfg(target_arch = "x86_64")]
 pub const SUPERPAGE_SIZE_2MB: c_int = 2;
+/// Deprecated by SDK 27.2: superpages are unsupported on current hardware.
 #[cfg(target_arch = "x86_64")]
 pub const VM_FLAGS_SUPERPAGE_SIZE_2MB: c_int = SUPERPAGE_SIZE_2MB << VM_FLAGS_SUPERPAGE_SHIFT;
 
@@ -213,7 +225,12 @@ pub const kGUARD_EXC_RECLAIM_ACCOUNTING_FAILURE: u32 = 9;
 pub const kGUARD_EXC_SEC_IOPL_ON_EXEC_PAGE: u32 = 10;
 pub const kGUARD_EXC_SEC_EXEC_ON_IOPL_PAGE: u32 = 11;
 pub const kGUARD_EXC_SEC_UPL_WRITE_ON_EXEC_REGION: u32 = 12;
-pub const kGUARD_EXC_LARGE_ALLOCATION_TELEMETRY: u32 = 13;
+pub const kGUARD_EXC_COW_DEFEATURED_COPY_DENIED: u32 = 13;
+pub const kGUARD_EXC_COW_DEFEATURED_EXTRACT_DENIED: u32 = 14;
+pub const kGUARD_EXC_COW_DEFEATURED_SHARE_MAP_AS_COPY_DENIED: u32 = 15;
+pub const kGUARD_EXC_COW_DEFEATURED_FIRST: u32 = kGUARD_EXC_COW_DEFEATURED_COPY_DENIED;
+pub const kGUARD_EXC_COW_DEFEATURED_LAST: u32 = kGUARD_EXC_COW_DEFEATURED_SHARE_MAP_AS_COPY_DENIED;
+pub const kGUARD_EXC_LARGE_ALLOCATION_TELEMETRY: u32 = 16;
 
 pub const kGUARD_EXC_SEC_ACCESS_FAULT: u32 = 98;
 pub const kGUARD_EXC_SEC_ASYNC_ACCESS_FAULT: u32 = 99;
@@ -321,6 +338,27 @@ pub struct vm_statistics64 {
     pub tagged_compressions: u64,
     pub tagged_decompressions: u64,
     pub compressed_tag_storage_bytes: u64,
+    pub speculative_pages_created: u64,
+    pub speculative_pages_activated: u64,
+    pub swap_count: u64,
+    pub empty_tag_storing_tag_storage_pages: u64,
+    pub executable_count: u64,
+    pub shared_region_count: u64,
+    pub boot_stolen_count: u64,
+    pub secluded_count: u64,
+    pub active_internal_count: u64,
+    pub inactive_internal_count: u64,
+    pub active_external_count: u64,
+    pub inactive_external_count: u64,
+    pub purgeable_pageable_count: u64,
+    pub purgeable_wired_count: u64,
+    pub background_internal_count: u64,
+    pub background_external_count: u64,
+    pub donated_count: u64,
+    pub realtime_count: u64,
+    pub max_mem_count: u64,
+    pub phantom_ghosts_found: u64,
+    pub phantom_ghosts_added: u64,
 }
 
 #[repr(C, packed(8))]
